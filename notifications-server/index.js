@@ -1,3 +1,5 @@
+var Redis = require('ioredis');
+var redis = new Redis(process.env.REDIS_URI);
 var app = require('express')();
 var http = require('http').Server(app);
 
