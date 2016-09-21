@@ -11,7 +11,12 @@ services:
       - "./notifications-server/node_modules:/usr/src/app/node_modules"
     environment:
       - PORT=8080
+      - REDIS_URI=redis://redis
   db:
     image: postgres
+    ports:
+      - "5432"
   redis:
     image: redis
+    ports:
+      - "6379"
