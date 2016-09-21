@@ -1,5 +1,16 @@
 version: '2'
 services:
+  notifications-server:
+    build: ./notifications-server
+    depends_on:
+      - redis
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./notifications-server:/usr/src/app"
+      - "./notifications-server/node_modules:/usr/src/app/node_modules"
+    environment:
+      - PORT=8080
   db:
     image: postgres
   redis:
