@@ -21,4 +21,9 @@ class TwitchStreamer(models.Model):
     display_name = models.CharField(max_length=30)
     language = models.CharField(max_length=5)
     logo = models.CharField(max_length=150)
+    status = models.CharField(max_length=150)
+    views = models.IntegerField()
+    followers = models.IntegerField()
+    
+    live = models.BooleanField(default=False)
     
