@@ -5,6 +5,9 @@ import ReactLoader from 'react-progress-label'
 import {NavBar} from "./components/NavBar.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 
+const reduxStore = require('./store');
+import { Provider } from 'react-redux'
+
 var Content = React.createClass({
     getInitialState: function() {
        return {
@@ -39,5 +42,8 @@ var Content = React.createClass({
     }
 });
 ReactDOM.render(
-    <Content/>, document.getElementById('root')
+    <Provider store={reduxStore}>
+      <Content/>
+    </Provider>
+    , document.getElementById('root')
 );
