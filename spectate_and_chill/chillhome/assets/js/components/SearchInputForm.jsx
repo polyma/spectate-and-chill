@@ -2,6 +2,7 @@ import React from "react"
 
 export class SearchInputForm extends React.Component {
     // _getSummonerData() {
+        // this.props.setLoading();
     //     var summonerName = $("#summoner").val();
     //     var region = $("#region").val();
     //     var apiKey = "1d08e678-90be-4c52-b94e-069619ad0e87";
@@ -15,6 +16,7 @@ export class SearchInputForm extends React.Component {
     //             var summonerName = summonerName.replace(" ", "");
     //             var summonerName = summonerName.toLowerCase().trim();
     //             var summonerID = json[summonerName].id;
+                    // this.props.unsetLoading();
     //         },
     //         error: function(XMLHttpRequest, textStatus, errorThrown) {
     //             alert("The Summoner does not exist.");
@@ -26,7 +28,7 @@ export class SearchInputForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            summonerName: 'insert',
+            summonerName: 'Summoner Name',
             region: 'euw',
         }
         this.changeName = this._changeName.bind(this)
@@ -38,7 +40,7 @@ export class SearchInputForm extends React.Component {
     _validateInput(e) {
         e.preventDefault();
         //if everythins is ok
-        this.getSummonerData();
+
     }
 
      render() {
@@ -50,7 +52,7 @@ export class SearchInputForm extends React.Component {
                         <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-bar" placeholder="Summoner name" ></input>
                     </div>
                     <div>
-                        <select className="form-control region-btn" value={this.state.region} onChange={this.changeRegion}>
+                        <select className="col-xs-2 form-control region-btn" value={this.state.region} onChange={this.changeRegion}>
                             <option value="na">NA</option>
                             <option value="euw">EUW</option>
                             <option value="eune">EUNE</option>
@@ -63,7 +65,9 @@ export class SearchInputForm extends React.Component {
                             <option value="tr">TR</option>
                         </select>
                     </div>
-                    <button type="submit"/>
+                    <div className="submit col-xs-1">
+                    <button type="submit" className="submit-button"><span className="glyphicon glyphicon-search"></span></button>
+                    </div>
                     </form>
                 </div>
             </div>

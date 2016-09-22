@@ -5,7 +5,7 @@ export class NavBar extends React.Component {
         return (
             <div className="row">
                 <div className="col-xs-12 navbar-nav nav-bar">
-                    SpectateAndChill
+                    <img className="logo" src="../static/specnchill.png"></img>
                 </div>
             </div>
         );
