@@ -1,14 +1,7 @@
 var Constants = require('../constants/ServerConstants');
 var socket = null;
+import {receiveStreams, disconnect, newSocket} from '../actions/SocketActionCreators';
 
-/*
-  SET UP SOCKET CONNECTION
-*/
-var io = require('socket.io-client');
-socket = io.connect('ws://localhost:8080'); //NOTE: need to send user id for this to work
-socket.on('connect', function() {
-  console.log('connected to server!');
-});
 
 /*
   REDUX MIDDLEWARE
@@ -16,11 +9,11 @@ socket.on('connect', function() {
 export function socketMiddleware(store) {
   return next => action => {
     const result = next(action);
-    // if(action.type ===  Constants.ActionTypes.NEW_SOCKET_CONNECTION) {
-    //   console.log('Registered new socket connection with middleware');
-    //   setSocket(action.socket);
-    //   return result;
-    // }
+    if(action.type ===  Constants.ActionTypes.NEW_SOCKET_CONNECTION) {
+      console.log('Registered new socket connection with middleware');
+      setSocket(action.socket);
+      return result;
+    }
     if (socket) {
       backendSwitch(action);
     }
@@ -32,16 +25,16 @@ export function socketMiddleware(store) {
 /*
   Switch for events from the backend
 */
-import {receiveStreams, disconnect} from '../actions/SocketActionCreators';
-var reduxStore = require('../store');
+
+var store = require('../store');
 export function backendSwitch(msg) {
   switch(msg.event) {
     case 'streams':
-      reduxStore.dispatch(receiveStreams(msg.payload));
+      store.dispatch(receiveStreams(msg.payload)); //assume that we ONLY have the streams that are relevant to us
       break;
-    case 'disconnect':
-      reduxStore.dispatch(disconnect());
-      break;
+    // case 'disconnect':
+    //   dispatch(disconnect());
+    //   break;
     default:
   }
 }
@@ -49,4 +42,8 @@ export function backendSwitch(msg) {
 
 export default function setSocket (incomingSocket) {
   socket = incomingSocket;
+}
+
+export function setUserId(id) {
+  socket.send(id);
 }
