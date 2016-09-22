@@ -19,6 +19,7 @@ def request_summoner(request):
             "name":"muchisgosu",
             "language":"en",
             "logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/mushisgosu-profile_image-b1c8bb5fd700025e-300x300.png",
+            "status":"TSM Gosu - Solo Q - Shadowverse later",
             
             "followedBy":[{
                 "summonerId":123456789,
