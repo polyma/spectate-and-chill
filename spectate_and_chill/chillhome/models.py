@@ -28,3 +28,4 @@ class TwitchStreamer(models.Model):
     
     live = models.BooleanField(default=False)
     
+    
