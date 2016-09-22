@@ -22093,28 +22093,27 @@
 	var SearchInputForm = exports.SearchInputForm = function (_React$Component) {
 	    _inherits(SearchInputForm, _React$Component);
 
-	    /*
-	    getSummonerData : function() {
-	        var summonerName = $("#summoner").val();
-	        var region = $("#region").val();
-	        var apiKey = "1d08e678-90be-4c52-b94e-069619ad0e87";
-	          $.ajax({
-	            url: "https://" + region + ".api.pvp.net/api/lol/" + region "/v2.2/matchlist/by-summoner/" + summonerID + "?rankedQueues=RANKED_SOLO_5x5&seasons=SEASON2016&api_key=" + apiKey;
-	            type: 'GET',
-	            dataType: 'json',
-	            data: {},
-	            success: function(json) {
-	                var summonerName = summonerName.replace(" ", "");
-	                var summonerName = summonerName.toLowerCase().trim();
-	                var summonerID = json[summonerName].id;
-	            },
-	            error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                alert("The Summoner does not exist.");
-	            }
-	        });
-	        alert(summonerID);
-	    }
-	    */
+	    // _getSummonerData() {
+	    //     var summonerName = $("#summoner").val();
+	    //     var region = $("#region").val();
+	    //     var apiKey = "1d08e678-90be-4c52-b94e-069619ad0e87";
+	    //
+	    //     $.ajax({
+	    //         url: "https://" + region + ".api.pvp.net/api/lol/" + region "/v2.2/matchlist/by-summoner/" + summonerID + "?rankedQueues=RANKED_SOLO_5x5&seasons=SEASON2016&api_key=" + apiKey;
+	    //         type: 'GET',
+	    //         dataType: 'json',
+	    //         data: {},
+	    //         success: function(json) {
+	    //             var summonerName = summonerName.replace(" ", "");
+	    //             var summonerName = summonerName.toLowerCase().trim();
+	    //             var summonerID = json[summonerName].id;
+	    //         },
+	    //         error: function(XMLHttpRequest, textStatus, errorThrown) {
+	    //             alert("The Summoner does not exist.");
+	    //         }
+	    //     });
+	    //     alert(summonerID);
+	    // }
 
 	    function SearchInputForm(props) {
 	        _classCallCheck(this, SearchInputForm);
@@ -22125,17 +22124,19 @@
 	            summonerName: 'insert',
 	            region: 'euw'
 	        };
-	        _this.changeName = _this.changeName.bind(_this);
-	        _this.changeRegion = _this.changeRegion.bind(_this);
-	        _this.validateInput = _this.validateInput.bind(_this);
+	        _this.changeName = _this._changeName.bind(_this);
+	        _this.changeRegion = _this._changeRegion.bind(_this);
+	        _this.validateInput = _this._validateInput.bind(_this);
+	        // this.getSummonerData = this._getSummonerData.bind(this);
 	        return _this;
 	    }
 
 	    _createClass(SearchInputForm, [{
-	        key: 'validateInput',
-	        value: function validateInput(e) {
+	        key: '_validateInput',
+	        value: function _validateInput(e) {
 	            e.preventDefault();
-	            if (typeof this.state.summonerName === 'string') console.log('error validating!');
+	            //if everythins is ok
+	            this.getSummonerData();
 	        }
 	    }, {
 	        key: 'render',
@@ -22218,13 +22219,13 @@
 	            );
 	        }
 	    }, {
-	        key: 'changeName',
-	        value: function changeName(e) {
+	        key: '_changeName',
+	        value: function _changeName(e) {
 	            this.setState({ summonerName: e.value });
 	        }
 	    }, {
-	        key: 'changeRegion',
-	        value: function changeRegion(e) {
+	        key: '_changeRegion',
+	        value: function _changeRegion(e) {
 	            this.setState({ region: e.value });
 	        }
 	    }]);
