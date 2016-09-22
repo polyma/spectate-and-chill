@@ -6,6 +6,12 @@ import time
 import redis
 
 from cassiopeia import baseriotapi, riotapi
+from django.conf import settings
+
+redisServer = settings.IP_ADDRESS
+#redisServer = "54.183.202.43"
+#redisServer = "redis"
+
 
 # Create your views here.
 def index(request):
@@ -57,7 +63,7 @@ def request_summoner(request):
                     "region":region,
                 }]
         }]
-        r = redis.Redis(host="redis", port=6379)
+        r = redis.Redis(host=redisServer, port=6379)
         r.publish("event", json.dumps(dummyData))
         return HttpResponse()
     except Exception as e:
@@ -69,6 +75,6 @@ def delay404(request):
     raise Http404()
 
 def redisTest(request):
-    r = redis.Redis(host="redis", port=6379)
+    r = redis.Redis(host=redisServer, port=6379)
     r.publish("event", "hello world")
     return HttpResponse()

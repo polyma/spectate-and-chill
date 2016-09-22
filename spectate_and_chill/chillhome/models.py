@@ -27,3 +27,25 @@ class TwitchStreamer(models.Model):
     followers = models.IntegerField()
 
     live = models.BooleanField(default=False)
+
+    
+class Streamer(models.Model):
+    summonerId = models.IntegerField()
+    region = models.CharField(max_length=4)
+    streamService = models.CharField(max_length=10)
+    streamId = models.IntegerField()
+    streamName = models.CharField(max_length=50)
+    
+    class Meta:
+        unique_together = ("streamService","streamId")
+    
+    
+class User(models.Model):
+    summonerId = models.IntegerField()
+    region = models.CharField(max_length=4)
+    summonerName = models.CharField(max_length=24)
+    
+    class Meta:
+        unique_together = ("summonerId", "region")
+        
+    
