@@ -15,7 +15,7 @@ class Recommender(object):
         Gets general recommendations for a user - which streamers they're likely to want to watch in sorted score order with scores
 
         summoner_id    int             the summoner to get recommendations for
-        
+
         returns        list<object>    a list of recommendation objects with score and id
         """
         return [
