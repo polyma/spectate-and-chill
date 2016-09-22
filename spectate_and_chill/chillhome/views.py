@@ -15,6 +15,8 @@ def index(request):
 
 def request_summoner(request):
     # ?summonerName={name}&region={region}
+
+    summoner = None
     try:
         # Request the API
         region = (request.GET.get("region")).lower()
@@ -27,8 +29,12 @@ def request_summoner(request):
         # Save the summoner name/id as part of the user
         #
 
+    except:
+        # Something was wrong or went wrong, assume the summoner doesn't exist
+        raise Http404('no summoner')
+    try:
         dummyData = [{
-            "streamer": {
+                "id": "streamer",
                 "displayName":"MushIsGosu",
                 "name":"muchisgosu",
                 "language":"en",
@@ -46,18 +52,17 @@ def request_summoner(request):
                 "championId":67,
                 "lane":"",
                 "followedBy":[{
+                    "id": "%s_%s"%(summoner.id, region),
                     "summonerId":summoner.id,
                     "region":region,
                 }]
-            }
         }]
         r = redis.Redis(host="redis", port=6379)
         r.publish("event", json.dumps(dummyData))
         return HttpResponse()
+    except Exception as e:
+        raise Http404('KABOOM \n%s'%e)
 
-    except:
-        # Something was wrong or went wrong, assume the summoner doesn't exist
-        raise Http404()
 
 def delay404(request):
     time.sleep(5)

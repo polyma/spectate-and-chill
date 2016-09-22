@@ -1,5 +1,7 @@
 var Constants = require('../constants/ServerConstants');
 var socket = null;
+import {receiveStreams, disconnect, newSocket} from '../actions/SocketActionCreators';
+import {dispatch} from '../store';
 
 /*
   SET UP SOCKET CONNECTION
@@ -8,6 +10,14 @@ var io = require('socket.io-client');
 socket = io.connect('ws://localhost:8080'); //NOTE: need to send user id for this to work
 socket.on('connect', function() {
   console.log('connected to server!');
+  if(dispatch) { //store may not be present TODO: fix this...
+    dispatch(newSocket(socket));
+  }
+  //TODO: remove this
+  setUserId('21505497_euw');
+});
+socket.on('disconnect', function() {
+  dispatch(disconnect());
 });
 
 /*
@@ -32,16 +42,15 @@ export function socketMiddleware(store) {
 /*
   Switch for events from the backend
 */
-import {receiveStreams, disconnect} from '../actions/SocketActionCreators';
-var reduxStore = require('../store');
+
 export function backendSwitch(msg) {
   switch(msg.event) {
     case 'streams':
-      reduxStore.dispatch(receiveStreams(msg.payload));
+      dispatch(receiveStreams(msg.payload));
       break;
-    case 'disconnect':
-      reduxStore.dispatch(disconnect());
-      break;
+    // case 'disconnect':
+    //   dispatch(disconnect());
+    //   break;
     default:
   }
 }
@@ -49,4 +58,8 @@ export function backendSwitch(msg) {
 
 export default function setSocket (incomingSocket) {
   socket = incomingSocket;
+}
+
+export function setUserId(id) {
+  socket.send(id);
 }

@@ -20,4 +20,5 @@ RUN npm cache clean
 
 
 USER app
-CMD ["nodemon", ".", "-L"]
+#CMD ["nodemon", ".", "-L"]
+CMD ["node", "."]

@@ -39,7 +39,7 @@ function rootApp(state = Immutable.Map(), action) {
 /*
   Helper functions for initial state
 */
-let store = createStore(rootApp, Immutable.Map({
+var store = createStore(rootApp, Immutable.Map({
   userId: null,
   userProfileIcon: null,
   streams: Immutable.List(),
