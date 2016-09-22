@@ -20,7 +20,7 @@ from cassiopeia import riotapi
 
 
 riotapi.set_load_policy("lazy")
-riotapi.set_rate_limit((25000, 10))
+riotapi.set_rate_limit(25000, 10)
 riotapi.set_data_store(None)
 riotapi.set_api_key("RGAPI-e4491f0b-b99a-49c4-b817-5f9b00267da1")
 

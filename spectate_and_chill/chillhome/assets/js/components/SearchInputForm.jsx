@@ -1,29 +1,27 @@
 import React from "react"
 
 export class SearchInputForm extends React.Component {
-    /*
-    _getSummonerData() {
-        var summonerName = $("#summoner").val();
-        var region = $("#region").val();
-        var apiKey = "1d08e678-90be-4c52-b94e-069619ad0e87";
-
-        $.ajax({
-            url: "https://" + region + ".api.pvp.net/api/lol/" + region "/v2.2/matchlist/by-summoner/" + summonerID + "?rankedQueues=RANKED_SOLO_5x5&seasons=SEASON2016&api_key=" + apiKey;
-            type: 'GET',
-            dataType: 'json',
-            data: {},
-            success: function(json) {
-                var summonerName = summonerName.replace(" ", "");
-                var summonerName = summonerName.toLowerCase().trim();
-                var summonerID = json[summonerName].id;
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert("The Summoner does not exist.");
-            }
-        });
-        alert(summonerID);
-    }
-    */
+    // _getSummonerData() {
+    //     var summonerName = $("#summoner").val();
+    //     var region = $("#region").val();
+    //     var apiKey = "1d08e678-90be-4c52-b94e-069619ad0e87";
+    //
+    //     $.ajax({
+    //         url: "https://" + region + ".api.pvp.net/api/lol/" + region "/v2.2/matchlist/by-summoner/" + summonerID + "?rankedQueues=RANKED_SOLO_5x5&seasons=SEASON2016&api_key=" + apiKey;
+    //         type: 'GET',
+    //         dataType: 'json',
+    //         data: {},
+    //         success: function(json) {
+    //             var summonerName = summonerName.replace(" ", "");
+    //             var summonerName = summonerName.toLowerCase().trim();
+    //             var summonerID = json[summonerName].id;
+    //         },
+    //         error: function(XMLHttpRequest, textStatus, errorThrown) {
+    //             alert("The Summoner does not exist.");
+    //         }
+    //     });
+    //     alert(summonerID);
+    // }
 
     constructor(props) {
         super(props);
@@ -31,10 +29,10 @@ export class SearchInputForm extends React.Component {
             summonerName: 'insert',
             region: 'euw',
         }
-        this.changeName = this.changeName.bind(this)
-        this.changeRegion = this.changeRegion.bind(this);
-        this.validateInput = this.validateInput.bind(this);
-        this.getSummonerData = this.getSummonerData.bind(this);
+        this.changeName = this._changeName.bind(this)
+        this.changeRegion = this._changeRegion.bind(this);
+        this.validateInput = this._validateInput.bind(this);
+        // this.getSummonerData = this._getSummonerData.bind(this);
     }
 
     _validateInput(e) {
