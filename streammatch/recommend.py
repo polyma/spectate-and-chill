@@ -21,15 +21,18 @@ class Recommender(object):
         return [
             {
                 "id": 5908,
-                "score": 1.0
+                "score": 1.0,
+                "realm": "NA"
             },
             {
                 "id": 51575588,
                 "score": 0.75,
+                "realm": "NA"
             },
             {
                 "id": 20132250,
-                "score": 0.5
+                "score": 0.5,
+                "realm": "NA"
             }
         ]
 
@@ -41,7 +44,19 @@ class Recommender(object):
         score_threshold    float    the interest score limit for users to be interested in the match
         """
         return [
-            22508641,
-            28341307,
-            45193160
+            {
+                "id": 22508641,
+                "score": 1.0,
+                "realm": "NA"
+            },
+            {
+                "id": 28341307,
+                "score": 0.75,
+                "realm": "NA"
+            },
+            {
+                "id": 45193160,
+                "score": 0.5,
+                "realm": "NA"
+            }
         ]
