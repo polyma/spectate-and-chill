@@ -1,5 +1,21 @@
 version: '2'
 services:
+  web:
+    build: ./spectate_and_chill
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - redis
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=icecold
+      - DB_DATABASE=spectatedb
+      - REDIS_URI=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./spectate_and_chill:/code
   notifications-server:
     build: ./notifications-server
     depends_on:
@@ -19,8 +35,6 @@ services:
       - POSTGRES_PASSWORD=icecold
     ports:
       - "5432"
-    environment:
-      - POSTGRES_PASSWORD=icecold
   redis:
     image: redis
     ports:
