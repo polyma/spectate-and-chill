@@ -6,11 +6,18 @@ from django.contrib.postgres.fields import JSONField
 class MatchEverything(models.Model):
     matchId = models.IntegerField() #Long?
     region = models.CharField(max_length=4)
-    json = JSONField() # Double Check
+    json = JSONField()
     
-    # Primary key is the matchId + region 
+    # Primary key is the matchId + region
+    def __str__(self):
+        return "MatchEverything (%s %s)"%(self.matchId, self.region)
+        
+    class Meta:
+        unique_together = ("matchId", "region")
     
 class TwitchStreamer(models.Model):
-    pass
+    twitchId = models.IntegerField()
+    name = models.CharField(max_length=30)
+    display_name = models.CharField(max_length=30)
     
     
