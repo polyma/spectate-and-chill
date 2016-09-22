@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404
 
 import json
-import time 
+import time
+import redis 
 
 
 # Create your views here.
@@ -17,3 +18,8 @@ def request_summoner(request):
 def delay404(request):
     time.sleep(5)
     raise Http404()
+
+def redisTest(request):
+    r = redis.Redis(host="localhost", port=6379)
+    r.publish("event", "hello world")
+    

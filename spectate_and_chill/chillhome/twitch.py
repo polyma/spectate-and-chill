@@ -24,7 +24,17 @@ class Twitch(object):
         response = urllib.request.urlopen(r)
         
         j = json.loads(response.read().decode('utf-8'))
+        totalStreams = j["_total"]
         
+        # Repeat until all streamers pulled
+        streamers = set([])
+        
+        
+        
+        # Create a queryset of streamers found
+        # Do an exclude to find out who's not actively streaming
+        # Turn everyone not actively streaming to "streaming:false"
+        # Turn everyone actively streaming to "streaming:true"
         
         
         
