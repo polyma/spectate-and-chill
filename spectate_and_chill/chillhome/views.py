@@ -6,9 +6,10 @@ import time
 import redis
 
 from cassiopeia import baseriotapi, riotapi
+from django.conf import settings
 
-
-redisServer = "54.183.202.43"
+redisServer = settings.IP_ADDRESS
+#redisServer = "54.183.202.43"
 #redisServer = "redis"
 
 
