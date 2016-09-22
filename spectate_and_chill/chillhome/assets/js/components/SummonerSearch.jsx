@@ -6,7 +6,7 @@ export class SummonerSearch extends React.Component {
     render() {
         return (
             <div className="row">
-                <div className="championSearch">
+                <div className="summ-search">
                     <SearchInputForm/>
                 </div>
             </div>

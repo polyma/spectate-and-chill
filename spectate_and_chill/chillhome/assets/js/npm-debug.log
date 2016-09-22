@@ -1,0 +1,263 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'react-progress-label',
+1 verbose cli   '--save' ]
+2 info using npm@2.15.9
+3 info using node@v4.5.0
+4 verbose install initial load of C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\package.json
+5 warn package.json static@1.0.0 No description
+6 warn package.json static@1.0.0 No repository field.
+7 warn package.json static@1.0.0 No README data
+8 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-core\package.json
+9 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-loader\package.json
+10 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-preset-es2015\package.json
+11 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-preset-react\package.json
+12 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react\package.json
+13 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-dom\package.json
+14 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-hot-loader\package.json
+15 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-loader\package.json
+16 verbose installManyTop reading scoped package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\webpack\package.json
+17 verbose readDependencies loading dependencies from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\package.json
+18 silly cache add args [ 'react-progress-label', null ]
+19 verbose cache add spec react-progress-label
+20 silly cache add parsed spec Result {
+20 silly cache add   raw: 'react-progress-label',
+20 silly cache add   scope: null,
+20 silly cache add   name: 'react-progress-label',
+20 silly cache add   rawSpec: '',
+20 silly cache add   spec: 'latest',
+20 silly cache add   type: 'tag' }
+21 silly addNamed react-progress-label@latest
+22 verbose addNamed "latest" is being treated as a dist-tag for react-progress-label
+23 info addNameTag [ 'react-progress-label', 'latest' ]
+24 silly mapToRegistry name react-progress-label
+25 silly mapToRegistry using default registry
+26 silly mapToRegistry registry https://registry.npmjs.org/
+27 silly mapToRegistry data Result {
+27 silly mapToRegistry   raw: 'react-progress-label',
+27 silly mapToRegistry   scope: null,
+27 silly mapToRegistry   name: 'react-progress-label',
+27 silly mapToRegistry   rawSpec: '',
+27 silly mapToRegistry   spec: 'latest',
+27 silly mapToRegistry   type: 'tag' }
+28 silly mapToRegistry uri https://registry.npmjs.org/react-progress-label
+29 verbose addNameTag registry:https://registry.npmjs.org/react-progress-label not in flight; fetching
+30 verbose request uri https://registry.npmjs.org/react-progress-label
+31 verbose request no auth needed
+32 info attempt registry request try #1 at 10:04:01 AM
+33 verbose request id 02e2d2e450acbd13
+34 http request GET https://registry.npmjs.org/react-progress-label
+35 http 200 https://registry.npmjs.org/react-progress-label
+36 verbose headers { server: 'CouchDB/1.6.1 (Erlang OTP/R16B03)',
+36 verbose headers   etag: '"EMBVPO0E17IBC394GYUG374G5"',
+36 verbose headers   'content-type': 'application/json',
+36 verbose headers   'content-encoding': 'gzip',
+36 verbose headers   'cache-control': 'max-age=300',
+36 verbose headers   'content-length': '2844',
+36 verbose headers   'accept-ranges': 'bytes',
+36 verbose headers   date: 'Thu, 22 Sep 2016 17:04:06 GMT',
+36 verbose headers   via: '1.1 varnish',
+36 verbose headers   age: '0',
+36 verbose headers   connection: 'keep-alive',
+36 verbose headers   'x-served-by': 'cache-sea1927-SEA',
+36 verbose headers   'x-cache': 'MISS',
+36 verbose headers   'x-cache-hits': '0',
+36 verbose headers   'x-timer': 'S1474563846.501078,VS0,VE26',
+36 verbose headers   vary: 'Accept-Encoding' }
+37 silly get cb [ 200,
+37 silly get   { server: 'CouchDB/1.6.1 (Erlang OTP/R16B03)',
+37 silly get     etag: '"EMBVPO0E17IBC394GYUG374G5"',
+37 silly get     'content-type': 'application/json',
+37 silly get     'content-encoding': 'gzip',
+37 silly get     'cache-control': 'max-age=300',
+37 silly get     'content-length': '2844',
+37 silly get     'accept-ranges': 'bytes',
+37 silly get     date: 'Thu, 22 Sep 2016 17:04:06 GMT',
+37 silly get     via: '1.1 varnish',
+37 silly get     age: '0',
+37 silly get     connection: 'keep-alive',
+37 silly get     'x-served-by': 'cache-sea1927-SEA',
+37 silly get     'x-cache': 'MISS',
+37 silly get     'x-cache-hits': '0',
+37 silly get     'x-timer': 'S1474563846.501078,VS0,VE26',
+37 silly get     vary: 'Accept-Encoding' } ]
+38 verbose get saving react-progress-label to C:\Users\Brian\AppData\Roaming\npm-cache\registry.npmjs.org\react-progress-label\.cache.json
+39 verbose correctMkdir C:\Users\Brian\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+40 silly addNameTag next cb for react-progress-label with tag latest
+41 silly addNamed react-progress-label@1.2.1
+42 verbose addNamed "1.2.1" is a plain semver version for react-progress-label
+43 silly mapToRegistry name react-progress-label
+44 silly mapToRegistry using default registry
+45 silly mapToRegistry registry https://registry.npmjs.org/
+46 silly mapToRegistry data Result {
+46 silly mapToRegistry   raw: 'react-progress-label',
+46 silly mapToRegistry   scope: null,
+46 silly mapToRegistry   name: 'react-progress-label',
+46 silly mapToRegistry   rawSpec: '',
+46 silly mapToRegistry   spec: 'latest',
+46 silly mapToRegistry   type: 'tag' }
+47 silly mapToRegistry uri https://registry.npmjs.org/react-progress-label
+48 verbose addRemoteTarball https://registry.npmjs.org/react-progress-label/-/react-progress-label-1.2.1.tgz not in flight; adding
+49 verbose addRemoteTarball [ 'https://registry.npmjs.org/react-progress-label/-/react-progress-label-1.2.1.tgz',
+49 verbose addRemoteTarball   '8e7d8454caf0b09713de29cc6d666625be53e777' ]
+50 info retry fetch attempt 1 at 10:04:01 AM
+51 info attempt registry request try #1 at 10:04:01 AM
+52 http fetch GET https://registry.npmjs.org/react-progress-label/-/react-progress-label-1.2.1.tgz
+53 http fetch 200 https://registry.npmjs.org/react-progress-label/-/react-progress-label-1.2.1.tgz
+54 silly fetchAndShaCheck shasum 8e7d8454caf0b09713de29cc6d666625be53e777
+55 verbose addTmpTarball C:\Users\Brian\AppData\Local\Temp\npm-1004-a75cdf5f\registry.npmjs.org\react-progress-label\-\react-progress-label-1.2.1.tgz not in flight; adding
+56 verbose addTmpTarball already have metadata; skipping unpack for react-progress-label@1.2.1
+57 verbose correctMkdir C:\Users\Brian\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+58 silly cache afterAdd react-progress-label@1.2.1
+59 verbose afterAdd C:\Users\Brian\AppData\Roaming\npm-cache\react-progress-label\1.2.1\package\package.json not in flight; writing
+60 verbose correctMkdir C:\Users\Brian\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+61 verbose afterAdd C:\Users\Brian\AppData\Roaming\npm-cache\react-progress-label\1.2.1\package\package.json written
+62 silly install resolved [ { name: 'react-progress-label',
+62 silly install resolved     version: '1.2.1',
+62 silly install resolved     description: 'progress label component',
+62 silly install resolved     main: 'index.js',
+62 silly install resolved     scripts:
+62 silly install resolved      { build: 'babel lib --out-dir dist & webpack -p',
+62 silly install resolved        start: 'webpack-dev-server -c --port=7788',
+62 silly install resolved        deploy: 'npm run build & github-pages-deploy',
+62 silly install resolved        test: 'echo "Error: no test specified" && exit 1' },
+62 silly install resolved     'github-pages-deploy': { src: 'example' },
+62 silly install resolved     author: { name: 'Wang Zuo' },
+62 silly install resolved     license: 'ISC',
+62 silly install resolved     peerDependencies: { react: '^0.14.0', 'react-dom': '^0.14.0' },
+62 silly install resolved     devDependencies:
+62 silly install resolved      { 'babel-core': '^6.1.21',
+62 silly install resolved        'babel-loader': '^6.2.0',
+62 silly install resolved        'babel-preset-es2015': '^6.1.18',
+62 silly install resolved        'babel-preset-react': '^6.1.18',
+62 silly install resolved        'css-loader': '^0.23.0',
+62 silly install resolved        'github-pages-deploy': '0.0.3',
+62 silly install resolved        less: '^2.5.3',
+62 silly install resolved        'less-loader': '^2.2.1',
+62 silly install resolved        'react-input-color': '^1.7.1',
+62 silly install resolved        'react-input-slider': '^1.3.1',
+62 silly install resolved        'style-loader': '^0.13.0',
+62 silly install resolved        webpack: '^1.12.6' },
+62 silly install resolved     repository:
+62 silly install resolved      { type: 'git',
+62 silly install resolved        url: 'git+https://github.com/wangzuo/react-progress-label.git' },
+62 silly install resolved     keywords: [ 'circle', 'progress', 'react', 'react-component' ],
+62 silly install resolved     bugs: { url: 'https://github.com/wangzuo/react-progress-label/issues' },
+62 silly install resolved     homepage: 'https://github.com/wangzuo/react-progress-label#readme',
+62 silly install resolved     gitHead: 'c038300122bc4e6165cd4fe3711f5615412612e4',
+62 silly install resolved     _id: 'react-progress-label@1.2.1',
+62 silly install resolved     _shasum: '8e7d8454caf0b09713de29cc6d666625be53e777',
+62 silly install resolved     _from: 'react-progress-label@latest',
+62 silly install resolved     _npmVersion: '3.4.0',
+62 silly install resolved     _nodeVersion: '4.1.0',
+62 silly install resolved     _npmUser: { name: 'adjusted', email: 'wzuoadjusted@gmail.com' },
+62 silly install resolved     maintainers: [ [Object] ],
+62 silly install resolved     dist:
+62 silly install resolved      { shasum: '8e7d8454caf0b09713de29cc6d666625be53e777',
+62 silly install resolved        tarball: 'https://registry.npmjs.org/react-progress-label/-/react-progress-label-1.2.1.tgz' },
+62 silly install resolved     directories: {},
+62 silly install resolved     _resolved: 'https://registry.npmjs.org/react-progress-label/-/react-progress-label-1.2.1.tgz' } ]
+63 info install react-progress-label@1.2.1 into C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js
+64 info installOne react-progress-label@1.2.1
+65 verbose installOne of react-progress-label to C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js not in flight; installing
+66 verbose correctMkdir C:\Users\Brian\AppData\Roaming\npm-cache\_locks correctMkdir not in flight; initializing
+67 verbose lock using C:\Users\Brian\AppData\Roaming\npm-cache\_locks\react-progress-label-07e02e9c5adda5b3.lock for C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+68 silly install write writing react-progress-label 1.2.1 to C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+69 verbose unbuild node_modules\react-progress-label
+70 silly gentlyRm C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label is being purged from base C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js
+71 verbose gentlyRm don't care about contents; nuking C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+72 verbose tar unpack C:\Users\Brian\AppData\Roaming\npm-cache\react-progress-label\1.2.1\package.tgz
+73 verbose tar unpacking to C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+74 silly gentlyRm C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label is being purged
+75 verbose gentlyRm don't care about contents; nuking C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+76 silly gunzTarPerm modes [ '777', '666' ]
+77 silly gunzTarPerm extractEntry package.json
+78 silly gunzTarPerm modified mode [ 'package.json', 420, 438 ]
+79 silly gunzTarPerm extractEntry .npmignore
+80 silly gunzTarPerm modified mode [ '.npmignore', 420, 438 ]
+81 silly gunzTarPerm extractEntry README.md
+82 silly gunzTarPerm modified mode [ 'README.md', 420, 438 ]
+83 silly gunzTarPerm extractEntry LICENSE
+84 silly gunzTarPerm modified mode [ 'LICENSE', 420, 438 ]
+85 silly gunzTarPerm extractEntry webpack.config.js
+86 silly gunzTarPerm modified mode [ 'webpack.config.js', 420, 438 ]
+87 silly gunzTarPerm extractEntry index.js
+88 silly gunzTarPerm modified mode [ 'index.js', 420, 438 ]
+89 silly gunzTarPerm extractEntry dist/progress-label.js
+90 silly gunzTarPerm modified mode [ 'dist/progress-label.js', 420, 438 ]
+91 silly gunzTarPerm extractEntry .babelrc
+92 silly gunzTarPerm modified mode [ '.babelrc', 420, 438 ]
+93 silly gunzTarPerm extractEntry lib/progress-label.js
+94 silly gunzTarPerm modified mode [ 'lib/progress-label.js', 420, 438 ]
+95 silly gunzTarPerm extractEntry screenshot.png
+96 silly gunzTarPerm modified mode [ 'screenshot.png', 420, 438 ]
+97 silly gunzTarPerm extractEntry example/app.js
+98 silly gunzTarPerm modified mode [ 'example/app.js', 420, 438 ]
+99 silly gunzTarPerm extractEntry example/app.less
+100 silly gunzTarPerm modified mode [ 'example/app.less', 420, 438 ]
+101 silly gunzTarPerm extractEntry example/index.html
+102 silly gunzTarPerm modified mode [ 'example/index.html', 420, 438 ]
+103 verbose write writing to C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label\package.json
+104 info preinstall react-progress-label@1.2.1
+105 verbose readDependencies loading dependencies from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label\package.json
+106 silly prepareForInstallMany adding react@^0.14.0 from react-progress-label peerDependencies
+107 silly prepareForInstallMany adding react-dom@^0.14.0 from react-progress-label peerDependencies
+108 warn peerDependencies The peer dependency react@^0.14.0 included from react-progress-label will no
+109 warn peerDependencies longer be automatically installed to fulfill the peerDependency
+110 warn peerDependencies in npm 3+. Your application will need to depend on it explicitly.
+111 warn peerDependencies The peer dependency react-dom@^0.14.0 included from react-progress-label will no
+112 warn peerDependencies longer be automatically installed to fulfill the peerDependency
+113 warn peerDependencies in npm 3+. Your application will need to depend on it explicitly.
+114 verbose readDependencies loading dependencies from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label\package.json
+115 silly install resolved []
+116 verbose about to build C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+117 info build C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+118 info linkStuff react-progress-label@1.2.1
+119 silly linkStuff react-progress-label@1.2.1 has C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules as its parent node_modules
+120 verbose linkBins react-progress-label@1.2.1
+121 verbose linkMans react-progress-label@1.2.1
+122 verbose rebuildBundles react-progress-label@1.2.1
+123 info install react-progress-label@1.2.1
+124 info postinstall react-progress-label@1.2.1
+125 verbose readDependencies loading dependencies from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\package.json
+126 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-core\package.json
+127 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-loader\package.json
+128 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-preset-es2015\package.json
+129 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\babel-preset-react\package.json
+130 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react\package.json
+131 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-dom\package.json
+132 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-hot-loader\package.json
+133 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-loader\package.json
+134 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label\package.json
+135 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\webpack\package.json
+136 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\.bin\webpack\package.json
+137 verbose targetResolver reading package data from C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\.bin\webpack.cmd\package.json
+138 verbose already installed skipping react-dom@^0.14.0 C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js
+139 verbose already installed skipping react@^0.14.0 C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js
+140 silly install resolved []
+141 verbose unlock done using C:\Users\Brian\AppData\Roaming\npm-cache\_locks\react-progress-label-07e02e9c5adda5b3.lock for C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\node_modules\react-progress-label
+142 verbose validateInstall loading C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js\package.json for validation
+143 verbose stack Error: The package react@15.3.2 does not satisfy its siblings' peerDependencies requirements!
+143 verbose stack     at C:\Program Files\nodejs\node_modules\npm\lib\install.js:125:32
+143 verbose stack     at C:\Program Files\nodejs\node_modules\npm\lib\install.js:268:7
+143 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:142:5
+143 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:263:14
+143 verbose stack     at cb (C:\Program Files\nodejs\node_modules\npm\node_modules\slide\lib\async-map.js:47:24)
+143 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:263:14
+143 verbose stack     at cb (C:\Program Files\nodejs\node_modules\npm\node_modules\slide\lib\async-map.js:47:24)
+143 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:263:14
+143 verbose stack     at cb (C:\Program Files\nodejs\node_modules\npm\node_modules\slide\lib\async-map.js:47:24)
+143 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:263:14
+144 verbose cwd C:\Users\Brian\Documents\Projects\spectateandchill\spectate_and_chill\chillhome\assets\js
+145 error Windows_NT 10.0.10586
+146 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "react-progress-label" "--save"
+147 error node v4.5.0
+148 error npm  v2.15.9
+149 error code EPEERINVALID
+150 error peerinvalid The package react@15.3.2 does not satisfy its siblings' peerDependencies requirements!
+150 error peerinvalid Peer react-dom@15.3.2 wants react@^15.3.2
+150 error peerinvalid Peer react-loader@2.4.0 wants react@^0.14.0 || ^15.0.0
+150 error peerinvalid Peer react-progress-label@1.2.1 wants react@^0.14.0
+151 verbose exit [ 1, true ]
