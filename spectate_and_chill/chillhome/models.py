@@ -16,8 +16,9 @@ class MatchEverything(models.Model):
         unique_together = ("matchId", "region")
     
 class TwitchStreamer(models.Model):
-    twitchId = models.IntegerField()
+    twitchId = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=30)
     display_name = models.CharField(max_length=30)
-    
+    language = models.CharField(max_length=5)
+    logo = models.CharField(max_length=150)
     

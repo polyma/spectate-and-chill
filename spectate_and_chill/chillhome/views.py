@@ -13,6 +13,21 @@ def index(request):
 
 
 def request_summoner(request):
+    dummyData = [
+        "streamer":{
+            "displayName":"MushIsGosu",
+            "name":"muchisgosu",
+            "language":"en",
+            "logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/mushisgosu-profile_image-b1c8bb5fd700025e-300x300.png",
+            
+            "followedBy":[{
+                "summonerId":123456789,
+                "region":"na",
+            }]
+        }
+    ]
+    r = redis.Redis(host="redis", port=6379)
+    r.publish("event", json.dumps(dummyData))
     return HttpResponse()
 
 def delay404(request):
