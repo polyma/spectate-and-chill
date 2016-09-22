@@ -38,6 +38,12 @@ def request_summoner(request):
                 "totalViews":78560127,
                 "followers":1096293, 
                 
+                "spectateURL":"<complete gibberish>",
+                "twitchURL":"https://www.twitch.tv/mushisgosu",
+                "previewURL_small":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-80x45.jpg",
+                "previewURL_medium":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-320x180.jpg",
+                "previewURL_large":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-640x360.jpg",    
+                
                 "followedBy":[{
                     "summonerId":summoner.id,
                     "region":region,

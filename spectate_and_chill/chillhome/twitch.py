@@ -6,6 +6,8 @@ import json
 
 from .Singleton import Singleton
 
+from .models import TwitchStreamer
+
 
 @Singleton
 class Twitch(object):
@@ -27,14 +29,32 @@ class Twitch(object):
         totalStreams = j["_total"]
         
         # Repeat until all streamers pulled
-        streamers = set([])
+        streamers = append[]
+        ids = []
+        
+        for stream in j["streams"]:
+            ids.append(stream["_id"])
+            streamer, created = TwitchStreamer.objects.update_or_create(
+                twitchId = stream["_id"],
+                name = stream["channel"]["name"],
+                
+                defaults = {
+                    "display_name":stream["channel"]["display_name"],
+                    "language":stream["channel"]["language"],
+                    "logo":stream["channel"]["logo"],
+                    "status":stream["channel"]["status"],
+                    "currentViews":stream["viewers"],
+                    "totalViews":stream["channel"]["views"],
+                    "followers":stream["channel"]["followers"],
+                    "live":True,
+                }
+            )
+            streamers.append(streamer)
         
         
+        # Do an exclude to find out who's not actively streaming, setting streaming to false
+        notLive = TwitchStreamer.objects.exclude(primary_key__in=ids)
         
-        # Create a queryset of streamers found
-        # Do an exclude to find out who's not actively streaming
-        # Turn everyone not actively streaming to "streaming:false"
-        # Turn everyone actively streaming to "streaming:true"
         
         
         
