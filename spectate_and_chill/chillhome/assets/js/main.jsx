@@ -13,23 +13,35 @@ var Content = React.createClass({
     getInitialState: function() {
        return {
            loading: false,
-           showVideo: false,
+           showVideo: true,
+           showRecommendations: false,
+           showTwitchWidget: false
        };
    },
 
    _showVideo: function() {
         this.setState({ showVideo: true }, function() {
-            this.setTimeout(function() {
-                this.setState({ loading: false });
-            }.bind(this), 1000 / 60);
+
         });
     },
 
-    _setLoading: function() {
-        this.setState({ setLoading: true }, function() {
-            this.setTimeout(function() {
-                this.setState({ loading: false });
-            }.bind(this), 1000 / 60);
+    _setLoading: function(loaded) {
+        if (loaded) {
+            this.setState({ setLoading: true }, function() {
+
+            });
+        }
+    },
+
+    _setRecommendatinos: function() {
+        this.setState({ showRecommendations: true }, function() {
+
+        });
+    },
+
+    _setRecommendatinos: function() {
+        this.setState({ setTwitchWidget: true }, function() {
+
         });
     },
 

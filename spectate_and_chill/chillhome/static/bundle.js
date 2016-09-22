@@ -22028,11 +22028,15 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "div",
-	                { className: "row" },
+	                { className: "container-fluid" },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "col-xs-12 navbar-nav nav-bar" },
-	                    _react2.default.createElement("img", { className: "logo", src: "../static/specnchill.png" })
+	                    { className: "row" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "col-xs-12 navbar-nav navbar-fixed-top nav-bar" },
+	                        _react2.default.createElement("img", { className: "logo", src: "../static/specnchill.png" })
+	                    )
 	                )
 	            );
 	        }
@@ -22122,30 +22126,6 @@
 
 	var SearchInputForm = exports.SearchInputForm = function (_React$Component) {
 	    _inherits(SearchInputForm, _React$Component);
-
-	    // _getSummonerData() {
-	    // this.props.setLoading();
-	    //     var summonerName = $("#summoner").val();
-	    //     var region = $("#region").val();
-	    //     var apiKey = "1d08e678-90be-4c52-b94e-069619ad0e87";
-	    //
-	    //     $.ajax({
-	    //         url: "https://" + region + ".api.pvp.net/api/lol/" + region "/v2.2/matchlist/by-summoner/" + summonerID + "?rankedQueues=RANKED_SOLO_5x5&seasons=SEASON2016&api_key=" + apiKey;
-	    //         type: 'GET',
-	    //         dataType: 'json',
-	    //         data: {},
-	    //         success: function(json) {
-	    //             var summonerName = summonerName.replace(" ", "");
-	    //             var summonerName = summonerName.toLowerCase().trim();
-	    //             var summonerID = json[summonerName].id;
-	    // this.props.unsetLoading();
-	    //         },
-	    //         error: function(XMLHttpRequest, textStatus, errorThrown) {
-	    //             alert("The Summoner does not exist.");
-	    //         }
-	    //     });
-	    //     alert(summonerID);
-	    // }
 
 	    function SearchInputForm(props) {
 	        _classCallCheck(this, SearchInputForm);
