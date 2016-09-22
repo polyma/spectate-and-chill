@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import JSONField
 
 class MatchEverything(models.Model):
     matchId = models.IntegerField() #Long?
-    region = models.CharField()
+    region = models.CharField(max_length=4)
     json = JSONField() # Double Check
     
     # Primary key is the matchId + region 
