@@ -19,6 +19,8 @@ services:
       - POSTGRES_PASSWORD=icecold
     ports:
       - "5432"
+    environment:
+      - POSTGRES_PASSWORD=icecold
   redis:
     image: redis
     ports:
