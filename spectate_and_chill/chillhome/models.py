@@ -22,7 +22,8 @@ class TwitchStreamer(models.Model):
     language = models.CharField(max_length=5)
     logo = models.CharField(max_length=150)
     status = models.CharField(max_length=150)
-    views = models.IntegerField()
+    currentViews = modesl.IntegerField()
+    totalViews = models.IntegerField()
     followers = models.IntegerField()
     
     live = models.BooleanField(default=False)

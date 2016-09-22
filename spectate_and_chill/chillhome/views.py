@@ -20,7 +20,8 @@ def request_summoner(request):
             "language":"en",
             "logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/mushisgosu-profile_image-b1c8bb5fd700025e-300x300.png",
             "status":"TSM Gosu - Solo Q - Shadowverse later",
-            "views":78560127,
+            "currentViews":7333,
+            "totalViews":78560127,
             "followers":1096293, 
             
             "followedBy":[{
