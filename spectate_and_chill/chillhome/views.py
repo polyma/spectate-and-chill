@@ -43,7 +43,8 @@ def request_summoner(request):
                 "previewURL_small":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-80x45.jpg",
                 "previewURL_medium":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-320x180.jpg",
                 "previewURL_large":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-640x360.jpg",
-
+                "championId":67,
+                "lane":"",
                 "followedBy":[{
                     "summonerId":summoner.id,
                     "region":region,
