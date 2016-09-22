@@ -1,0 +1,18 @@
+body {
+    background-color: #282C34;
+}
+
+.nav-bar {
+    height: 50px;
+    width: 100%;
+    color: white;
+}
+
+.region-btn {
+    width: 100px;
+}
+
+.search-bar {
+    background-color: #2C323C;
+
+}
