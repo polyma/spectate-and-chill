@@ -71,7 +71,7 @@ def redisTest(request):
     return HttpResponse()
 
     
-def (request):
+def recommendations(request):
     dummyData = [
             {
                 "summonerName":"Hi Im Gosu",

@@ -27,6 +27,7 @@ class TwitchStreamer(models.Model):
     totalViews = models.IntegerField()
     followers = models.IntegerField()
 
+    live = models.BooleanField(default=False)
 
     
 class Streamer(models.Model):

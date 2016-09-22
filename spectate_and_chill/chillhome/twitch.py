@@ -6,7 +6,9 @@ import json
 
 from .Singleton import Singleton
 
-from .models import TwitchStreamer
+from .models import TwitchStreamer, Streamer
+from django.conf import settings
+
 
 
 @Singleton
@@ -94,7 +96,62 @@ class Twitch(object):
                 
         return {}
             
+        
+    def autofind_streamers(self):
+        limit = 100
+        offset = 0
+        url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
+        
+        r = urllib.request.Request(url)
+        r.add_header("Client-ID", self.clientId)
+        response = urllib.request.urlopen(r)
+        j = json.loads(response.read().decode('utf-8'))
+        
+        streamers = set([]) # converted to list later
+        
+        while len(j["streams"]) > 0:
+            # Process
+            for stream in j["streams"]:
+                streamers.add(stream["channel"]["name"])
             
+            # Issue the new call
+            offset += limit
+            url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
+            
+            r = urllib.request.Request(url)
+            r.add_header("Client-ID", self.clientId)
+            response = urllib.request.urlopen(r)
+            
+            j = json.loads(response.read().decode('utf-8'))
+        
+        
+        # Split the streamer names into lists of 40, ideal for checking names
+        streamers = list(streamers)
+        splitLists = [streamers[x:x+40] for x in range(0, len(streamers), 40)]
+        region = "na"
+        url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{names}?api_key={api_key}"
+        
+        summoners = 
+        
+        for sublist in splitLists:
+            url = url.format(
+                region=region,
+                names=",".join(sublist),
+                api_key=settings.APIKEY,
+            )
+        
+            try:
+                r = urllib.request.Request(url)
+                response = urllib.request.urlopen(r)
+                
+                
+                
+            except:
+                pass
+            
+        
+        
+        
         
     def _whos_streaming(self):    
         limit = 100

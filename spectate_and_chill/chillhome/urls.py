@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^summoner/$', views.request_summoner, name='request_summoner'),
     url(r'^delay404/$', views.delay404, name='delay404'),
     url(r'^redis/$', views.redisTest, name='redisTest'),
+    url(r'^recommendations/$', views.recommendations, name='recommendations'),
 ]
