@@ -7,6 +7,11 @@ import redis
 
 from cassiopeia import baseriotapi, riotapi
 
+
+redisServer = "54.183.202.43"
+#redisServer = "redis"
+
+
 # Create your views here.
 def index(request):
     #return HttpResponse("You made it!")
@@ -51,7 +56,7 @@ def request_summoner(request):
                 }]
             }
         }]
-        r = redis.Redis(host="redis", port=6379)
+        r = redis.Redis(host=redisServer, port=6379)
         r.publish("event", json.dumps(dummyData))
         return HttpResponse()
 
@@ -64,6 +69,6 @@ def delay404(request):
     raise Http404()
 
 def redisTest(request):
-    r = redis.Redis(host="redis", port=6379)
+    r = redis.Redis(host=redisServer, port=6379)
     r.publish("event", "hello world")
     return HttpResponse()
