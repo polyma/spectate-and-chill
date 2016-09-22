@@ -51,15 +51,11 @@ def request_summoner(request):
                 "previewURL_large":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-640x360.jpg",
                 "championId":67,
                 "lane":"",
-                "followedBy":[{
-                    "summonerId":summoner.id,
-                    "region":region,
-                }]
             }
         }]
-        r = redis.Redis(host=redisServer, port=6379)
-        r.publish("event", json.dumps(dummyData))
-        return HttpResponse()
+        #r = redis.Redis(host=redisServer, port=6379)
+        #r.publish("event", json.dumps(dummyData))
+        return HttpResponse(json.dumps(dummyData))
 
     except:
         # Something was wrong or went wrong, assume the summoner doesn't exist
@@ -73,3 +69,22 @@ def redisTest(request):
     r = redis.Redis(host=redisServer, port=6379)
     r.publish("event", "hello world")
     return HttpResponse()
+
+    
+def (request):
+    dummyData = [
+            {
+                "summonerName":"Hi Im Gosu",
+                "region":"na",
+                "name":"muchisgosu",
+                "displayName":"MushIsGosu",
+            },
+            {
+                "summonerName":"Voyboy",
+                "region":"na",
+                "name":"voyboy",
+                "displayName":"Voyboy",
+            }
+    ]
+    return HttpResponse(json.dumps(dummyData))
+    

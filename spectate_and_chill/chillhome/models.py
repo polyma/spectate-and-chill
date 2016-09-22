@@ -15,6 +15,7 @@ class MatchEverything(models.Model):
     class Meta:
         unique_together = ("matchId", "region")
 
+        
 class TwitchStreamer(models.Model):
     twitchId = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=30)
@@ -26,18 +27,18 @@ class TwitchStreamer(models.Model):
     totalViews = models.IntegerField()
     followers = models.IntegerField()
 
-    live = models.BooleanField(default=False)
 
     
 class Streamer(models.Model):
     summonerId = models.IntegerField()
     region = models.CharField(max_length=4)
-    streamService = models.CharField(max_length=10)
-    streamId = models.IntegerField()
-    streamName = models.CharField(max_length=50)
+    
+    twitchId = models.IntegerField()
+    twitchName = models.CharField(max_length=50)
+    
     
     class Meta:
-        unique_together = ("streamService","streamId")
+        unique_together = ("twitchId", "summonerId", "region")
     
     
 class User(models.Model):
@@ -48,4 +49,17 @@ class User(models.Model):
     class Meta:
         unique_together = ("summonerId", "region")
         
+    
+    
+class Recommendation(models.Model):
+    summonerId = models.IntegerField()
+    region = models.CharField(max_length=4)
+    
+    twitchId = models.IntegerField()
+    
+    score = models.FloatField()
+    
+    class Meta:
+        unique_together = ("summonerId", "region", "twitchId")
+    
     
