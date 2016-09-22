@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ReactLoader from 'react-progress-label'
+import ReactLoader from 'react-loader'
 
 import {NavBar} from "./components/NavBar.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
+import {About} from "./components/About.jsx"
 
 const reduxStore = require('./store');
 import { Provider } from 'react-redux'
@@ -37,6 +38,7 @@ var Content = React.createClass({
             <div className="row">
                 <NavBar/>
                 <SummonerSearch setLoading={this._setLoading}/>
+                <About />
             </div>
         );
     }
