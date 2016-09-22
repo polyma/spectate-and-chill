@@ -39,20 +39,28 @@ export class SearchInputForm extends React.Component {
 
     _validateInput(e) {
         e.preventDefault();
+<<<<<<< HEAD
+        var re = new RegExp("^([\p{L}_. ]+)$");
+        if (re.test(summonerName)) {
+            this.getSummonerData();
+        }
+=======
         //if everythins is ok
 
+>>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
     }
 
      render() {
         return (
-            <div className="inputForm form-horizontal">
+
+            <div className="inputForm form-horizontal animated fadeInDown">
                 <div className="form-group row">
                 <form onSubmit={this.validateInput}>
                     <div className="col-xs-6 col-xs-offset-2 ">
                         <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-bar" placeholder="Summoner name" ></input>
                     </div>
                     <div>
-                        <select className="col-xs-2 form-control region-btn" value={this.state.region} onChange={this.changeRegion}>
+                        <select className="col-xs-2 form-control region-btn" value={this.state.region} onChange={this._changeRegion} >
                             <option value="na">NA</option>
                             <option value="euw">EUW</option>
                             <option value="eune">EUNE</option>

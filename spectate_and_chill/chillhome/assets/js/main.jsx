@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ReactLoader from 'react-loader'
+import Loader from 'react-loaders'
 
 import {NavBar} from "./components/NavBar.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
+import {TwitchWidget} from "./components/TwitchWidget.jsx"
 
 const reduxStore = require('./store');
 import { Provider, connect } from 'react-redux'
@@ -50,12 +51,20 @@ var Content = React.createClass({
         });
     },
 
-    _setLoading: function(loaded) {
-        if (loaded) {
-            this.setState({ setLoading: true }, function() {
 
-            });
-        }
+
+    _setLoading : function(data) {
+        $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                this.setState({ loading: true });
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
     },
 
     _setTwitchVideo: function() {
@@ -67,9 +76,10 @@ var Content = React.createClass({
     render: function() {
         return (
             <div className="row">
-              <NavBar/>
-              <SummonerSearch setLoading={this._setLoading}/>
-              <About />
+                {if loading == }
+                <NavBar/>
+                <SummonerSearch setLoading={this._setLoading}/>
+                <About />
             </div>
         );
     }
