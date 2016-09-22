@@ -58,13 +58,7 @@ var Content = React.createClass({
         }
     },
 
-    _setRecommendatinos: function() {
-        this.setState({ showRecommendations: true }, function() {
-
-        });
-    },
-
-    _setRecommendatinos: function() {
+    _setTwitchVideo: function() {
         this.setState({ setTwitchWidget: true }, function() {
 
         });
@@ -80,15 +74,6 @@ var Content = React.createClass({
         );
     }
 });
-
-
-// const ContentContainer = ({ streams, backendSwitch }) => (
-//   <Content/>
-// )
-// const ContentSuperContainer = connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(ContentContainer)
 
 
 ReactDOM.render(

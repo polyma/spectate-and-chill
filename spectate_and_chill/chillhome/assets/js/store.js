@@ -7,8 +7,8 @@ import {socketMiddleware} from './middleware/socketMiddleware';
 import StreamConstants from './constants/StreamConstants';
 
 var StreamRecord = new Immutable.Record({
+  id: 0,
   "displayName":"ERROR",
-  "matchId": 0,
   "name":"muchisgosu",
   "language":"en",
   "logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/mushisgosu-profile_image-b1c8bb5fd700025e-300x300.png",
@@ -24,6 +24,12 @@ var StreamRecord = new Immutable.Record({
   "championId":67,
   "lane":"",
 });
+
+var OnlineRecord = new Immutable.Record({
+  id: 0,
+  matchId: 0,
+});
+
 /*
   Create Reducers
 */
@@ -31,6 +37,7 @@ function rootApp(state = Immutable.Map(), action) {
   var stateUpdate =  Immutable.fromJS({
     userId: 0,
     userProfileIcon: 0,
+    onlineList: onlineListReducers(state.get('onlineList'), action),
     streams: streamReducers(state.get('streams'), action),
   });
   console.log('rootapp', stateUpdate.toJS());
@@ -43,33 +50,28 @@ function rootApp(state = Immutable.Map(), action) {
 var store = createStore(rootApp, Immutable.Map({
   userId: null,
   userProfileIcon: null,
-  streams: Immutable.List(),
+  onlineList: Immutable.List(),
+  streams: Immutable.Map(),
 }), applyMiddleware(socketMiddleware,thunkMiddleware));
 
-export function streamReducers(state=Immutable.List(), action) {
+
+export function onlineListReducers(state=Immutable.List(), action) {
+  switch(action.type) {
+    case StreamConstants.ActionTypes.ONLINE_UPDATES:
+    //RESET:
+    state = Immutable.List(action.payload.id, new OnlineRecord(action.payload));
+    return state;
+    break;
+    default:
+    return state;
+    console.log('defaulted on online list reducers')
+  }
+}
+
+export function streamReducers(state=Immutable.Map(), action) {
   switch(action.type) {
     case StreamConstants.ActionTypes.RAW_UPDATES:
-      //RESET:
-      state = state.push(new StreamRecord(
-          action.payload
-          // {
-          // "displayName":action.payload,
-          // "name":action.payload,
-          // "language":action.payload,
-          // "logo":action.payload,
-          // "status":action.payload,
-          // "currentViews":action.payload,
-          // "totalViews":action.payload,
-          // "followers":action.payload,
-          // "spectateURL":action.payload,
-          // "twitchURL":action.payload,
-          // "previewURL_small":action.payload,
-          // "previewURL_medium":action.payload,
-          // "previewURL_large":action.payload,
-          // "championId":action.payload,
-          // "lane":action.payload.lane,
-        // }
-      ));
+      state = state.set(action.payload.id, new StreamRecord(action.payload));
       return state;
     break;
     default:
