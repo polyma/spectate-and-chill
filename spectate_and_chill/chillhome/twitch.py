@@ -29,7 +29,7 @@ class Twitch(object):
         totalStreams = j["_total"]
         
         # Repeat until all streamers pulled
-        streamers = append[]
+        streamers = []
         ids = []
         
         for stream in j["streams"]:
@@ -53,11 +53,108 @@ class Twitch(object):
         
         
         # Do an exclude to find out who's not actively streaming, setting streaming to false
-        notLive = TwitchStreamer.objects.exclude(primary_key__in=ids)
+        #notLive = TwitchStreamer.objects.exclude(primary_key__in=ids)
         
         
         
+    def _get_stream(self, name):
+        url = "https://api.twitch.tv/kraken/streams/%s"%name
+        
+        r = urllib.request.Request(url)
+        r.add_header("Client-ID", self.clientId)
+        response = urllib.request.urlopen(r)
+        
+        j = json.loads(response.read().decode('utf-8'))
         
         
+        if "stream" in j and len(j["stream"]) > 0:
+            # They're streaming, but is it League?
+            if j["stream"]["game"] != "League of Legends":
+                return {}
+                
+            streamInfo = {
+                "language":j["stream"]["channel"]["language"],
+                "displayName":j["stream"]["channel"]["display_name"],
+                "status":j["stream"]["channel"]["status"],
+            
+                # Views
+                "currentViews":j["stream"]["viewers"],
+                "lifetimeViews":j["stream"]["channel"]["views"],
+                "followers":j["stream"]["channel"]["followers"],
+                
+                
+                # Images
+                "smallPreview":j["preview"]["small"],
+                "mediumPreview":j["preview"]["medium"],
+                "largePreview":j["preview"]["large"],
+                "logo":j["channel"]["logo"],
+            }
+            return streamInfo
+            
+                
+        return {}
+            
+            
+        
+    def _whos_streaming(self):    
+        limit = 100
+        offset = 0
+        url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
+        
+        r = urllib.request.Request(url)
+        r.add_header("Client-ID", self.clientId)
+        response = urllib.request.urlopen(r)
+        
+        j = json.loads(response.read().decode('utf-8'))
+        
+        streamers = set([])
+        
+        while len(j["streams"]) > 0:
+            # Process
+            for stream in j["streams"]:
+                streamers.add(stream["channel"]["name"])
+            
+            # Issue the new call
+            offset += limit
+            url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
+            
+            r = urllib.request.Request(url)
+            r.add_header("Client-ID", self.clientId)
+            response = urllib.request.urlopen(r)
+            
+            j = json.loads(response.read().decode('utf-8'))
+        
+        from cassiopeia import baseriotapi, riotapi
+        riotapi.set_load_policy("lazy")
+        riotapi.set_rate_limit(25000, 10)
+        riotapi.set_data_store(None)
+        riotapi.set_api_key("RGAPI-e4491f0b-b99a-49c4-b817-5f9b00267da1")
         
         
+        streamers = list(streamers)
+        
+        baseriotapi.set_region("na")
+        summoners = riotapi.get_summoners_by_name(streamers)
+        
+        # print("Streamers: %s\nSummoners: %s"%(len(streamers),len(summoners)))
+        
+        inGame = []
+        
+        for i in range(len(summoners)):
+            if summoners[i]:
+                hit = riotapi.get_current_game(summoners[i])
+                if hit:
+                    data = hit.data
+                    champion = 0
+                    for participant in data.participants:
+                        if participant.summonerId == summoners[i].id:
+                            champion = participant.championId
+                            
+                        
+                    #inGame.append({"streamer":streamers[i], "champion":
+                    print("%s is in game playing %s"%(streamers[i], champion))
+            #except Exception as e:
+            #    print(e)
+            #    pass
+        
+    
