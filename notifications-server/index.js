@@ -12,8 +12,16 @@ sub.on('message', function(channel, message) {
   let m = JSON.parse(message)
   m.forEach(function(a) {
     a.followedBy.forEach(function(clientObj) {
-      if(clients[clientObj])
-        clients[clientObj].send(a); //TODO: remove followedBy
+      if(clients[clientObj.id]) {
+        console.log('sending to user', clientObj.id)
+        clients[clientObj.id].send({
+          event: 'streams',
+          payload: a,
+        }); //TODO: remove followedBy
+      }
+      else {
+        console.log('cannot send to user', clientObj.id);
+      }
     });
   });
   //Send to socket id;

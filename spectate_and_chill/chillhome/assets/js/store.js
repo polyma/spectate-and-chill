@@ -8,6 +8,7 @@ import StreamConstants from './constants/StreamConstants';
 
 var StreamRecord = new Immutable.Record({
   "displayName":"ERROR",
+  "matchId": 0,
   "name":"muchisgosu",
   "language":"en",
   "logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/mushisgosu-profile_image-b1c8bb5fd700025e-300x300.png",
@@ -49,9 +50,8 @@ export function streamReducers(state=Immutable.List(), action) {
   switch(action.type) {
     case StreamConstants.ActionTypes.RAW_UPDATES:
       //RESET:
-      state = Immutable.List(action.payload.map(function(stream) {
-        return new StreamRecord(
-          stream
+      state = state.push(new StreamRecord(
+          action.payload
           // {
           // "displayName":action.payload,
           // "name":action.payload,
@@ -69,8 +69,7 @@ export function streamReducers(state=Immutable.List(), action) {
           // "championId":action.payload,
           // "lane":action.payload.lane,
         // }
-      );
-      }));
+      ));
       return state;
     break;
     default:
