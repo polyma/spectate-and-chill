@@ -12,6 +12,8 @@ services:
       - DB_HOST=db
       - DB_PASSWORD=icecold
       - DB_DATABASE=spectatedb
+      - REDIS_URI=redis
+      - REDIS_PORT=6379
     volumes:
       - ./spectate_and_chill:/code
   notifications-server:
