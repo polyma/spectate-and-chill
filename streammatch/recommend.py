@@ -1,21 +1,26 @@
 import numpy as np
-import functools
 import pickle
-from sklearn import decomposition, KDTree
+from sklearn import decomposition
+from sklearn.neighbors import KDTree
 
-from cassiopeia import baseriotapi, riotapi
+from cassiopeia import riotapi, baseriotapi
 
 
-NUM_COMPONENTS = 10
+NUM_COMPONENTS = 131
 LEAF_SIZE = 20
 METRIC = "euclidean"
+REQUIRED = {"id", "region"}
 
 
-def get_mastery_vector(champion_indexes, summoner):
-    baseriotapi.set_region(summoner["region"])
-    masteries = baseriotapi.get_champion_masteries(summoner["id"])
-    gen = map(lambda x: x.championPoints, masteries)
-    return normalize(np.fromiter(gen, np.float), norm="l1")
+def summoner_masteries_from_cass(summoner_id):
+    return [x.__dict__ for x in baseriotapi.get_champion_masteries(summoner_id)]
+
+
+def get_mastery_vector(champion_indexes, summoner_masteries):
+    vector = np.zeros(len(champion_indexes), dtype=np.float)
+    for mastery in summoner_masteries:
+        vector[champion_indexes.index(mastery["championId"])] = mastery["championPoints"]
+    return normalize(vector, norm="l1")
 
 
 def normalize(vector, norm="max"):
@@ -38,23 +43,28 @@ class Recommender(object):
         self.__train(general_summoners, streamer_summoners)
 
     def __train(self, general_summoners, streamer_summoners):
-        to_mastery_vector = functools.partial(get_mastery_vector, self.__champion_indexes)
-        data = np.zeros((len(self.__champion_indexes), len(general_summoners)), dtype=np.float)
-        for i, row in enumerate(map(to_mastery_vector, general_summoners)):
+        data = np.zeros((len(general_summoners), len(self.__champion_indexes)), dtype=np.float)
+        for i, row in enumerate(map(lambda x: get_mastery_vector(self.__champion_indexes, x["masteries"]), general_summoners)):
             data[i] = row
 
         self.__projection = decomposition.PCA(n_components=NUM_COMPONENTS)
         self.__projection.fit(data)
-        # self.__projection.explained_variance_ # Eigenvalues
 
         points = np.zeros((len(streamer_summoners), NUM_COMPONENTS), dtype=np.float)
-        for i, row in enumerate(map(to_mastery_vector, streamer_summoners)):
+        for i, row in enumerate(map(lambda x: get_mastery_vector(self.__champion_indexes, x["masteries"]), streamer_summoners)):
             points[i] = self.__projection.transform(row)
 
         self.__streamer_tree = KDTree(points, leaf_size=LEAF_SIZE, metric=METRIC)
-        self.__streamer_index = streamer_summoners
-        self.__user_tree = None
-        self.__user_index = []
+        self.__streamer_index = list()
+        for s in streamer_summoners:
+            s = dict(s)
+            to_remove = set()
+            for key in s:
+                if key not in REQUIRED:
+                    to_remove.add(key)
+            for key in to_remove:
+                del s[key]
+            self.__streamer_index.append(s)
 
     def to_file(self, filepath):
         with open(filepath, "wb") as out_file:
@@ -62,55 +72,41 @@ class Recommender(object):
 
     @staticmethod
     def from_file(filepath):
-        """
-        Loads an existing trained recommender model from a file on disk
-
-        filepath    str            the path on disk to the model file
-
-        returns     Recommender    the recommender loaded from the file
-        """
         with open(filepath, "rb") as in_file:
             return pickle.load(in_file)
 
-    def for_user(self, summoner, num_recommendations=5):
-        """
-        Gets general recommendations for a user - which streamers they're likely to want to watch in sorted score order with scores
-
-        summoner_id    int             the summoner to get recommendations for
-
-        returns        list<object>    a list of recommendation objects with score and id
-        """
-        mastery_vector = get_mastery_vector(self.__champion_indexes, summoner)
+    def recommend(self, summoner, champion_masteries, num_recommendations=12):
+        mastery_vector = get_mastery_vector(self.__champion_indexes, champion_masteries)
         projection = self.__projection.transform(mastery_vector)
-        neighbors = self.__streamer_tree.query(projection, k=num_recommendations)
-        self.__user_tree = KDTree(np.vstack(self.__user_tree.data, projection), leaf_size=LEAF_SIZE, metric=METRIC)
-        self.__user_index.append(summoner)
+        neighbors = self.__streamer_tree.query(projection, k=num_recommendations, return_distance=True)
+
+        distances = neighbors[0]
+        print(distances)
+        indexes = neighbors[1]
+        print(indexes)
 
         return [
             {
                 "id": self.__streamer_index[index]["id"],
                 "region": self.__streamer_index[index]["region"],
-                "score": distance
+                "score": distances[0][i]
             }
-            for distance, index in neighbors
+            for i, index in enumerate(indexes[0])
         ]
 
-    def for_streamer(self, summoner, score_threshold=4):
-        """
-        Gets a list of users likely to be interested in a streamer's new match
 
-        summoner_id        int      the streamer who has just entered a match
-        score_threshold    float    the interest score limit for users to be interested in the match
-        """
-        mastery_vector = get_mastery_vector(self.__champion_indexes, summoner)
-        projection = self.__projection.transform(mastery_vector)
-        neighbors = self.__user_tree.query_radius(projection, score_threshold, sort_results=True, return_distance=True)
+riotapi.set_load_policy("lazy")
+riotapi.set_rate_limit(25000, 10)
+riotapi.set_data_store(None)
+riotapi.set_api_key("RGAPI-e4491f0b-b99a-49c4-b817-5f9b00267da1")
+riotapi.set_region("NA")
 
-        return [
-            {
-                "id": self.__user_index[index]["id"],
-                "region": self.__user_index[index]["region"],
-                "score": distance
-            }
-            for distance, index in neighbors
-        ]
+with open("general_masteries.pkl", "rb") as in_file:
+    general = pickle.load(in_file)
+with open("streamer_masteries.pkl", "rb") as in_file:
+    streamers = pickle.load(in_file)
+
+summoner = riotapi.get_summoner_by_name("DrCyanide")
+summoner = {"id": summoner.id, "region": "NA"}
+masteries = summoner_masteries_from_cass(summoner["id"])
+rec = Recommender(general, streamers)
