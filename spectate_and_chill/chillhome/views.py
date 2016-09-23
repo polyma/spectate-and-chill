@@ -18,6 +18,7 @@ redisServer = settings.IP_ADDRESS
 #redisServer = "redis"
 
 from .models import *
+from .twitch import Twitch
 
 
 
@@ -154,6 +155,29 @@ def redisTest(request):
     r.publish("event", "hello world")
     return HttpResponse()
 
+def add_streamer(request):
+    # ?summonerName={name}&streamerName={name}&region={region}
+    t = Twitch.Instance()
+    
+    region = None
+    summonerName = None
+    streamerName = None
+    try:
+        # Request the API
+        region = (request.GET.get("region")).lower()
+        summonerName = request.GET.get("summonerName")
+        streamerName = request.GET.get("streamerName")
+    except:
+        raise Http404("Must provide region and summonerName")
+
+    success = t.manuallyAddStreamer(streamerName, summonerName, region)
+    if success:
+        return HttpResponse("Successfully added streamer")
+    else:
+        raise Http404("Failed to add streamer")
+    
+    
+    
 def recommendations(request):
     region = ""
     summonerName = ""
@@ -195,7 +219,7 @@ def recommendations(request):
         response = urllib.request.urlopen(r)
         j = json.loads(response.read().decode('utf-8'))
         summonerJson = j[list(j)[0]]
-        print(summonerJson)
+        #print(summonerJson)
         summonerId = summonerJson["id"]
         
         
@@ -208,7 +232,7 @@ def recommendations(request):
         r = urllib.request.Request(url)
         response = urllib.request.urlopen(r)
         champMastery = json.loads(response.read().decode('utf-8'))
-        print (champMastery)
+        #print (champMastery)
 
         #TODO: REPLACE TRY EXCEPT HERE
         recommender = Recommender.from_file("chillhome/model.pkl")
@@ -216,36 +240,41 @@ def recommendations(request):
         response = recommender.recommend({"id":summonerId, "region":region}, champMastery)
 
         #     response = [{"id":"adil", "region":region, "score": 1.0},{"id":"streamer", "region":region, "score": 1.0}]
-        print(response)
+        #print(response)
 
         for r in response:
-            # Find the streamer
-            streamer, created = Streamer.objects.get_or_create(
-                summonerId = r["id"],
-                region = Region.objects.get(slug=r["region"].lower()),
-            )
+            # Find the streamer, they already exist
+            try:
+                streamer = StreamerAccount.objects.get(summonerId = r["id"], region = Region.objects.get(slug=r["region"].lower()))
+                
+                 # Save the response
+                recommendation, created = Recommendation.objects.update_or_create(
+                    user=user,
+                    streamer = streamer,
+                    defaults={
+                        "score":r["score"],
+                    }
+                )
 
-            streamer.save()
-
-            # Save the response
-            recommendation, created = Recommendation.objects.update_or_create(
-                user=summoner,
-                streamer = streamer,
-                defaults={
-                    "score":r["score"],
-                }
-            )
-
-            recommendation.save()
+                recommendation.save()
+                
+            except:
+                print("Unable to use recommendation: %s (%s) -> %s"%(user.summonerName, region.slug, r["id"]))
+                continue
+                
+                
+           
 
         # Pull the recommendations from the DB
-        recommendations = Recommendation.objects.filter(user=summoner).order_by("score")
-        print("Recommendations: %s"%recommendations)
+        recommendations = Recommendation.objects.filter(user=user).order_by("score")
+        #print("Recommendations: %s"%recommendations)
 
         content = []
         for r in recommendations:
+            
+        
             content.append({
-                "twitchName":r.streamer.streamName,
+                "twitchName":r.streamer.stream.name,
                 "summonerId":r.streamer.summonerId,
                 "region":r.streamer.region.slug,
             })

@@ -26,15 +26,15 @@ class Language(models.Model):
 #        unique_together = ("matchId", "region")
 
 class TwitchStream(models.Model):
-    twitchId = models.CharField(primary_key=True, max_length=20)
-    name = models.CharField(max_length=30)
-    display_name = models.CharField(max_length=30)
+    twitchId = models.CharField(primary_key=True, max_length=20, default="")
+    name = models.CharField(max_length=30, default="")
+    display_name = models.CharField(max_length=30, default = "")
     language = models.CharField(max_length=5, default="", blank=True)
 
-    logo = models.CharField(max_length=250, blank=True)
-    previewSmall = models.CharField(max_length=250, blank=True)
-    previewMedium = models.CharField(max_length=250, blank=True)
-    previewLarge = models.CharField(max_length=250, blank=True)
+    logo = models.CharField(max_length=250, blank=True, default="")
+    previewSmall = models.CharField(max_length=250, blank=True, default="")
+    previewMedium = models.CharField(max_length=250, blank=True, default="")
+    previewLarge = models.CharField(max_length=250, blank=True, default="")
 
     status = models.CharField(max_length=150, default="")
     currentViews = models.PositiveIntegerField(default=0)
