@@ -5,11 +5,12 @@ var StreamCard = React.createClass({
         $.getJSON('http://ddragon.leagueoflegends.com/cdn/6.19.1/data/en_US/champion.json', function(data) {
             champions = JSON.stringify(data);
             var championIcon = "";
-            for (var champion in champions.data) {
-                if (champion[key].equals(championId)) {
-                    alert(champion[key]);
-                    alert(champion['image']['full']);
+            for (var champion in champions['data']) {
+                //console.log(champion['key']);
+                //console.log(championId);
+                if (champion['key'].equals(championId)) {
                     championIcon = "http://ddragon.leagueoflegends.com/cdn/6.19.1/img/champion" + champion['image']['full'];
+                    //console.log(championIcon);
                 }
                 break;
             }

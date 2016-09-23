@@ -6,9 +6,9 @@ export class Loading extends React.Component {
         let loader = <Loader className="animated zoomIn" type="ball-scale-ripple" />
         return (
             <div>
-                <img className="snax-load" src="../static/porosnax.png"></img>
                 <div className="load-anim">
                     {loader}
+                    Loading...
                 </div>
             </div>
         );
