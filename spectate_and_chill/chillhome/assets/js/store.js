@@ -7,6 +7,7 @@ import {socketMiddleware} from './middleware/socketMiddleware';
 import StreamConstants from './constants/StreamConstants';
 import ServerConstants from './constants/ServerConstants';
 
+import {getChampionName} from './actions/SocketActionCreators';
 var StreamRecord = new Immutable.Record({
   id: 0,
   "displayName":"ERROR",
@@ -40,9 +41,11 @@ function rootApp(state = Immutable.Map(), action) {
   var stateUpdate =  Immutable.fromJS({
     userId: 0,
     userProfileIcon: 0,
+    isLoading: loadingReducers(state.get('isLoading'), action),
     onlineList: onlineListReducers(state.get('onlineList'), action, state),
     streams: streamReducers(state.get('streams'), action),
     topStream: topStreamReducers(state.get('topStream'), action),
+    currentChampion: championReducers(state.get('currentChampion'), action),
   });
   console.log('rootapp', stateUpdate.toJS());
   return stateUpdate;
@@ -57,7 +60,32 @@ var store = createStore(rootApp, Immutable.Map({
   onlineList: Immutable.List(),
   streams: Immutable.Map(),
   topStream: null,
+  isLoading: false,
+  currentChampion: null,
 }), applyMiddleware(socketMiddleware, thunkMiddleware));
+
+function championReducers(state=null, action) {
+  switch(action.type) {
+    case 'CHAMPION':
+      return action.payload;
+    break;
+    default:
+      return state;
+  }
+}
+
+function loadingReducers(state=false, action) {
+  switch(action.type) {
+    case 'SET_LOADING':
+    return true;
+    break;
+    case 'UNSET_LOADING':
+    return false;
+    break;
+    default:
+    return state;
+  }
+}
 
 function topStreamReducers(state=Immutable.List(), action) {
   switch(action.type) {
@@ -77,10 +105,10 @@ export function onlineListReducers(state=Immutable.List(), action, rootState) {
     case ServerConstants.ActionTypes.SOCKET_MESSAGE:
       //Checkagainst previous list and get diffs
       //get offlines of previous
-      var offline = state.filter(x => (x.matchId === 0))
+      var offline = state.filter(x => (x.twitchLive === false))
       //get all onlines of new
       var online = action.payload.filter(y => {
-        if(y.matchId !== 0) {
+        if(y.twitchLive == true) {
           //online
           return y
         }
@@ -103,8 +131,19 @@ export function onlineListReducers(state=Immutable.List(), action, rootState) {
         new_online.forEach(function(n) {
           console.log(rootState)
           if(rootState.get('streams').get(n.id)) {
+            let s = rootState.get('streams').get(n.id);
+            let c = rootState.get('currentChampion') || ''
             console.log('woo!');
-            window.alert('YES! ' + n.id + ' is online!');
+            getChampionName(rootState.get('streams').get(n.id).get('championId'))
+            .then((res)=> {
+              window.alert('YES! ' + s.name + ' is online ' + (res ? 'playing ' + res.name : ''));
+              championReducers(rootState.get('currentChampion'), {type: 'CHAMPION', payload: null})
+            })
+            .catch(()=> {
+              window.alert('YES! ' + s.name + ' is online!');
+              championReducers(rootState.get('currentChampion'), {type: 'CHAMPION', payload: null})
+            })
+            //unset
           }
         });
       }
@@ -126,7 +165,7 @@ export function streamReducers(state=Immutable.Map(), action) {
     case StreamConstants.ActionTypes.RAW_UPDATES:
       action.payload.forEach(function(stream) {
         state = state.set(stream.id, new StreamRecord(stream));
-      })
+      });
       console.log('Received updates from recommendation endpoint', state);
       return state;
     break;

@@ -73,7 +73,7 @@ class Check_Current_Games(object):
 
 
                     streamer.live = True
-                            
+
                     streamer.save()
                     break # No need to see the rest of their games
                 except urllib.error.HTTPError as e:
@@ -123,7 +123,12 @@ class Check_Current_Games(object):
         # Redis Update Goes Here
         r = redis.Redis(host=redisServer, port=6379)
         r.publish("event", json.dumps(content))
-        
+
+        timer = threading.Timer(60, self.checkAllGames)
+        timer.daemon = True
+        timer.start()
+
+
 
 def schedule_checks(region, summoner_ids, on_new_game, minutes_per_check=2):
     __do_check(region, summoner_ids, on_new_game, minutes_per_check)

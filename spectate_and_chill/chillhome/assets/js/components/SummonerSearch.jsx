@@ -9,9 +9,9 @@ export class SummonerSearch extends React.Component {
             region: 'na',
             error: null
         }
-        this.changeName = this._changeName.bind(this)
-        this.changeRegion = this._changeRegion.bind(this);
-        this.validateInput = this._validateInput.bind(this);
+        this._changeName = this._changeName.bind(this)
+        this._changeRegion = this._changeRegion.bind(this);
+        this._validateInput = this._validateInput.bind(this);
         // this.getSummonerData = this._getSummonerData.bind(this);
     }
 
@@ -39,7 +39,7 @@ export class SummonerSearch extends React.Component {
                   <form >
                     <div className="row summ-search">
                       <div className="col-xs-9">
-                        <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-form" placeholder="Summoner name"></input>
+                        <input value={this.state.summonerName} onChange={this._changeName} id="summoner" className="form-control search-form" placeholder="Summoner name"></input>
                       </div>
                       <div className="col-xs-2 region-btn">
                         <select className="form-control region-form" value={this.state.region} onChange={this._changeRegion}>
@@ -56,7 +56,7 @@ export class SummonerSearch extends React.Component {
                         </select>
                       </div>
                       <div className="col-xs-1 submit submit-button">
-                        <button onClick={this.validateInput} type="submit" className="submit-form">
+                        <button onClick={this._validateInput} type="submit" className="submit-form">
                                         <span className="glyphicon glyphicon-search"></span>
                                     </button>
                                 </div>

@@ -6,9 +6,9 @@ export class Loading extends React.Component {
         let loader = <Loader className="animated zoomIn" type="ball-scale-ripple" />
         return (
             <div>
-                <div className="load-anim">
-                    {loader}
-                    Loading...
+              <div className="load-anim">
+                {loader}
+                Loading... {this.props.status}
                 </div>
             </div>
         );

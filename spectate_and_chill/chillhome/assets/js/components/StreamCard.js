@@ -50,7 +50,7 @@ var StreamCard = React.createClass({
                     <img className="online-pic" src={champion}></img>
                     <span className="lane"> {this.props.lane ? this.props.lane : null} </span>
                   </div>
-                    <img className="stream-preview" src={this.props.previewURL_large}></img>
+                  <img className="stream-preview" src={this.props.previewURL_large}></img>
                 </div>
             :
                 // Offline card

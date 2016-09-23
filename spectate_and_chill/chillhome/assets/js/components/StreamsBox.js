@@ -27,10 +27,11 @@ var rankStreams = function rankStream(streams, onlineList, setTopOnline) {
     var s = streams.toIndexedSeq().toArray().map((stream, i) => {
       var isOnline = false;
       onlineList.map((online) => {
-        if(stream.get('id') === online.id && online.matchId !== 0) {
+        if(stream.get('id') === online.id && (online.twitchLive == true)) {
           isOnline = true;
         }
       });
+      console.log(isOnline);
       return {
         isOnline,
         name: stream.get('name'),
@@ -47,7 +48,6 @@ var rankStreams = function rankStream(streams, onlineList, setTopOnline) {
         return (
           <div key={x + "o"} top={m.name} className="col-xs-4">
             <StreamCard
-
               score={m.score}
               online={m.isOnline}
               {...m.stream.toJS()}
@@ -70,6 +70,7 @@ var rankStreams = function rankStream(streams, onlineList, setTopOnline) {
         );
       }
     });
+    console.log(onlines, 'onlines');
     var full_list = onlines.concat(offlines)
     setTopOnline(full_list[0]);
     return full_list;

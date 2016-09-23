@@ -76,10 +76,31 @@ export function getRecommendations(userId, region) {
         // Here, we update the app state with the results of the API call.
         console.log('received result for recommendations', json);
         dispatch(receiveStreams(json));
+        dispatch({type: 'UNSET_LOADING', payload: false})
       })
       // .catch(err => dispatch(error(err)));
 //NOTE: WE MAY NEED import 'babel-polyfill' http://redux.js.org/docs/advanced/AsyncActions.html
       // In a real world app, you also want to
       // catch any error in the network call.
+  }
+}
+export function getChampionName(championId) {
+  console.log('beginning champion ID request...');
+  return function (dispatch) {
+    return fetch('http://pentasteal.lol/common/champions/na')
+      .then(response => response.json())
+      .then(json => {
+        // We can dispatch many times!
+        // Here, we update the app state with the results of the API call.
+        dispatch(receiveChampion(json.champion[championId]));
+        return json;
+      });
+}
+}
+
+export function receiveChampion(championObj){
+  return {
+    type: 'CHAMPION',
+    payload: championObj,
   }
 }

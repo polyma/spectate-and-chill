@@ -19,11 +19,11 @@ import {setUserId, backendSwitch} from './middleware/socketMiddleware';
 var Content = React.createClass({
     getInitialState: function() {
        return {
-           loading: false,
            showRecommendations: false,
            showTwitchWidget: false,
            error: null,
            summonerNameResult: null,
+           status: '',
        };
    },
 
@@ -56,12 +56,20 @@ var Content = React.createClass({
 
     _getSummonerData: function(summonerName, region) {
       console.log('Beginning summoner fetch...', summonerName, region);
-      this.setState({loading: true, error: null}, function() {
+      this.setState({
+        status: 'Grabbing Summoner data',
+      })
+      this.props.setLoad();
+      this.setState({error: null}, function() {
         $.ajax({
           url: window.serverUrl + '/summoner?summonerName=' + summonerName + "&region=" + region,
           success: function(data) {
             this._successfulSummonerRequest(data);
             //Now get the recommendations
+            this.setState({
+              status: 'Initializing recomendations engine',
+            });
+            this.props.setLoad();
             this.props.requestReccos(summonerName, region);
           }.bind(this),
           error: function(xhr, err) {
@@ -73,9 +81,7 @@ var Content = React.createClass({
             }
           }.bind(this),
           complete: function() {
-            this.setState({
-                loading: false,
-            });
+
           }.bind(this),
         })
       });
@@ -88,9 +94,6 @@ var Content = React.createClass({
     },
 
     _successfulSummonerRequest: function(data) {
-        this.setState({
-            loading: false,
-        });
     },
 
     render: function() {
@@ -98,7 +101,7 @@ var Content = React.createClass({
       //   <SummonerSearch getSummonerData={this._getSummonerData}/>
       //   <StreamsBoxContainer/>
       // </div>)
-        if (!this.state.loading) {
+        if (!this.props.isLoading) {
             if (this.props.streams.size > 0) {
                 $("#bgvid").addClass("hidden");
                 return (
@@ -107,12 +110,12 @@ var Content = React.createClass({
                       <StreamsBoxContainer/>
                     </div>
                 )
-            } else if (this.state.showTwitchWidget){
+            } else if (this.state.showTwitchWidget && this.props.stateFul.get('streams')){
                 $("#bgvid").addClass("hidden");
                 return (
                     <div className="row">
                       <NavBar />
-                      <TwitchWidget />
+                      <TwitchWidget name={this.stateFul ? this.stateFul.get('topStream') : null}/>
                       <StreamsBoxContainer/>
                     </div>
                 )
@@ -131,7 +134,7 @@ var Content = React.createClass({
             return (
                 <div className="row">
                   <NavBar />
-                  <Loading />
+                  <Loading status={this.state.status}/>
                 </div>
             )
         }
@@ -140,14 +143,22 @@ var Content = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-      streams: state.get('streams'),
+    isLoading: state.get('isLoading'),
+    stateFul: state,
+    streams: state.get('streams'),
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
     requestReccos: (sn, reg) => {
       dispatch(getRecommendations(sn, reg))
-    }
+    },
+    setLoad: function() {
+      dispatch({type: 'SET_LOADING', payload: true})
+    },
+    unSetLoad: function() {
+      dispatch({type: 'UNSET_LOADING', payload: false})
+    },
   }
 }
 
