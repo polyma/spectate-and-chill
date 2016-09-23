@@ -20,12 +20,16 @@ from django.conf import settings
 from cassiopeia import riotapi
 #from chillhome.RecommenderWrapper import RecommenderWrapper
 
+from chillhome.current_game_checks import Check_Current_Games
 
 riotapi.set_load_policy("lazy")
 riotapi.set_rate_limit(25000, 10)
 riotapi.set_data_store(None)
 riotapi.set_api_key(settings.APIKEY)
 
+ccg = Check_Current_Games.Instance()
+# Start a non-blocking call
+ccg.checkAllGames()
 
 #recommender = RecommenderWrapper.Instance()
 

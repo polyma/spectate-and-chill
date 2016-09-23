@@ -1,4 +1,4 @@
-#import threading
+import threading
 
 #from cassiopeia import baseriotapi
 #from cassiopeia.type.core.currentgame import Game
@@ -10,19 +10,21 @@ from .models import *
 import time
 import redis
 from django.conf import settings
+import urllib.request
+import urllib.error
+import urllib.parse 
+import json
+
 
 redisServer = settings.IP_ADDRESS
 
 
 @Singleton
-class Check_Current_Games(objects):
+class Check_Current_Games(object):
     def __init__(self):
         self.twitchApi = Twitch.Instance()
+        self.running = True
         
-    def loopManager(self):
-        while true:
-            self.checkAllGames()
-            time.sleep(120)
         
     def checkAllGames(self):    
         streamers = TwitchStream.objects.all()
@@ -33,6 +35,7 @@ class Check_Current_Games(objects):
             streamer = self.twitchApi.update_TwitchStream(streamer)
             
             streamer.matchId = "0"
+            streamer.regionSlug = ""
             streamer.encryptionKey = ""
             streamer.championId = 0
             
@@ -54,6 +57,7 @@ class Check_Current_Games(objects):
                     gameJson = json.loads(response.read().decode('utf-8'))
                     
                     # They're in a game
+                    streamer.regionSlug = account.region.slug
                     streamer.matchId = gameJson["gameId"]
                     if "observers" in gameJson and "encryptionKey" in gameJson["observers"]:
                         streamer.encryptionKey = gameJson["observers"]["encryptionKey"]
@@ -70,19 +74,6 @@ class Check_Current_Games(objects):
                     # They're not in a game on this account
                     pass
                 
-            
-    
-        # Streamers who have all of their accounts with a matchId == 0, set TwitchStream offline
-        #twitchStreams = TwitchStream.objects.all()
-        #for ts in twitchStreams:
-        #    streamerAccounts = StreamerAccount.objects.filter(streamId=ts.twitchId, streamName=ts.name)
-        #    if streamerAccounts.count() == 0:
-        #        ts.live = False
-        #    else:
-        #        ts.live = True
-        #        # Update the TwitchStream based on the API
-        #    ts.save()
-        #    
         
         # Convert all streamers to a list
         streamers = TwitchStream.objects.all()
@@ -99,7 +90,10 @@ class Check_Current_Games(objects):
             item["currentViews"] = streamer.currentViews
             item["totalViews"] = streamer.totalViews
             item["followers"] = streamer.followers
+            item["twitchLive"] = streamer.live
             
+            item["matchId"] = streamer.matchId
+            item["region"] = streamer.regionSlug
             item["encryptionKey"] = streamer.encryptionKey
             item["twitchURL"] = "https://www.twitch.tv/%s"%streamer.name
             item["previewURL_small"] = streamer.previewSmall
@@ -109,10 +103,18 @@ class Check_Current_Games(objects):
             
             content.append(item)
         
+        #print(json.dumps(content))
+        
         # Redis Update Goes Here
         r = redis.Redis(host=redisServer, port=6379)
         r.publish("event", json.dumps(content))        
 
+        
+        timer = threading.Timer(60 * 2, self.checkAllGames)
+        timer.daemon = True
+        timer.start()
+        
+        
             
 def schedule_checks(region, summoner_ids, on_new_game, minutes_per_check=2):
     __do_check(region, summoner_ids, on_new_game, minutes_per_check)

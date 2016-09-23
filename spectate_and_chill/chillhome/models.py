@@ -41,8 +41,10 @@ class TwitchStream(models.Model):
     totalViews = models.PositiveIntegerField(default=0)
     followers = models.PositiveIntegerField(default=0)
     
-    matchId = models.CharField(max_length=15, default="0")
+    
     championId = models.IntegerField(default=0)
+    matchId = models.CharField(max_length=15, default="0")
+    regionSlug = models.CharField(max_length=4, default="")
     encryptionKey = models.CharField(max_length=40, default="")
     
     live = models.BooleanField(default=False)
