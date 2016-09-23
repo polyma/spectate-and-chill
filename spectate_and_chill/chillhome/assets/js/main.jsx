@@ -117,6 +117,7 @@ var Content = React.createClass({
                     <div className="row">
                       <NavBar />
                       <TwitchWidget />
+                      <StreamsBoxContainer/>
                     </div>
                 )
             } else {
