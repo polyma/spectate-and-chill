@@ -33,6 +33,7 @@ var StreamCard = React.createClass({
 
     render: function() {
         var champion = this.getChampion(this.props.championId);
+        var url = "https://www.twitch.tv/" + this.props.name;
         return (
           <div className="animated">
             {this.props.displayName}
@@ -41,7 +42,7 @@ var StreamCard = React.createClass({
                 <div className="online-card">
                     <div className="card-name">
                         <div className="online"><p>ONLINE</p></div>
-                        <p>{this.props.name}</p>
+                        <a href={this.url} target="_blank" >{this.props.name}</a>
                     </div>
                     <div className="card-pics">
                         <img className="online-pic" src={this.props.logo}></img>
@@ -55,7 +56,7 @@ var StreamCard = React.createClass({
                 <div className="offline-card">
                     <div className="card-name">
                         <div className="offline"><p>OFFLINE</p></div>
-                        <p>{this.props.name}</p>
+                        <a href={this.url} target="_blank" >{this.props.name}</a>
                     </div>
                     <img className="offline-pic" src={this.props.logo}></img>
                 </div>

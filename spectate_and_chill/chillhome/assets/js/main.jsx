@@ -8,7 +8,6 @@ import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
 import {TwitchWidget} from "./components/TwitchWidget.jsx"
 import {Loading} from "./components/Loading.jsx"
-import {ErrorBox} from "./components/ErrorBox.jsx"
 
 const reduxStore = require('./store');
 import { Provider, connect } from 'react-redux'
@@ -53,10 +52,6 @@ var Content = React.createClass({
 
     },
 
-    _getError : function() {
-        error = this.state.error
-    },
-
     _setTwitchVideo: function() {
         this.setState({ setTwitchWidget: true }, function() {
 
@@ -65,28 +60,13 @@ var Content = React.createClass({
 
     _getSummonerData: function(summonerName, region) {
       console.log('Beginning summoner fetch...', summonerName, region);
-<<<<<<< HEAD
-      this.setState({loading: true}, function() {
-         this._successfulSummonerRequest();
-         this.props.requestReccos(summonerName, region);
-         /*
-=======
       this.setState({loading: true, error: null}, function() {
->>>>>>> 11ce2484238c65b1563f843ae4f42ea91c102f62
         $.ajax({
           url: window.serverUrl + '/summoner?summonerName=' + summonerName + "&region=" + region,
           success: function(data) {
             this._successfulSummonerRequest(data);
             //Now get the recommendations
             this.props.requestReccos(summonerName, region);
-<<<<<<< HEAD
-          },
-          error: function(err) {
-            this.setState({error: err});
-          }
-        }).bind(this)
-        */
-=======
           }.bind(this),
           error: function(xhr, err) {
             if(xhr.status === 404) {
@@ -102,7 +82,6 @@ var Content = React.createClass({
             });
           }.bind(this),
         })
->>>>>>> 11ce2484238c65b1563f843ae4f42ea91c102f62
       });
     },
 
@@ -128,44 +107,25 @@ var Content = React.createClass({
                 $("#bgvid").addClass("hidden");
                 return (
                     <div className="row">
-<<<<<<< HEAD
-                        <ErrorBox />
-                        <NavBar />
-                        <StreamsBoxContainer/>
-=======
                       <NavBar />
                       <StreamsBoxContainer/>
->>>>>>> 11ce2484238c65b1563f843ae4f42ea91c102f62
                     </div>
                 )
             } else if (this.state.showTwitchWidget){
                 $("#bgvid").addClass("hidden");
                 return (
                     <div className="row">
-<<<<<<< HEAD
-                        <ErrorBox />
-                        <NavBar />
-                        <TwitchWidget />
-=======
                       <NavBar />
                       <TwitchWidget />
->>>>>>> 11ce2484238c65b1563f843ae4f42ea91c102f62
                     </div>
                 )
             } else {
                 $("#bgvid").removeClass("hidden");
                 return (
                     <div className="row">
-<<<<<<< HEAD
-                        <ErrorBox />
-                        <Logo />
-                        <SummonerSearch getSummonerData={this._getSummonerData}/>
-                        <About />
-=======
                       <Logo />
                       <SummonerSearch getSummonerData={this._getSummonerData}/>
                       <About />
->>>>>>> 11ce2484238c65b1563f843ae4f42ea91c102f62
                     </div>
                 )
             }
@@ -173,14 +133,8 @@ var Content = React.createClass({
             $("#bgvid").addClass("hidden");
             return (
                 <div className="row">
-<<<<<<< HEAD
-                    <ErrorBox />
-                    <NavBar />
-                    <Loading />
-=======
                   <NavBar />
                   <Loading />
->>>>>>> 11ce2484238c65b1563f843ae4f42ea91c102f62
                 </div>
             )
         }
