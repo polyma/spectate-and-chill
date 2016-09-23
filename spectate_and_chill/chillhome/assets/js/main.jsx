@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Loader from 'react-loaders'
 
 import {NavBar} from "./components/NavBar.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
