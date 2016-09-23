@@ -76,7 +76,7 @@ class Check_Current_Games(object):
                 except urllib.error.HTTPError as e:
                     # They're not in a game on this account
                     pass
-
+            streamer.save()
 
         # Convert all streamers to a list
         streamers = TwitchStream.objects.all()
