@@ -1,8 +1,11 @@
 var Constants = require('../constants/ServerConstants');
 var socket = null;
+import {receiveStreams, disconnect, newSocket} from '../actions/SocketActionCreators';
 
 
-
+/*
+  REDUX MIDDLEWARE
+*/
 export function socketMiddleware(store) {
   return next => action => {
     const result = next(action);
@@ -12,7 +15,7 @@ export function socketMiddleware(store) {
       return result;
     }
     if (socket) {
-      frontendSwitch(action);
+      backendSwitch(action);
     }
 
     return result;
@@ -22,38 +25,16 @@ export function socketMiddleware(store) {
 /*
   Switch for events from the backend
 */
-import {setOwnerStreaming, userUpdate, receiveMessage, disconnect} from '../actions/ChatServerActionCreators';
-var reduxStore = require('../store');
+
+var store = require('../store');
 export function backendSwitch(msg) {
   switch(msg.event) {
-    case 'msg':
-      reduxStore.dispatch(receiveMessage(msg.payload));
+    case 'streams':
+      store.dispatch(receiveStreams(msg.payload)); //assume that we ONLY have the streams that are relevant to us
       break;
-    case 'user-store-update':
-      reduxStore.dispatch(userUpdate(msg.payload));
-      break;
-    case 'stream-id':
-      reduxStore.dispatch(setOwnerStreaming(msg.payload));
-      break;
-    case 'disconnect':
-      reduxStore.dispatch(disconnect());
-      break;
-    default:
-  }
-}
-
-/*
-  Switch for actions created by the front-end
-*/
-function frontendSwitch(action) {
-  console.log('frontend', action);
-  switch(action.type) {
-    case Constants.ActionTypes.JOIN_STREAM:
-      socket.send({
-        event: 'connect',
-        payload: action.streamId,
-      });
-      break;
+    // case 'disconnect':
+    //   dispatch(disconnect());
+    //   break;
     default:
   }
 }
@@ -61,4 +42,8 @@ function frontendSwitch(action) {
 
 export default function setSocket (incomingSocket) {
   socket = incomingSocket;
+}
+
+export function setUserId(id) {
+  socket.send(id);
 }

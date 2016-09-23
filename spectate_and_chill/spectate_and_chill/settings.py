@@ -16,6 +16,12 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+#IP_ADDRESS = "127.0.0.1"
+IP_ADDRESS = "54.183.202.43"
+
+APIKEY = "RGAPI-e4491f0b-b99a-49c4-b817-5f9b00267da1"
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -74,27 +80,31 @@ WSGI_APPLICATION = 'spectate_and_chill.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 #DATABASES = {
 #    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'spectatedb',
-#        'PORT': '5432', 
-#        'HOST': '127.0.0.1',
-#        'USER': 'postgres',
-#        'PASSWORD': 'icecold',
-#        
-#    },
-#    'options':{
-#    	'timeout': 50, # Originally 10, this is a temp fix for SQLite multithreading issues
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #    }
 #}
+
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'PORT': '5432', 
+        #'HOST': '172.31.19.79',
+        #'HOST': '54.183.202.43',
+        'HOST': IP_ADDRESS,
+        'USER': 'sandc',
+        'PASSWORD': 'icecold',
+        
+    },
+    'options':{
+    	'timeout': 50, # Originally 10, this is a temp fix for SQLite multithreading issues
+    }
+}
 
 
 # Password validation
@@ -134,3 +144,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/var/www/html/static/'

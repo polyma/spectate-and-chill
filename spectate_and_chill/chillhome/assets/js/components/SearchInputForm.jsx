@@ -1,33 +1,13 @@
 import React from "react"
 
 export class SearchInputForm extends React.Component {
-    // _getSummonerData() {
-    //     var summonerName = $("#summoner").val();
-    //     var region = $("#region").val();
-    //     var apiKey = "1d08e678-90be-4c52-b94e-069619ad0e87";
-    //
-    //     $.ajax({
-    //         url: "https://" + region + ".api.pvp.net/api/lol/" + region "/v2.2/matchlist/by-summoner/" + summonerID + "?rankedQueues=RANKED_SOLO_5x5&seasons=SEASON2016&api_key=" + apiKey;
-    //         type: 'GET',
-    //         dataType: 'json',
-    //         data: {},
-    //         success: function(json) {
-    //             var summonerName = summonerName.replace(" ", "");
-    //             var summonerName = summonerName.toLowerCase().trim();
-    //             var summonerID = json[summonerName].id;
-    //         },
-    //         error: function(XMLHttpRequest, textStatus, errorThrown) {
-    //             alert("The Summoner does not exist.");
-    //         }
-    //     });
-    //     alert(summonerID);
-    // }
 
     constructor(props) {
         super(props);
         this.state = {
-            summonerName: 'insert',
+            summonerName: 'Summoner Name',
             region: 'euw',
+            error: null,
         }
         this.changeName = this._changeName.bind(this)
         this.changeRegion = this._changeRegion.bind(this);
@@ -37,20 +17,28 @@ export class SearchInputForm extends React.Component {
 
     _validateInput(e) {
         e.preventDefault();
-        //if everythins is ok
-        this.getSummonerData();
+        var re = new RegExp("^([\p{L}_. ]+)$");
+        if (re.test(summonerName)) {
+            this.props.getSummonerData(this.state.summonerName, this.state.region);
+        }
+        else {
+            this.setState({error: 'SUMMONER NAME INCORRECTLY FORMATTED'})
+        }
     }
 
-     render() {
+    render() {
         return (
-            <div className="inputForm form-horizontal">
+            <div className="inputForm form-horizontal animated fadeInDown">
                 <div className="form-group row">
+                {this.state.error
+                ? <h2>ERROR {this.state.error}</h2>
+                : null}
                 <form onSubmit={this.validateInput}>
                     <div className="col-xs-6 col-xs-offset-2 ">
                         <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-bar" placeholder="Summoner name" ></input>
                     </div>
                     <div>
-                        <select className="form-control region-btn" value={this.state.region} onChange={this.changeRegion}>
+                        <select className="col-xs-2 form-control region-btn" value={this.state.region} onChange={this._changeRegion} >
                             <option value="na">NA</option>
                             <option value="euw">EUW</option>
                             <option value="eune">EUNE</option>
@@ -63,7 +51,9 @@ export class SearchInputForm extends React.Component {
                             <option value="tr">TR</option>
                         </select>
                     </div>
-                    <button type="submit"/>
+                    <div className="submit col-xs-1">
+                    <button type="submit" className="submit-button"><span className="glyphicon glyphicon-search"></span></button>
+                    </div>
                     </form>
                 </div>
             </div>

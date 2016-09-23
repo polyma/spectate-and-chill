@@ -9,9 +9,19 @@ sub.on('connect', function(err, count) {
 sub.on('message', function(channel, message) {
   console.log('message', message, 'received from', channel);
   // should be an  array
-  array.forEach(function(a) {
+  let m = JSON.parse(message)
+  m.forEach(function(a) {
     a.followedBy.forEach(function(clientObj) {
-      clients[clientObj].send(a); //TODO: remove followedBy
+      if(clients[clientObj.id]) {
+        console.log('sending to user', clientObj.id)
+        clients[clientObj.id].send({
+          event: 'streams',
+          payload: a,
+        }); //TODO: remove followedBy
+      }
+      else {
+        console.log('cannot send to user', clientObj.id);
+      }
     });
   });
   //Send to socket id;
@@ -30,11 +40,13 @@ io.on('connection', function(socket){
     console.log('user', socket.id, 'disconnected');
   });
   socket.on('message', function(msg) {
+    //NOTE: the only messages we receive from the frontend contain the user id that they are
     //Message containing summoner id + realm
     console.log('message received from client', msg);
     //sign up for their own channel
-    socket.id = msg.id;
-    clients[id] = socket;
+    socket.id = msg;
+    console.log('set user socket id to', socket.id);
+    clients[socket.id] = socket;
   });
 });
 
