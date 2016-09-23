@@ -33,6 +33,8 @@ class Check_Current_Games(objects):
             streamer = self.twitchApi.update_TwitchStream(streamer)
             
             streamer.matchId = "0"
+            streamer.encryptionKey = ""
+            streamer.championId = 0
             
             accounts = StreamerAccount.objects.filter(stream=streamer)
             for account in accounts:
@@ -53,6 +55,15 @@ class Check_Current_Games(objects):
                     
                     # They're in a game
                     streamer.matchId = gameJson["gameId"]
+                    if "observers" in gameJson and "encryptionKey" in gameJson["observers"]:
+                        streamer.encryptionKey = gameJson["observers"]["encryptionKey"]
+                        
+                    # Find their champion
+                    for participant in gameJson["participants"]:
+                        if participant["summonerId"] == account.summonerId:
+                            streamer.championId = participant["championId"]
+                    
+                    
                     streamer.save()
                     break # No need to see the rest of their games
                 except urllib.error.HTTPError as e:
@@ -77,8 +88,30 @@ class Check_Current_Games(objects):
         streamers = TwitchStream.objects.all()
         
         content = []
+        for streamer in streamers:
+            item = {}
+            item["id"] = streamer.twitchId
+            item["displayName"] = streamer.display_name
+            item["name"] = streamer.name
+            item["language"] = streamer.language
+            item["logo"] = streamer.logo
+            item["status"] = streamer.status
+            item["currentViews"] = streamer.currentViews
+            item["totalViews"] = streamer.totalViews
+            item["followers"] = streamer.followers
+            
+            item["encryptionKey"] = streamer.encryptionKey
+            item["twitchURL"] = "https://www.twitch.tv/%s"%streamer.name
+            item["previewURL_small"] = streamer.previewSmall
+            item["previewURL_medium"] = streamer.previewMedium
+            item["previewURL_large"] = streamer.previewLarge
+            item["championId"] = streamer.championId
+            
+            content.append(item)
         
-        # Redis Update Goes Here        
+        # Redis Update Goes Here
+        r = redis.Redis(host=redisServer, port=6379)
+        r.publish("event", json.dumps(content))        
 
             
 def schedule_checks(region, summoner_ids, on_new_game, minutes_per_check=2):
