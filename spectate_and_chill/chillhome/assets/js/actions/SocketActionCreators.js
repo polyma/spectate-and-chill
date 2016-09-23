@@ -30,16 +30,23 @@ export function disconnect() {
   }
 }
 
-export function getRecommendations() {
+export function requestRecommendations() {
   return {
     type: StreamConstants.ActionTypes.REQUEST_RECOMMENDATIONS,
   }
 }
 
-export function getRecommendations(userId) {
+export function error(string) {
+  return {
+    type: 'ERROR',
+    payload: string,
+  }
+}
+
+export function getRecommendations(userId, region) {
   return function (dispatch) {
-    dispatch(getRecommendations());
-    return fetch(window.serverUrl + '/recommendations?user_id=' + userId)
+    dispatch(requestRecommendations());
+    return fetch(window.serverUrl + '/summoner?summonerName=' + userId + '&region=' + region)
       .then(response => response.json())
       .then(json => {
         // We can dispatch many times!
@@ -47,6 +54,7 @@ export function getRecommendations(userId) {
         console.log('received result for recommendations', json);
         dispatch(receiveStreams(json));
       })
+      .catch(err => dispatch(error(err)));
 //NOTE: WE MAY NEED import 'babel-polyfill' http://redux.js.org/docs/advanced/AsyncActions.html
       // In a real world app, you also want to
       // catch any error in the network call.
