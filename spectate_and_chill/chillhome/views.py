@@ -187,12 +187,32 @@ def recommendations(request):
         )
         r = urllib.request.Request(url)
         response = urllib.request.urlopen(r)
+        j = json.loads(response.read().decode('utf-8'))
+        summonerJson = j[list(j)[0]]
+        print(summonerJson)
+        summonerId = summonerJson["id"]
+        ##TODO: FIX THIS HACK
+        if region.slug == 'euw':
+            platform_append = 'W1'
+        else:
+            platform_append = ''
+        url = "https://{region}.api.pvp.net/championmastery/location/{platform}/player/{summonerId}/champions?api_key={apikey}".format(
+        region=region.slug,
+        platform=region.region_tag.upper() + platform_append,
+        summonerId=summonerId,
+        apikey=settings.APIKEY,
+        )
+        r = urllib.request.Request(url)
+        response = urllib.request.urlopen(r)
         champMastery = json.loads(response.read().decode('utf-8'))
+        print (champMastery)
 
+        #TODO: REPLACE TRY EXCEPT HERE
         recommender = Recommender.from_file("chillhome/model.pkl")
         #recommender = (RecommenderWrapper.Instance()).recommender
-        response = recommender.recommend({"id":summoner.summonerId, "region":summoner.region.slug}, championMastery)
+        response = recommender.recommend({"id":summonerId, "region":region}, champMastery)
 
+        #     response = [{"id":"adil", "region":region, "score": 1.0},{"id":"streamer", "region":region, "score": 1.0}]
         print(response)
 
         for r in response:

@@ -82,7 +82,7 @@ class Twitch(object):
             stream.previewMedium = twitchJson["stream"]["preview"]["medium"]
             stream.previewLarge = twitchJson["stream"]["preview"]["large"]
             
-            stream.status = twitchJson["stream"]["preview"]["status"]
+            stream.status = twitchJson["stream"]["channel"]["status"]
             stream.currentViews = twitchJson["stream"]["viewers"]
             stream.totalViews = twitchJson["stream"]["channel"]["views"]
             stream.followers = twitchJson["stream"]["channel"]["followers"]
