@@ -271,15 +271,35 @@ def recommendations(request):
 
         content = []
         for r in recommendations:
-
-
             content.append({
-                "id": r.streamer.stream.twitchId,
-                "name": r.streamer.stream.name,
+                #"id": r.streamer.stream.id,
+                #"name": r.streamer.stream.name,
                 "summonerId": r.streamer.summonerId,
                 "region": r.streamer.region.slug,
-                "logo": r.streamer.stream.logo,
-                "status": r.streamer.stream.status,
+                "score": r.score, 
+                
+                #"logo": r.streamer.stream.logo,
+                #"status": r.streamer.stream.status,
+                
+                "id":r.streamer.stream.twitchId,
+                "displayName":r.streamer.stream.display_name,
+                "name":r.streamer.stream.name,
+                "language":r.streamer.stream.language,
+                "logo":r.streamer.stream.logo,
+                "status":r.streamer.stream.status,
+                "currentViews":r.streamer.stream.currentViews,
+                "totalViews":r.streamer.stream.totalViews,
+                "followers":r.streamer.stream.followers,
+                "twitchLive":r.streamer.stream.live,
+
+                "matchId":r.streamer.stream.matchId,
+                "region":r.streamer.stream.regionSlug,
+                "encryptionKey":r.streamer.stream.encryptionKey,
+                "twitchURL":"https://www.twitch.tv/%s"%r.streamer.stream.name,
+                "previewURL_small":r.streamer.stream.previewSmall,
+                "previewURL_medium":r.streamer.stream.previewMedium,
+                "previewURL_large":r.streamer.stream.previewLarge,
+                "championId":r.streamer.stream.championId,
             })
 
 
