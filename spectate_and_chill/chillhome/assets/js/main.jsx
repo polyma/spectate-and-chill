@@ -8,6 +8,7 @@ import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
 import {TwitchWidget} from "./components/TwitchWidget.jsx"
 import {Loading} from "./components/Loading.jsx"
+import {ErrorBox} from "./components/ErrorBox.jsx"
 
 const reduxStore = require('./store');
 import { Provider, connect } from 'react-redux'
@@ -51,6 +52,10 @@ var Content = React.createClass({
 
     },
 
+    _getError : function() {
+        error = this.state.error
+    },
+
     _setTwitchVideo: function() {
         this.setState({ setTwitchWidget: true }, function() {
 
@@ -60,6 +65,9 @@ var Content = React.createClass({
     _getSummonerData: function(summonerName, region) {
       console.log('Beginning summoner fetch...', summonerName, region);
       this.setState({loading: true}, function() {
+         this._successfulSummonerRequest();
+         this.props.requestReccos(summonerName, region);
+         /*
         $.ajax({
           url: window.serverUrl,
           success: function(data) {
@@ -72,6 +80,7 @@ var Content = React.createClass({
             this.setState({error: err});
           }
         }).bind(this)
+        */
       });
     },
 
@@ -87,6 +96,7 @@ var Content = React.createClass({
                 $("#bgvid").addClass("hidden");
                 return (
                     <div className="row">
+                        <ErrorBox />
                         <NavBar />
                         <StreamsBoxContainer/>
                     </div>
@@ -95,6 +105,7 @@ var Content = React.createClass({
                 $("#bgvid").addClass("hidden");
                 return (
                     <div className="row">
+                        <ErrorBox />
                         <NavBar />
                         <TwitchWidget />
                     </div>
@@ -103,6 +114,7 @@ var Content = React.createClass({
                 $("#bgvid").removeClass("hidden");
                 return (
                     <div className="row">
+                        <ErrorBox />
                         <Logo />
                         <SummonerSearch getSummonerData={this._getSummonerData}/>
                         <About />
@@ -113,6 +125,7 @@ var Content = React.createClass({
             $("#bgvid").addClass("hidden");
             return (
                 <div className="row">
+                    <ErrorBox />
                     <NavBar />
                     <Loading />
                 </div>

@@ -69,6 +69,7 @@ video#bgvid {
 }
 
 .nav-logo {
+    cursor:pointer;
     position: fixed;
     width: auto;
     height: 7%;
@@ -76,8 +77,23 @@ video#bgvid {
     margin: 0;
 }
 
+.error-box {
+    position: absolute;
+    width: 100px;
+    height: 200px;
+
+    left: 50%;
+    margin-left: -25px;
+    top: 0%;
+}
+
 .logo-container {
     text-align: center;
+}
+
+.update-rec {
+    position: absolute;
+    right: 1%;
 }
 
 .logo {

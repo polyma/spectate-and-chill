@@ -14,7 +14,7 @@ const StreamsBox = ({ streams, onlineList }) => (
                     online={stream.get('matchId')}
                     {...streamObj.toJS()}
                   />
-                </div>
+            </div>
         );
       }
     })

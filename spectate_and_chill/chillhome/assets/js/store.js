@@ -54,7 +54,7 @@ var store = createStore(rootApp, Immutable.Map({
   userId: null,
   userProfileIcon: null,
   onlineList: Immutable.List(),
-  streams: Immutable.Map(),
+  streams: Immutable.Map([new StreamRecord({id: 'adil'})]),
 }), applyMiddleware(socketMiddleware, thunkMiddleware));
 
 

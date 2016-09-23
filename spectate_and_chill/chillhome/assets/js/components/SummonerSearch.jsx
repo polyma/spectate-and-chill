@@ -18,8 +18,8 @@ export class SummonerSearch extends React.Component {
     _validateInput(e) {
         e.preventDefault();
         this.props.getSummonerData(this.state.summonerName, this.state.region);
-        this.state.summonerName = this.state.summonerName.replace(" ", "");
         this.state.summonerName = this.state.summonerName.trim();
+        this.state.summonerName = this.state.summonerName.toLowerCase();
         //var re = new RegExp("/[,.\s]+/g");
         //if (re.test(this.state.summonerName)) {
         //    this.setState({error: 'INVALID SUMMONER NAME'})
