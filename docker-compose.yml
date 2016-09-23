@@ -31,8 +31,9 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=spectateDB
+      - POSTGRES_DB=spectatedb
       - POSTGRES_PASSWORD=icecold
+      - POSTGRES_USER=sandc
     ports:
       - "5432"
   redis:

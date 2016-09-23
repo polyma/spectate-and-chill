@@ -16,8 +16,8 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-#IP_ADDRESS = "127.0.0.1"
-IP_ADDRESS = "54.183.202.43"
+IP_ADDRESS = "redis"
+DB_ADDRESS = "54.183.202.43"
 
 APIKEY = "RGAPI-e4491f0b-b99a-49c4-b817-5f9b00267da1"
 
@@ -93,13 +93,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
-        'PORT': '5432', 
+        'PORT': '5432',
         #'HOST': '172.31.19.79',
         #'HOST': '54.183.202.43',
-        'HOST': IP_ADDRESS,
+        'HOST': DB_ADDRESS,
         'USER': 'sandc',
         'PASSWORD': 'icecold',
-        
+
     },
     'options':{
     	'timeout': 50, # Originally 10, this is a temp fix for SQLite multithreading issues
