@@ -41,6 +41,7 @@ class Check_Current_Games(object):
             streamer.regionSlug = ""
             streamer.encryptionKey = ""
             streamer.championId = 0
+            streamer.live = False
 
             accounts = StreamerAccount.objects.filter(stream=streamer)
             for account in accounts:
@@ -71,6 +72,8 @@ class Check_Current_Games(object):
                             streamer.championId = participant["championId"]
 
 
+                    streamer.live = True
+                            
                     streamer.save()
                     break # No need to see the rest of their games
                 except urllib.error.HTTPError as e:
