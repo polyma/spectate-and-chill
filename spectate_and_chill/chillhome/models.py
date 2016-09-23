@@ -9,51 +9,53 @@ class Region(models.Model):
     name = models.CharField(max_length=50)
     
     
-    
 class Language(models.Model):
     region = models.ForeignKey(Region)
     locale = models.CharField(max_length=5)
 
-class MatchEverything(models.Model):
-    matchId = models.PositiveIntegerField() #Long?
-    region = models.ForeignKey(Region)
-    json = JSONField()
-
-    # Primary key is the matchId + region
-    def __str__(self):
-        return "MatchEverything (%s %s)"%(self.matchId, self.region)
-
-    class Meta:
-        unique_together = ("matchId", "region")
+#class MatchEverything(models.Model):
+#    matchId = models.PositiveIntegerField() #Long?
+#    region = models.ForeignKey(Region)
+#    json = JSONField()
+#
+#    # Primary key is the matchId + region
+#    def __str__(self):
+#        return "MatchEverything (%s %s)"%(self.matchId, self.region)
+#
+#    class Meta:
+#        unique_together = ("matchId", "region")
 
 class TwitchStream(models.Model):
     twitchId = models.CharField(primary_key=True, max_length=20)
     name = models.CharField(max_length=30)
     display_name = models.CharField(max_length=30)
-    language = models.CharField(max_length=5)
+    language = models.CharField(max_length=5, default="")
     
     logo = models.CharField(max_length=250)
     previewSmall = models.CharField(max_length=250)
     previewMedium = models.CharField(max_length=250)
     previewLarge = models.CharField(max_length=250)
     
-    status = models.CharField(max_length=150)
-    currentViews = models.PositiveIntegerField()
-    totalViews = models.PositiveIntegerField()
-    followers = models.PositiveIntegerField()
+    status = models.CharField(max_length=150, default="")
+    currentViews = models.PositiveIntegerField(default=0)
+    totalViews = models.PositiveIntegerField(default=0)
+    followers = models.PositiveIntegerField(default=0)
     
-
+    matchId = models.CharField(max_length=15, default="0")
     live = models.BooleanField(default=False)
 
     
-class Streamer(models.Model):
+class StreamerAccount(models.Model):
     summonerId = models.PositiveIntegerField()
     region = models.ForeignKey(Region)    
-    matchId = models.CharField(max_length=15)
-        
-    streamId = models.CharField(primary_key = True, max_length=20, default=0)
-    streamName = models.CharField(max_length=50, default="")
     
+    stream = models.ForeignKey(TwitchStream)
+    
+    #streamId = models.CharField(max_length=20, default=0)
+    #streamName = models.CharField(max_length=50, default="")
+    
+    class Meta:
+        unique_together = ("summonerId", "region")
     
     
 class User(models.Model):
@@ -69,7 +71,7 @@ class User(models.Model):
     
 class Recommendation(models.Model):
     user = models.ForeignKey(User)
-    streamer = models.ForeignKey(Streamer)
+    streamer = models.ForeignKey(StreamerAccount)
     score = models.FloatField()
     
     class Meta:
