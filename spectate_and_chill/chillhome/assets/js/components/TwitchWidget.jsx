@@ -1,6 +1,8 @@
 import React from "react"
 
-export class TwitchWidget extends React.Component {
+import {connect} from 'react-redux';
+
+export class Twitch extends React.Component {
     render() {
         //this.props.currentTwitchUrl
         var channelName = this.props.name;
@@ -14,3 +16,18 @@ export class TwitchWidget extends React.Component {
         );
     }
 }
+const mapStateToProps = (state) => {
+  return {
+    name: state.get('topStream'),
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+const TwitchWidget = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Twitch)
+
+export default TwitchWidget

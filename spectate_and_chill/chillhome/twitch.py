@@ -58,19 +58,27 @@ class Twitch(object):
                 logo = ""
                 if twitchJson["stream"]["channel"]["logo"] != None:
                     logo = twitchJson["stream"]["channel"]["logo"]
+                    
+                language = ""
+                if twitchJson["stream"]["channel"]["language"] != None:
+                    language = twitchJson["stream"]["channel"]["language"]
+                    
+                status = "Untitled Stream"
+                if twitchJson["stream"]["channel"]["status"] != None:
+                    status = twitchJson["stream"]["channel"]["status"]
                 
                 ts = TwitchStream(
                     twitchId = twitchName["channel"]["_id"],
                     name = twitchJson["stream"]["channel"]["name"],
                     display_name = twitchJson["stream"]["channel"]["display_name"],
-                    language = twitchJson["stream"]["channel"]["language"],
+                    language = language,
                     
                     logo = logo,
                     previewSmall = twitchJson["stream"]["preview"]["small"],
                     previewMedium = twitchJson["stream"]["preview"]["medium"],
                     previewLarge = twitchJson["stream"]["preview"]["large"],
                     
-                    status = twitchJson["stream"]["channel"]["status"],
+                    status = status,
                     currentViews = twitchJson["stream"]["viewers"],
                     totalViews = twitchJson["stream"]["channel"]["views"],
                     followers = twitchJson["stream"]["channel"]["followers"],
@@ -142,15 +150,28 @@ class Twitch(object):
 
         for stream in j["streams"]:
             ids.append(stream["_id"])
+            
+            status = "Untitled Stream"
+            if stream["channel"]["status"] != None:
+                status = stream["channel"]["status"]
+                
+            logo = ""
+            if stream["channel"]["logo"] != None:
+                logo = stream["channel"]["logo"]
+                
+            language = ""
+            if stream["channel"]["language"] != None:
+                language = stream["channel"]["language"]
+            
             streamer, created = TwitchStream.objects.update_or_create(
                 twitchId = stream["_id"],
                 name = stream["channel"]["name"],
 
                 defaults = {
                     "display_name":stream["channel"]["display_name"],
-                    "language":stream["channel"]["language"],
-                    "logo":stream["channel"]["logo"],
-                    "status":stream["channel"]["status"],
+                    "language":language,
+                    "logo":logo,
+                    "status":status,
                     "currentViews":stream["viewers"],
                     "totalViews":stream["channel"]["views"],
                     "followers":stream["channel"]["followers"],
@@ -181,18 +202,27 @@ class Twitch(object):
         if "stream" in twitchJson and twitchJson["stream"] != None:
             # They have content to update
             stream.display_name = twitchJson["stream"]["channel"]["display_name"]
-            stream.language = twitchJson["stream"]["channel"]["language"]
-
+            
+            language = ""
+            if twitchJson["stream"]["channel"]["language"] != None:
+                language = twitchJson["stream"]["channel"]["language"]
+            
             logo = ""
             if twitchJson["stream"]["channel"]["logo"] != None:
                 logo = twitchJson["stream"]["channel"]["logo"]
 
+            status = "Untitled Stream"
+            if twitchJson["stream"]["channel"]["status"] != None:
+                status = twitchJson["stream"]["channel"]["status"]
+                
+            stream.language = language
+                
             stream.logo = logo
             stream.previewSmall = twitchJson["stream"]["preview"]["small"]
             stream.previewMedium = twitchJson["stream"]["preview"]["medium"]
             stream.previewLarge = twitchJson["stream"]["preview"]["large"]
 
-            stream.status = twitchJson["stream"]["channel"]["status"]
+            stream.status = status
             stream.currentViews = twitchJson["stream"]["viewers"]
             stream.totalViews = twitchJson["stream"]["channel"]["views"]
             stream.followers = twitchJson["stream"]["channel"]["followers"]
@@ -268,23 +298,31 @@ class Twitch(object):
                 #print("len before: %s"%len(list(streamers)))
 
                 logo = ""
-                if "logo" in stream["channel"] and stream["channel"]["logo"] != None:
+                if stream["channel"]["logo"] != None:
                     logo = stream["channel"]["logo"]
 
+                language = ""
+                if stream["channel"]["language"] != None:
+                    language = stream["channel"]["language"]
+                    
+                status = "Untitled Stream"
+                if stream["channel"]["status"] != None:
+                    status = stream["channel"]["status"]
+                    
                 streamers.update(
                     {stream["channel"]["name"]:
                         {
                         "id":stream["_id"],
                         "name":stream["channel"]["name"],
                         "display_name":stream["channel"]["display_name"],
-                        "language":stream["channel"]["language"],
+                        "language":language,
 
                         "logo":logo,
                         "previewSmall":stream["preview"]["small"],
                         "previewMedium":stream["preview"]["medium"],
                         "previewLarge":stream["preview"]["large"],
 
-                        "status":stream["channel"]["status"],
+                        "status":status,
                         "currentViews":stream["viewers"],
                         "totalViews":stream["channel"]["views"],
                         "followers":stream["channel"]["followers"],
@@ -398,7 +436,7 @@ class Twitch(object):
                     name = streamer["name"],
                     defaults = {
                         "display_name":streamer["display_name"],
-                        "language":streamer["language"],
+                        "language":language,
 
                         "logo":logo,
                         "previewSmall":streamer["previewSmall"],
