@@ -19,6 +19,112 @@ class Twitch(object):
 
     def __init__(self):
         pass
+        
+        
+    def manuallyAddStreamer(self, twitchName, summonerName, summonerRegionSlug):
+    
+        # Pull the TwitchAccount
+        ts = None
+        
+        try:
+            ts = TwitchStream.objects.get(name=twitchName.lower())
+        except:
+            
+            url = "https://api.twitch.tv/kraken/streams/%s"%twitchName
+            
+            print(url)
+            
+            twitchJson = None
+            try:
+                r = urllib.request.Request(url)
+                r.add_header("Client-ID", self.clientId)
+                response = urllib.request.urlopen(r)
+
+                twitchJson = json.loads(response.read().decode('utf-8'))
+            except Exception as e:
+                # doesn't exist?
+                print("Unable to find streamer: %s"%e)
+                return False
+
+            if twitchJson["stream"] == None:
+                ts = TwitchStream(
+                    name = twitchName.lower(),
+                    display_name = twitchName,
+                    live = False,
+                )
+                ts.save()
+            else:
+                
+                logo = ""
+                if twitchJson["stream"]["channel"]["logo"] != None:
+                    logo = twitchJson["stream"]["channel"]["logo"]
+                
+                ts = TwitchStream(
+                    twitchId = twitchName["channel"]["_id"],
+                    name = twitchJson["stream"]["channel"]["name"],
+                    display_name = twitchJson["stream"]["channel"]["display_name"],
+                    language = twitchJson["stream"]["channel"]["language"],
+                    
+                    logo = logo,
+                    previewSmall = twitchJson["stream"]["preview"]["small"],
+                    previewMedium = twitchJson["stream"]["preview"]["medium"],
+                    previewLarge = twitchJson["stream"]["preview"]["large"],
+                    
+                    status = twitchJson["stream"]["channel"]["status"],
+                    currentViews = twitchJson["stream"]["viewers"],
+                    totalViews = twitchJson["stream"]["channel"]["views"],
+                    followers = twitchJson["stream"]["channel"]["followers"],
+                    
+                    live = True,
+                )
+                
+                ts.save()
+        
+        region = None
+        try:
+            region = Region.objects.get(slug=summonerRegionSlug.lower())
+        except:
+            print("Bad match on the region, make sure regions are up-to-date in the DB")
+            return False
+            
+        # get the summoner
+        url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{name}?api_key={api_key}"
+
+        sendMe = url.format(
+            region=region.slug,
+            name=summonerName,
+            api_key=settings.APIKEY,
+        )
+
+        print(sendMe)
+        summonerJson = None
+        try:
+            r = urllib.request.Request(sendMe)
+            response = urllib.request.urlopen(r)
+
+            summonerJson = json.loads(response.read().decode('utf-8'))
+            
+        except urllib.error.HTTPError as e:
+            print("Summoner not found")
+            return False
+            
+        try:
+            sa = StreamerAccount(
+                summonerId = summonerJson[list(summonerJson)[0]]["id"],
+                region = region,
+                stream = ts,
+            )
+            sa.save()
+        except Exception as e:
+            print("Unable to create Summoner Account: %s"%e)
+            return False
+        
+            
+        print("Summoner/Streamer added to db")
+        return True
+        
+    
+        
 
     def _current_streamers(self, offset=0, limit=100):
         url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
