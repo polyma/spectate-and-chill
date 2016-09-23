@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Loader from 'react-loaders'
 
-import {NavBar} from "./components/NavBar.jsx"
+import {Logo} from "./components/Logo.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
 import {TwitchWidget} from "./components/TwitchWidget.jsx"
@@ -51,8 +51,6 @@ var Content = React.createClass({
         });
     },
 
-
-
     _setLoading : function(data) {
 
     },
@@ -70,21 +68,19 @@ var Content = React.createClass({
     _successfulSummonerRequest: function() {
             this.setState({
                 loading: false,
-
             });
     },
 
     render: function() {
         return (
             <div className="row">
-                <NavBar/>
+                <Logo />
                 <SummonerSearch getSummonerData={this._getSummonerData}/>
                 <About />
             </div>
         )
     }
 });
-
 
 ReactDOM.render(
     <Provider store={reduxStore}>

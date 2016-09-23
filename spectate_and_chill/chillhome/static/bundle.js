@@ -58,7 +58,7 @@
 
 	var _reactLoaders2 = _interopRequireDefault(_reactLoaders);
 
-	var _NavBar = __webpack_require__(174);
+	var _Logo = __webpack_require__(174);
 
 	var _SummonerSearch = __webpack_require__(175);
 
@@ -130,7 +130,6 @@
 	    _successfulSummonerRequest: function _successfulSummonerRequest() {
 	        this.setState({
 	            loading: false
-
 	        });
 	    },
 
@@ -138,7 +137,7 @@
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'row' },
-	            _react2.default.createElement(_NavBar.NavBar, null),
+	            _react2.default.createElement(_Logo.Logo, null),
 	            _react2.default.createElement(_SummonerSearch.SummonerSearch, { getSummonerData: this._getSummonerData }),
 	            _react2.default.createElement(_About.About, null)
 	        );
@@ -21791,7 +21790,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.NavBar = undefined;
+	exports.Logo = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -21807,35 +21806,35 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var NavBar = exports.NavBar = function (_React$Component) {
-	    _inherits(NavBar, _React$Component);
+	var Logo = exports.Logo = function (_React$Component) {
+	    _inherits(Logo, _React$Component);
 
-	    function NavBar() {
-	        _classCallCheck(this, NavBar);
+	    function Logo() {
+	        _classCallCheck(this, Logo);
 
-	        return _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (Logo.__proto__ || Object.getPrototypeOf(Logo)).apply(this, arguments));
 	    }
 
-	    _createClass(NavBar, [{
+	    _createClass(Logo, [{
 	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "div",
-	                { className: "container-fluid" },
+	                { className: "row" },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "row" },
+	                    { className: "col-xs-12 logo-container" },
 	                    _react2.default.createElement(
 	                        "div",
-	                        { className: "col-xs-12 navbar-nav nav-bar" },
-	                        _react2.default.createElement("img", { className: "logo", src: "../static/specnchill.png" })
+	                        { className: "logo" },
+	                        _react2.default.createElement("img", { src: "../static/specnchill.png" })
 	                    )
 	                )
 	            );
 	        }
 	    }]);
 
-	    return NavBar;
+	    return Logo;
 	}(_react2.default.Component);
 
 /***/ },
@@ -21882,7 +21881,7 @@
 	                { className: "row" },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "summ-search" },
+	                    { className: "col-xs-12 summ-search" },
 	                    _react2.default.createElement(_SearchInputForm.SearchInputForm, null)
 	                )
 	            );
@@ -21945,7 +21944,7 @@
 	            if (re.test(summonerName)) {
 	                this.props.getSummonerData(this.state.summonerName, this.state.region);
 	            } else {
-	                this.setState({ error: 'SUMMONER NAME INCORRECTLY FORMATTED' });
+	                this.setState({ error: 'INVALID SUMMONER NAME' });
 	            }
 	        }
 	    }, {
@@ -21953,89 +21952,93 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'inputForm form-horizontal animated fadeInDown' },
+	                { className: 'row' },
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'form-group row' },
-	                    this.state.error ? _react2.default.createElement(
-	                        'h2',
-	                        null,
-	                        'ERROR ',
-	                        this.state.error
-	                    ) : null,
+	                    { className: 'inputForm form-horizontal animated fadeInDown' },
 	                    _react2.default.createElement(
-	                        'form',
-	                        { onSubmit: this.validateInput },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'col-xs-6 col-xs-offset-2 ' },
-	                            _react2.default.createElement('input', { value: this.state.summonerName, onChange: this.changeName, id: 'summoner', className: 'form-control search-bar', placeholder: 'Summoner name' })
-	                        ),
-	                        _react2.default.createElement(
-	                            'div',
+	                        'div',
+	                        { className: 'form-group col-xs-12' },
+	                        this.state.error ? _react2.default.createElement(
+	                            'h2',
 	                            null,
-	                            _react2.default.createElement(
-	                                'select',
-	                                { className: 'col-xs-2 form-control region-btn', value: this.state.region, onChange: this._changeRegion },
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'na' },
-	                                    'NA'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'euw' },
-	                                    'EUW'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'eune' },
-	                                    'EUNE'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'br' },
-	                                    'BR'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'kr' },
-	                                    'KR'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'lan' },
-	                                    'LAN'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'las' },
-	                                    'LAS'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'oce' },
-	                                    'OCE'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'ru' },
-	                                    'RU'
-	                                ),
-	                                _react2.default.createElement(
-	                                    'option',
-	                                    { value: 'tr' },
-	                                    'TR'
-	                                )
-	                            )
-	                        ),
+	                            'ERROR ',
+	                            this.state.error
+	                        ) : null,
 	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 'submit col-xs-1' },
+	                            'form',
+	                            { onSubmit: this.validateInput },
 	                            _react2.default.createElement(
-	                                'button',
-	                                { type: 'submit', className: 'submit-button' },
-	                                _react2.default.createElement('span', { className: 'glyphicon glyphicon-search' })
+	                                'div',
+	                                { className: 'search-bar' },
+	                                _react2.default.createElement('input', { value: this.state.summonerName, onChange: this.changeName, id: 'summoner', className: 'form-control search-form', placeholder: 'Summoner name' })
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'region-btn' },
+	                                _react2.default.createElement(
+	                                    'select',
+	                                    { className: 'form-control region-form', value: this.state.region, onChange: this._changeRegion },
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'na' },
+	                                        'NA'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'euw' },
+	                                        'EUW'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'eune' },
+	                                        'EUNE'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'br' },
+	                                        'BR'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'kr' },
+	                                        'KR'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'lan' },
+	                                        'LAN'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'las' },
+	                                        'LAS'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'oce' },
+	                                        'OCE'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'ru' },
+	                                        'RU'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'tr' },
+	                                        'TR'
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'submit submit-button' },
+	                                _react2.default.createElement(
+	                                    'button',
+	                                    { type: 'submit', className: 'submit-form' },
+	                                    _react2.default.createElement('span', { className: 'glyphicon glyphicon-search' })
+	                                )
 	                            )
 	                        )
 	                    )

@@ -22,39 +22,41 @@ export class SearchInputForm extends React.Component {
             this.props.getSummonerData(this.state.summonerName, this.state.region);
         }
         else {
-            this.setState({error: 'SUMMONER NAME INCORRECTLY FORMATTED'})
+            this.setState({error: 'INVALID SUMMONER NAME'})
         }
     }
 
     render() {
         return (
-            <div className="inputForm form-horizontal animated fadeInDown">
-                <div className="form-group row">
-                {this.state.error
-                ? <h2>ERROR {this.state.error}</h2>
-                : null}
-                <form onSubmit={this.validateInput}>
-                    <div className="col-xs-6 col-xs-offset-2 ">
-                        <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-bar" placeholder="Summoner name" ></input>
+            <div className="row">
+                <div className="inputForm form-horizontal animated fadeInDown">
+                    <div className="form-group col-xs-12">
+                        {this.state.error
+                        ? <h2>ERROR {this.state.error}</h2>
+                        : null}
+                        <form onSubmit={this.validateInput}>
+                            <div className="search-bar">
+                                <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-form" placeholder="Summoner name" ></input>
+                            </div>
+                            <div className="region-btn">
+                                <select className="form-control region-form" value={this.state.region} onChange={this._changeRegion} >
+                                    <option value="na">NA</option>
+                                    <option value="euw">EUW</option>
+                                    <option value="eune">EUNE</option>
+                                    <option value="br">BR</option>
+                                    <option value="kr">KR</option>
+                                    <option value="lan">LAN</option>
+                                    <option value="las">LAS</option>
+                                    <option value="oce">OCE</option>
+                                    <option value="ru">RU</option>
+                                    <option value="tr">TR</option>
+                                </select>
+                            </div>
+                            <div className="submit submit-button">
+                                <button type="submit" className="submit-form"><span className="glyphicon glyphicon-search"></span></button>
+                            </div>
+                        </form>
                     </div>
-                    <div>
-                        <select className="col-xs-2 form-control region-btn" value={this.state.region} onChange={this._changeRegion} >
-                            <option value="na">NA</option>
-                            <option value="euw">EUW</option>
-                            <option value="eune">EUNE</option>
-                            <option value="br">BR</option>
-                            <option value="kr">KR</option>
-                            <option value="lan">LAN</option>
-                            <option value="las">LAS</option>
-                            <option value="oce">OCE</option>
-                            <option value="ru">RU</option>
-                            <option value="tr">TR</option>
-                        </select>
-                    </div>
-                    <div className="submit col-xs-1">
-                    <button type="submit" className="submit-button"><span className="glyphicon glyphicon-search"></span></button>
-                    </div>
-                    </form>
                 </div>
             </div>
         );
