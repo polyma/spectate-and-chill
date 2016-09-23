@@ -79,6 +79,9 @@ class Recommender(object):
             return pickle.load(in_file)
 
     def recommend(self, summoner, champion_masteries, num_recommendations=12):
+        if num_recommendations > len(self.__streamer_index):
+            num_recommendations = len(self.__streamer_index)
+
         mastery_vector = get_mastery_vector(self.__champion_indexes, champion_masteries)
         projection = self.__projection.transform(mastery_vector)
         neighbors = self.__streamer_tree.query(projection, k=num_recommendations, return_distance=True)
@@ -136,7 +139,7 @@ def main():
             sys.exit(1)
 
         if not args.recs:
-            args.recs = 1
+            args.recs = 12
 
         recommender = Recommender.from_file(args.model)
         riotapi.set_region(args.region)
