@@ -1,5 +1,8 @@
 import numpy as np
 import pickle
+import sys
+import os
+import argparse
 from sklearn import decomposition
 from sklearn.neighbors import KDTree
 
@@ -81,9 +84,7 @@ class Recommender(object):
         neighbors = self.__streamer_tree.query(projection, k=num_recommendations, return_distance=True)
 
         distances = neighbors[0]
-        print(distances)
         indexes = neighbors[1]
-        print(indexes)
 
         return [
             {
@@ -93,3 +94,59 @@ class Recommender(object):
             }
             for i, index in enumerate(indexes[0])
         ]
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-general", type=str)
+    parser.add_argument("-streamers", type=str)
+    parser.add_argument("-model", type=str)
+    parser.add_argument("-train", action="store_true")
+    parser.add_argument("-summoner", type=str)
+    parser.add_argument("-region", type=str)
+    parser.add_argument("-recs", type=int)
+    args = parser.parse_args()
+
+    riotapi.set_load_policy("lazy")
+    riotapi.set_rate_limit(25000, 10)
+    riotapi.set_data_store(None)
+    riotapi.set_api_key(os.environ["API_KEY"])
+
+    if not args.model:
+        args.model = "model.pkl"
+
+    if args.train:
+        if not args.general or not args.streamers:
+            print("Need to specify general and streamers files.")
+            sys.exit(1)
+
+        with open(args.general, "rb") as in_file:
+            general = pickle.load(in_file)
+
+        with open(args.streamers, "rb") as in_file:
+            streamers = pickle.load(in_file)
+
+        riotapi.set_region("NA")
+
+        recommender = Recommender(general, streamers)
+        recommender.to_file(args.model)
+    else:
+        if not args.summoner or not args.region:
+            print("Need to specify summoner and region if recommending, or train if training")
+            sys.exit(1)
+
+        if not args.recs:
+            args.recs = 1
+
+        recommender = Recommender.from_file(args.model)
+        riotapi.set_region(args.region)
+        summoner = riotapi.get_summoner_by_name(args.summoner)
+        masteries = summoner_masteries_from_cass(summoner.id)
+        summoner = {"id": summoner.id, "region": args.region}
+
+        for rec in recommender.recommend(summoner, masteries, num_recommendations=args.recs):
+            print("{} - {}: {}".format(rec["id"], rec["region"], rec["score"]))
+
+
+if __name__ == "__main__":
+    main()

@@ -17,7 +17,34 @@ redisServer = settings.IP_ADDRESS
 
 from .models import *
 
-# Create your views here.
+
+
+def pullRegions():
+    url = "http://status.leagueoflegends.com/shards"
+    r = urllib.request.Request(url)
+    response = urllib.request.urlopen(r)
+    
+    shards = json.loads(response.read().decode('utf-8'))
+
+    for shard in shards:
+        region, created = Region.objects.get_or_create(
+            slug=shard["slug"],
+            defaults={
+                "region_tag":shard["region_tag"],
+                "hostname":shard["hostname"],
+                "name":shard["name"],
+            }
+        )
+        
+        for locale in shard["locales"]:
+            lang, created = Language.objects.get_or_create(
+                region = region,
+                locale = localem
+            )
+        
+        
+    
+
 def index(request):
     #return HttpResponse("You made it!")
     return render(request, 'chillhome/index.html')
@@ -28,16 +55,30 @@ def request_summoner(request):
 
     summoner = None
     created = False
+    
+    region = None
+    summonerName = None
     try:
         # Request the API
         region = (request.GET.get("region")).lower()
         summonerName = request.GET.get("summonerName")
-
-        #baseriotapi.set_region(region)
-        #summoner = riotapi.get_summoner_by_name(summonerName)
-
+    except:
+        raise Http404("Must provide region and summonerName")
+        
+    try:
+        region = Region.objects.get(slug=region)
+    except:
+        pullRegions()
+        
+        try:
+            region = Region.objects.get(slug=region)
+        except:
+            raise Http404("Invalid Region: %s"%region)
+        
+        
+    try:    
         url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{name}?api_key={apikey}".format(
-            region=region,
+            region=region.slug,
             name=summonerName,
             apikey=settings.APIKEY,
         )
@@ -65,7 +106,16 @@ def request_summoner(request):
     try:
         if created:
             # New user, new recommendations
-            pass
+            # Pull Champion Mastery for this user
+            url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{name}?api_key={apikey}".format(
+                region=region.slug,
+                name=summonerName,
+                apikey=settings.APIKEY,
+            )
+            r = urllib.request.Request(url)
+            response = urllib.request.urlopen(r)
+            champMastery = json.loads(response.read().decode('utf-8'))
+            
             
         
     
@@ -117,7 +167,18 @@ def recommendations(request):
         summonerName = request.GET.get("summonerName")
     except:
         raise Http404("Must provide region and summonerName")
+       
+    try:
+        region = Region.objects.get(slug=region)
+    except:
+        pullRegions()
         
+        try:
+            region = Region.objects.get(slug=region)
+        except:
+            raise Http404("Invalid Region: %s"%region)
+            
+       
     user = None
     try:
         user = User.objects.get(region=region, summonerSimpleName=summonerName)
