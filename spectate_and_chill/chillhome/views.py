@@ -274,7 +274,7 @@ def recommendations(request):
 
 
             content.append({
-                "id": r.streamer.stream.id,
+                "id": r.streamer.stream.twitchId,
                 "name": r.streamer.stream.name,
                 "summonerId": r.streamer.summonerId,
                 "region": r.streamer.region.slug,
