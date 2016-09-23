@@ -42,9 +42,9 @@ def pullRegions():
         if region.slug == 'euw':
             region.region_tag = 'euw1'
             region.save()
-            
 
-        
+
+
         for locale in shard["locales"]:
             lang, created = Language.objects.get_or_create(
                 region = region,
@@ -158,7 +158,7 @@ def redisTest(request):
 def add_streamer(request):
     # ?summonerName={name}&streamerName={name}&region={region}
     t = Twitch.Instance()
-    
+
     region = None
     summonerName = None
     streamerName = None
@@ -175,9 +175,9 @@ def add_streamer(request):
         return HttpResponse("Successfully added streamer")
     else:
         raise Http404("Failed to add streamer")
-    
-    
-    
+
+
+
 def recommendations(request):
     region = ""
     summonerName = ""
@@ -221,8 +221,8 @@ def recommendations(request):
         summonerJson = j[list(j)[0]]
         #print(summonerJson)
         summonerId = summonerJson["id"]
-        
-        
+
+
         url = "https://{region}.api.pvp.net/championmastery/location/{platform}/player/{summonerId}/champions?api_key={apikey}".format(
         region=region.slug,
         platform=region.region_tag.upper(),
@@ -246,7 +246,7 @@ def recommendations(request):
             # Find the streamer, they already exist
             try:
                 streamer = StreamerAccount.objects.get(summonerId = r["id"], region = Region.objects.get(slug=r["region"].lower()))
-                
+
                  # Save the response
                 recommendation, created = Recommendation.objects.update_or_create(
                     user=user,
@@ -257,13 +257,13 @@ def recommendations(request):
                 )
 
                 recommendation.save()
-                
+
             except:
                 print("Unable to use recommendation: %s (%s) -> %s"%(user.summonerName, region.slug, r["id"]))
                 continue
-                
-                
-           
+
+
+
 
         # Pull the recommendations from the DB
         recommendations = Recommendation.objects.filter(user=user).order_by("score")
@@ -271,12 +271,15 @@ def recommendations(request):
 
         content = []
         for r in recommendations:
-            
-        
+
+
             content.append({
-                "twitchName":r.streamer.stream.name,
-                "summonerId":r.streamer.summonerId,
-                "region":r.streamer.region.slug,
+                "id": r.streamer.stream.twitchId,
+                "name": r.streamer.stream.name,
+                "summonerId": r.streamer.summonerId,
+                "region": r.streamer.region.slug,
+                "logo": r.streamer.stream.logo,
+                "status": r.streamer.stream.status,
             })
 
 

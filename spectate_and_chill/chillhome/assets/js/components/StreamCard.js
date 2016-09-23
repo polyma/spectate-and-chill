@@ -1,6 +1,6 @@
 var React = require('react');
 var StreamCard = React.createClass({
-    getChampion: function(championId) {
+    _getChampion: function(championId) {
         var champions = "";
         $.getJSON('http://ddragon.leagueoflegends.com/cdn/6.19.1/data/en_US/champion.json', function(data) {
             champions = JSON.stringify(data);
@@ -16,6 +16,19 @@ var StreamCard = React.createClass({
             }
             return {championIcon};
         });
+    },
+
+    _validateInput(e) {
+        e.preventDefault();
+        this.props.getSummonerData(this.state.summonerName, this.state.region);
+        this.state.summonerName = this.state.summonerName.trim();
+        this.state.summonerName = this.state.summonerName.toLowerCase();
+        //var re = new RegExp("/[,.\s]+/g");
+        //if (re.test(this.state.summonerName)) {
+        //    this.setState({error: 'INVALID SUMMONER NAME'})
+        //} else {
+        //    console.log('valid input!');
+        this.props.getSummonerData(this.state.summonerName, this.state.region);
     },
 
     render: function() {

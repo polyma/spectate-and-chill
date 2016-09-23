@@ -31,32 +31,32 @@ export class SummonerSearch extends React.Component {
     render() {
         return (
             <div className="row">
-                <div className="inputForm form-horizontal animated fadeInDown col-xs-8 col-xs-offset-2">
-                    <div className="form-group ">
-                        {this.state.error
-                            ? alert("error")
-                            : null}
-                        <form onSubmit={this.validateInput}>
-                            <div className="row summ-search">
-                                <div className="col-xs-9">
-                                    <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-form" placeholder="Summoner name"></input>
-                                </div>
-                                <div className="col-xs-2 region-btn">
-                                    <select className="form-control region-form" value={this.state.region} onChange={this._changeRegion}>
-                                        <option value="na">NA</option>
-                                        <option value="euw">EUW</option>
-                                        <option value="eune">EUNE</option>
-                                        <option value="br">BR</option>
-                                        <option value="kr">KR</option>
-                                        <option value="lan">LAN</option>
-                                        <option value="las">LAS</option>
-                                        <option value="oce">OCE</option>
-                                        <option value="ru">RU</option>
-                                        <option value="tr">TR</option>
-                                    </select>
-                                </div>
-                                <div className="col-xs-1 submit submit-button">
-                                    <button type="submit" className="submit-form">
+              <div className="inputForm form-horizontal animated fadeInDown col-xs-8 col-xs-offset-2">
+                <div className="form-group ">
+                  {this.state.error
+                    ? alert("error")
+                  : null}
+                  <form >
+                    <div className="row summ-search">
+                      <div className="col-xs-9">
+                        <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-form" placeholder="Summoner name"></input>
+                      </div>
+                      <div className="col-xs-2 region-btn">
+                        <select className="form-control region-form" value={this.state.region} onChange={this._changeRegion}>
+                          <option value="na">NA</option>
+                          <option value="euw">EUW</option>
+                          <option value="eune">EUNE</option>
+                          <option value="br">BR</option>
+                          <option value="kr">KR</option>
+                          <option value="lan">LAN</option>
+                          <option value="las">LAS</option>
+                          <option value="oce">OCE</option>
+                          <option value="ru">RU</option>
+                          <option value="tr">TR</option>
+                        </select>
+                      </div>
+                      <div className="col-xs-1 submit submit-button">
+                        <button onClick={this.validateInput} type="submit" className="submit-form">
                                         <span className="glyphicon glyphicon-search"></span>
                                     </button>
                                 </div>
