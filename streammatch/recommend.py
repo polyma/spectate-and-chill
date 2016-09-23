@@ -93,20 +93,3 @@ class Recommender(object):
             }
             for i, index in enumerate(indexes[0])
         ]
-
-
-riotapi.set_load_policy("lazy")
-riotapi.set_rate_limit(25000, 10)
-riotapi.set_data_store(None)
-riotapi.set_api_key("RGAPI-e4491f0b-b99a-49c4-b817-5f9b00267da1")
-riotapi.set_region("NA")
-
-with open("general_masteries.pkl", "rb") as in_file:
-    general = pickle.load(in_file)
-with open("streamer_masteries.pkl", "rb") as in_file:
-    streamers = pickle.load(in_file)
-
-summoner = riotapi.get_summoner_by_name("DrCyanide")
-summoner = {"id": summoner.id, "region": "NA"}
-masteries = summoner_masteries_from_cass(summoner["id"])
-rec = Recommender(general, streamers)
