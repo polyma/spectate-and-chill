@@ -58,6 +58,44 @@ class Twitch(object):
         #notLive = TwitchStream.objects.exclude(primary_key__in=ids)
         
         
+    def update_TwitchStream(self, stream):
+        url = "https://api.twitch.tv/kraken/streams/%s"%stream.name
+        
+        twitchJson = None
+        try:
+            r = urllib.request.Request(url)
+            r.add_header("Client-ID", self.clientId)
+            response = urllib.request.urlopen(r)
+            
+            twitchJson = json.loads(response.read().decode('utf-8'))
+        except:
+            # doesn't exist?
+            return stream
+        
+        if "stream" in twitchJson and twitchJson["stream"] != None:
+            # They have content to update
+            stream.display_name = twitchJson["stream"]["channel"]["display_name"]
+            stream.language = twitchJson["stream"]["channel"]["language"]
+            
+            stream.logo = twitchJson["stream"]["channel"]["logo"]
+            stream.previewSmall = twitchJson["stream"]["preview"]["small"]
+            stream.previewMedium = twitchJson["stream"]["preview"]["medium"]
+            stream.previewLarge = twitchJson["stream"]["preview"]["large"]
+            
+            stream.status = twitchJson["stream"]["preview"]["status"]
+            stream.currentViews = twitchJson["stream"]["viewers"]
+            stream.totalViews = twitchJson["stream"]["channel"]["views"]
+            stream.followers = twitchJson["stream"]["channel"]["followers"]
+            
+        else:
+            stream.live=False
+            
+        stream.save()
+        return stream
+        
+        
+        
+        
         
     def _get_stream(self, name):
         url = "https://api.twitch.tv/kraken/streams/%s"%name

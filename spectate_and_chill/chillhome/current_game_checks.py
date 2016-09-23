@@ -24,49 +24,59 @@ class Check_Current_Games(objects):
             self.checkAllGames()
             time.sleep(120)
         
-    def checkAllGames(self):
-        streamers = Streamer.objects.all()
+    def checkAllGames(self):    
+        streamers = TwitchStream.objects.all()
         url = "https://{region}.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/{region_tag}/{summoner_id}?api_key={api_key}"
         
         for streamer in streamers:
-            # Check if they're in game
-            sendMe = url.format(
-                region=streamer.region.slug,
-                region_tag=streamer.region.region_tag.upper(),
-                summoner_id=streamer.summonerId,
-                api_key=settings.APIKEY,
-            )
+            # Check their connected StreamerAccounts
+            streamer = self.twitchApi.update_TwitchStream(streamer)
             
-            gameJson = None
-            try:
-                r = urllib.request.Request(sendMe)
-                response = urllib.request.urlopen(r)
+            streamer.matchId = "0"
+            
+            accounts = StreamerAccount.objects.filter(stream=streamer)
+            for account in accounts:
+                # Check if they're in game
+                sendMe = url.format(
+                    region=account.region.slug,
+                    region_tag=account.region.region_tag.upper(),
+                    summoner_id=account.summonerId,
+                    api_key=settings.APIKEY,
+                )
+            
+                gameJson = None
+                try:
+                    r = urllib.request.Request(sendMe)
+                    response = urllib.request.urlopen(r)
+                    
+                    gameJson = json.loads(response.read().decode('utf-8'))
+                    
+                    # They're in a game
+                    streamer.matchId = gameJson["gameId"]
+                    streamer.save()
+                    break # No need to see the rest of their games
+                except urllib.error.HTTPError as e:
+                    # They're not in a game on this account
+                    pass
                 
-                gameJson = json.loads(response.read().decode('utf-8'))
-                
-                # They're in a game
-                streamer.matchId = gameJson["gameId"]
-            except urllib.error.HTTPError as e:
-                # They're not in a game
-                streamer.matchId = "0"
-                
-                
-                
-            streamer.save()
+            
     
         # Streamers who have all of their accounts with a matchId == 0, set TwitchStream offline
-        twitchStreams = TwitchStream.objects.all()
-        for ts in twitchStreams:
-            streamerAccounts = Streamer.objects.filter(streamId=ts.twitchId, streamName=ts.name)
-            if streamerAccounts.count() == 0:
-                ts.live = False
-            else:
-                ts.live = True
-                # Update the TwitchStream based on the API
-            ts.save()
-            
+        #twitchStreams = TwitchStream.objects.all()
+        #for ts in twitchStreams:
+        #    streamerAccounts = StreamerAccount.objects.filter(streamId=ts.twitchId, streamName=ts.name)
+        #    if streamerAccounts.count() == 0:
+        #        ts.live = False
+        #    else:
+        #        ts.live = True
+        #        # Update the TwitchStream based on the API
+        #    ts.save()
+        #    
         
+        # Convert all streamers to a list
+        streamers = TwitchStream.objects.all()
         
+        content = []
         
         # Redis Update Goes Here        
 
