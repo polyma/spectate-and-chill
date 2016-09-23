@@ -23,6 +23,7 @@ var Content = React.createClass({
            showRecommendations: false,
            showTwitchWidget: false,
            error: null,
+           summonerNameResult: null,
        };
    },
 
@@ -43,7 +44,7 @@ var Content = React.createClass({
 
      socket.on('message', function(msg) {
        console.log('received message!', msg);
-       reduxStore.dispatch(newSocketMessage(msg));
+       reduxStore.dispatch(newSocketMessage(JSON.parse(msg)));
      });
    },
 
@@ -59,53 +60,72 @@ var Content = React.createClass({
 
     _getSummonerData: function(summonerName, region) {
       console.log('Beginning summoner fetch...', summonerName, region);
-      this.setState({loading: true}, function() {
+      this.setState({loading: true, error: null}, function() {
         $.ajax({
-          url: window.serverUrl,
+          url: window.serverUrl + '/summoner?summonerName=' + summonerName + "&region=" + region,
           success: function(data) {
-
-            this._successfulSummonerRequest();
+            this._successfulSummonerRequest(data);
             //Now get the recommendations
             this.props.requestReccos(summonerName, region);
-          },
-          error: function(err) {
-            this.setState({error: err});
-          }
-        }).bind(this)
+          }.bind(this),
+          error: function(xhr, err) {
+            if(xhr.status === 404) {
+              this._setError('Summoner not found');
+            }
+            else {
+              this._setError(err);
+            }
+          }.bind(this),
+          complete: function() {
+            this.setState({
+                loading: false,
+            });
+          }.bind(this),
+        })
       });
     },
 
-    _successfulSummonerRequest: function() {
+    _setError(err) {
+      this.setState({
+        error: err,
+      })
+    },
+
+    _successfulSummonerRequest: function(data) {
         this.setState({
             loading: false,
         });
     },
 
     render: function() {
+      // return(<div className="row">
+      //   <SummonerSearch getSummonerData={this._getSummonerData}/>
+      //   <StreamsBoxContainer/>
+      // </div>)
         if (!this.state.loading) {
             if (this.props.streams.size > 0) {
                 $("#bgvid").addClass("hidden");
                 return (
                     <div className="row">
-                        <NavBar />
-                        <StreamsBoxContainer/>
+                      <NavBar />
+                      <StreamsBoxContainer/>
                     </div>
                 )
             } else if (this.state.showTwitchWidget){
                 $("#bgvid").addClass("hidden");
                 return (
                     <div className="row">
-                        <NavBar />
-                        <TwitchWidget />
+                      <NavBar />
+                      <TwitchWidget />
                     </div>
                 )
             } else {
                 $("#bgvid").removeClass("hidden");
                 return (
                     <div className="row">
-                        <Logo />
-                        <SummonerSearch getSummonerData={this._getSummonerData}/>
-                        <About />
+                      <Logo />
+                      <SummonerSearch getSummonerData={this._getSummonerData}/>
+                      <About />
                     </div>
                 )
             }
@@ -113,8 +133,8 @@ var Content = React.createClass({
             $("#bgvid").addClass("hidden");
             return (
                 <div className="row">
-                    <NavBar />
-                    <Loading />
+                  <NavBar />
+                  <Loading />
                 </div>
             )
         }

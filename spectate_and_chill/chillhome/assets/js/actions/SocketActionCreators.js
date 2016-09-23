@@ -59,9 +59,10 @@ export function error(string) {
 }
 
 export function getRecommendations(userId, region) {
+  console.log('beginning recommendations request...');
   return function (dispatch) {
     dispatch(requestRecommendations());
-    return fetch(window.serverUrl + '/summoner?summonerName=' + userId + '&region=' + region)
+    return fetch(window.serverUrl + '/recommendations?summonerName=' + userId + '&region=' + region)
       .then(response => response.json())
       .then(json => {
         // We can dispatch many times!
@@ -69,7 +70,7 @@ export function getRecommendations(userId, region) {
         console.log('received result for recommendations', json);
         dispatch(receiveStreams(json));
       })
-      .catch(err => dispatch(error(err)));
+      // .catch(err => dispatch(error(err)));
 //NOTE: WE MAY NEED import 'babel-polyfill' http://redux.js.org/docs/advanced/AsyncActions.html
       // In a real world app, you also want to
       // catch any error in the network call.

@@ -3,23 +3,27 @@ import React from 'react';
 import StreamCard from './StreamCard';
 
 const StreamsBox = ({ streams, onlineList }) => (
-  <ul>
-    {onlineList.map((stream, i) => {
-      var streamObj = streams.get(stream.get('id'));
-      if(streamObj) {
-        return (
-            <div className="col-xs-4">
-                  <StreamCard
-                    key={i}
-                    online={stream.get('matchId')}
-                    {...streamObj.toJS()}
-                  />
-                </div>
-        );
-      }
+  <div className="row">
+    {console.log('loading streams box', streams)}
+    {streams.size !== 0 ? streams.toIndexedSeq().toArray().map((stream, i) => {
+      var isOnline = false;
+      onlineList.map((online) => {
+        if(stream.get('id') === online.id && online.matchId !== 0) {
+          isOnline = true;
+        }
+      });
+      return (
+        <div className="col-xs-4">
+          <StreamCard
+            key={i}
+            online={isOnline}
+            {...stream.toJS()}
+          />
+        </div>
+      );
     })
-    }
-  </ul>
+    : null}
+  </div>
 )
 const mapStateToProps = (state) => {
   return {
