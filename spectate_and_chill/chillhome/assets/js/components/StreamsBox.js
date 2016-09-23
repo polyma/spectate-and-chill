@@ -45,9 +45,9 @@ var rankStreams = function rankStream(streams, onlineList, setTopOnline) {
     var onlines = s.map(function(m, x) {
       if(m.isOnline) {
         return (
-          <div top={m.name} className="col-xs-4">
+          <div key={x + "o"} top={m.name} className="col-xs-4">
             <StreamCard
-              key={x + "o"}
+
               score={m.score}
               online={m.isOnline}
               {...m.stream.toJS()}
@@ -59,9 +59,9 @@ var rankStreams = function rankStream(streams, onlineList, setTopOnline) {
     var offlines = s.map(function(m, x) {
       if(!m.isOnline) {
         return (
-          <div className="col-xs-4">
+          <div key={x + "f"} className="col-xs-4">
             <StreamCard
-              key={x + "f"}
+
               score={m.score}
               online={m.isOnline}
               {...m.stream.toJS()}

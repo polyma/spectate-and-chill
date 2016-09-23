@@ -276,11 +276,11 @@ def recommendations(request):
                 #"name": r.streamer.stream.name,
                 "summonerId": r.streamer.summonerId,
                 "region": r.streamer.region.slug,
-                "score": r.score, 
-                
+                "score": r.score,
+
                 #"logo": r.streamer.stream.logo,
                 #"status": r.streamer.stream.status,
-                
+
                 "id":r.streamer.stream.twitchId,
                 "displayName":r.streamer.stream.display_name,
                 "name":r.streamer.stream.name,

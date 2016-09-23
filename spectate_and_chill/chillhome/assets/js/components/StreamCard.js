@@ -1,4 +1,7 @@
 var React = require('react');
+import {connect} from 'react-redux';
+
+import {setTopStream} from '../actions/SocketActionCreators';
 var StreamCard = React.createClass({
     _getChampion: function(championId) {
         var champions = "";
@@ -20,7 +23,7 @@ var StreamCard = React.createClass({
 
     _getTwitchWidget(e) {
         e.preventDefault();
-        this.props._setTwitchVideo(this.state.showTwitchWidget);
+        this.props._setTwitchVideo(this.props.name);
     },
 
     render: function() {
@@ -30,17 +33,17 @@ var StreamCard = React.createClass({
           <div className="animated">
             {this.props.displayName}
             {this.props.online ?
-                // Online card
+              // Online card
                 <div className="online-card">
-                    <div className="card-name">
-                        <button onClick={this._getTwitchWidget} type="submit" className="submit-form live-button btn-success"><div className="online"></div>LIVE</button>
-                        <a href={url} target="_blank" >{this.props.name}</a>
-                    </div>
-                    <div className="card-pics">
-                        <img className="online-pic" src={this.props.logo}></img>
-                        <img className="online-pic" src={champion}></img>
-                        <span className="lane"> {this.props.lane ? this.props.lane : null} </span>
-                    </div>
+                  <div className="card-name">
+                    <button onClick={this._getTwitchWidget} type="submit" className="submit-form live-button btn-success"><div className="online"></div>LIVE</button>
+                    <a href={url} target="_blank" >{this.props.name}</a>
+                  </div>
+                  <div className="card-pics">
+                    <img className="online-pic" src={this.props.logo}></img>
+                    <img className="online-pic" src={champion}></img>
+                    <span className="lane"> {this.props.lane ? this.props.lane : null} </span>
+                  </div>
                     <img className="stream-preview" src={this.props.previewURL_large}></img>
                 </div>
             :
@@ -58,4 +61,20 @@ var StreamCard = React.createClass({
     }
 });
 
-module.exports = StreamCard;
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    _setTwitchVideo: function(name) {
+      dispatch(setTopStream(name));
+    }
+  }
+}
+const StreamCardContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StreamCard)
+
+module.exports = StreamCardContainer;
