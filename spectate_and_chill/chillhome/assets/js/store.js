@@ -5,6 +5,7 @@ import thunkMiddleware from 'redux-thunk'
 import {socketMiddleware} from './middleware/socketMiddleware';
 
 import StreamConstants from './constants/StreamConstants';
+import ServerConstants from './constants/ServerConstants';
 
 var StreamRecord = new Immutable.Record({
   id: 0,
@@ -29,6 +30,7 @@ var StreamRecord = new Immutable.Record({
 var OnlineRecord = new Immutable.Record({
   id: 0,
   matchId: 0,
+  twitchLive: 0,
 });
 
 /*
@@ -38,7 +40,7 @@ function rootApp(state = Immutable.Map(), action) {
   var stateUpdate =  Immutable.fromJS({
     userId: 0,
     userProfileIcon: 0,
-    onlineList: onlineListReducers(state.get('onlineList'), action),
+    onlineList: onlineListReducers(state.get('onlineList'), action, state),
     streams: streamReducers(state.get('streams'), action),
   });
   console.log('rootapp', stateUpdate.toJS());
@@ -51,24 +53,55 @@ function rootApp(state = Immutable.Map(), action) {
 var store = createStore(rootApp, Immutable.Map({
   userId: null,
   userProfileIcon: null,
-  onlineList: Immutable.List([
-    new OnlineRecord({id: 'streamer', matchId: 0}),
-    new OnlineRecord({id: 'adil', matchId: 123}),
-  ]), //TODO: change this!
-  streams: Immutable.Map({
-      'streamer': new StreamRecord({id: 'streamer', displayName: 'STREAMER'}),
-      'adil': new StreamRecord({id: 'adil', displayName: 'ADIL'})
-  }),
+  onlineList: Immutable.List(),
+  streams: Immutable.Map(),
 }), applyMiddleware(socketMiddleware, thunkMiddleware));
 
 
-export function onlineListReducers(state=Immutable.List(), action) {
+export function onlineListReducers(state=Immutable.List(), action, rootState) {
+  console.log('online list reducers!', action);
   switch(action.type) {
-    case StreamConstants.ActionTypes.ONLINE_UPDATES:
-    //RESET:
-    state = Immutable.List(action.payload.id, new OnlineRecord(action.payload));
-    return state;
-    break;
+    case ServerConstants.ActionTypes.SOCKET_MESSAGE:
+      //Checkagainst previous list and get diffs
+      //get offlines of previous
+      var offline = state.filter(x => (x.matchId === 0))
+      //get all onlines of new
+      var online = action.payload.filter(y => {
+        if(y.matchId !== 0) {
+          //online
+          return y
+        }
+      });
+      var new_online = offline.filter((off) => {
+        var bO = false;
+        online.forEach(on => {
+          if(on.id === off.get('id')) { //TODO: check types match
+            bO = true;
+          }
+        });
+        if(bO === true) {
+          return off;
+        }
+      });
+      console.log(offline, online, new_online)
+      //Now check if new online is in our system
+      if(new_online.count() !== 0) {
+        console.log('new online!', new_online.toJS())
+        new_online.forEach(function(n) {
+          console.log(rootState)
+          if(rootState.get('streams').get(n.id)) {
+            console.log('woo!');
+            window.alert('YES! ' + n.id + ' is online!');
+          }
+        });
+      }
+      //TODO: convert to middleware
+      //RESET list
+      state = Immutable.List(action.payload.map((update) => {
+        return new OnlineRecord(update);
+      }));
+      return state;
+      break;
     default:
     return state;
     console.log('defaulted on online list reducers')

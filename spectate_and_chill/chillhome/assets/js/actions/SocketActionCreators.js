@@ -1,5 +1,5 @@
-const ServerConstants = require('../constants/ServerConstants');
 const StreamConstants = require('../constants/StreamConstants');
+const ServerConstants = require('../constants/ServerConstants');
 import fetch from 'isomorphic-fetch'
 
 
@@ -14,6 +14,21 @@ export function joinStream(id) {
   return {
     type: ServerConstants.ActionTypes.JOIN_STREAM,
     streamId: id,
+  }
+}
+
+export function newSocketMessage(msg) {
+  return {
+    type: ServerConstants.ActionTypes.SOCKET_MESSAGE,
+    payload: msg,
+  }
+}
+
+export function receiveEvents(events) {
+  console.log('RECEIVE EVENTs');
+  return {
+    type: StreamConstants.ActionTypes.ONLINE_UPDATES,
+    payload: events,
   }
 }
 
