@@ -76,7 +76,7 @@ var Content = React.createClass({
     render: function() {
         return (
             <div className="row">
-                {if loading == }
+            
                 <NavBar/>
                 <SummonerSearch setLoading={this._setLoading}/>
                 <About />
