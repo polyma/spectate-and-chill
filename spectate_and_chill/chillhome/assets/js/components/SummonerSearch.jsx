@@ -6,8 +6,8 @@ export class SummonerSearch extends React.Component {
     render() {
         return (
             <div className="row">
-                <div className="summ-search">
-                    <SearchInputForm/>
+              <div className="summ-search">
+                <SearchInputForm {...this.props}/>
                 </div>
             </div>
         );
