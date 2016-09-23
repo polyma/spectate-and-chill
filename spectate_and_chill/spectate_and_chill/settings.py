@@ -19,6 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #IP_ADDRESS = "127.0.0.1"
 IP_ADDRESS = "54.183.202.43"
 
+APIKEY = "RGAPI-e4491f0b-b99a-49c4-b817-5f9b00267da1"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/

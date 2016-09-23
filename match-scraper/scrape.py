@@ -4,7 +4,7 @@ import json
 import uuid
 import os
 
-from cassiopeia import riotapi
+from cassiopeia import baseriotapi
 from cassiopeia.type.api.exception import APIError
 
 
@@ -49,21 +49,24 @@ def load_match_ids(match_db):
 
 
 def save_matches(match_db, matches, max_chunk):
-    with open(os.path.join(match_db, "index.pkl"), "rb") as in_file:
-        mapping = pickle.load(in_file)
+    try:
+        with open(os.path.join(match_db, "index.pkl"), "rb") as in_file:
+            mapping = pickle.load(in_file)
+    except FileNotFoundError:
+        mapping = {}
 
     for chunk in chunks(matches, max_chunk):
-        id_ = uuid.uuid4()
+        id_ = str(uuid.uuid4())
         while id_ in mapping:
-            id_ = uuid.uuid4()
+            id_ = str(uuid.uuid4())
 
         with open(os.path.join(match_db, id_ + ".pkl"), "wb") as out_file:
             pickle.dump(chunk, out_file)
 
-        mapping[id_] = {match.id for match in chunk}
+        mapping[id_] = {match.matchId for match in chunk}
 
     with open(os.path.join(match_db, "index.pkl"), "wb") as out_file:
-        pickle.dump(mapping, in_file)
+        pickle.dump(mapping, out_file)
 
 
 def read_match_id_file(filepath):
@@ -79,9 +82,9 @@ def scrape_matches(match_db, match_ids, max_chunk):
     matches = []
     while len(to_get) > 0:
         id_ = to_get.pop(0)
-        match = riotapi.get_match(id_)
+        match = baseriotapi.get_match(id_)
         if match:
-            matches.append(id_)
+            matches.append(match)
 
         if len(matches) >= max_chunk:
             save_matches(match_db, matches, max_chunk)
@@ -97,11 +100,11 @@ def main():
     parser.add_argument("-ids", type=str, required=True, help="Path to match id file")
     args = parser.parse_args()
 
-    riotapi.set_region(args.region)
-    riotapi.set_api_key(args.key)
-    riotapi.print_calls(True)
-    riotapi.set_load_policy("lazy")
-    riotapi.get_match = auto_retry(riotapi.get_match)
+    baseriotapi.set_region(args.region)
+    baseriotapi.set_api_key(args.key)
+    baseriotapi.set_rate_limit(1000, 10)
+    baseriotapi.print_calls(True)
+    baseriotapi.get_match = auto_retry(baseriotapi.get_match)
 
     db = args.db if args.db else "matches"
     chunk = args.chunk if args.chunk else 50

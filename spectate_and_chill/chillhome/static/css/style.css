@@ -1,6 +1,9 @@
 
 body {
-    background-color: #122341;
+    background-color: black;
+    background-image: url(../chill.jpg) no-repeat;
+    min-width: 100%;
+    min-height: 100%
 }
 
 video#bgvid {
@@ -17,17 +20,18 @@ video#bgvid {
     -moz-transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
-    background: url(../watcher.jpg) no-repeat;
+    background: url(../chill.jpg) no-repeat;
     background-size: cover;
+    filter: blur(3px);
 }
 
 .overlay {
-    margin-top: 50px;
+    position: fixed;
     width: 100%;
     height: 100%;
     position: absolute;
     background-color: black;
-    opacity: 0.3;
+    opacity: 0.6;
 }
 
 .scan-lines {
@@ -46,9 +50,10 @@ video#bgvid {
 }
 
 .nav-bar {
+    background: rgba(00, 00, 00, 0.4);
+    width: 100%;
     height: 50px;
     color: white;
-    border-bottom: 2px solid #444444;
 }
 
 
@@ -58,19 +63,24 @@ video#bgvid {
 }
 
 .search-bar {
-    background-color: #2C323C;
+    background: rgba(53, 50, 60, 0.7);
+    height: 50px;
+    border-color: gray;
     color: white;
 }
 
 .region-btn {
-    background-color: #2C323C;
-    padding: 0;
+    background: rgba(53, 50, 60, 0.7);
+    height: 50px;
+    border-color: gray;
     margin: 0;
     color: white;
 }
 
 .summ-search {
-    margin-top: 20%;
+    text-align: center;
+    margin-top: 10%;
+    margin-left: 20px;
     color: white;
 }
 
@@ -80,9 +90,57 @@ video#bgvid {
     padding: 8px;
     cursor:pointer;
     color: white;
+    font-size: 2em;
 }
 
 .logo {
     max-height: 100%;
     width: auto;
+}
+
+.about {
+    margin-top: 5%;
+    padding: 10px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    text-align: justify;
+    text-align-last: center;
+    background: rgba(00, 00, 00, 0.4);
+    color: #EFEFEF;
+    font-size: 1.2em;
+    border-radius: 5px;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.purple {
+    color: #FF1F19;
+    font-weight: bold;
+}
+
+.iframe {
+    border: none;
+}
+
+.video-player, .chat-window {
+    float: left;
+}
+
+.loader-hidden, .dimmer-hidden {
+  display: none;
+}
+
+.loader-active, .dimmer-active {
+  display: block;
+}
+
+.dimmer {
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
+    background-color: black;
+    opacity: 0.7;
 }

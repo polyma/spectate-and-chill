@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ReactLoader from 'react-loader'
+import Loader from 'react-loaders'
 
 import {NavBar} from "./components/NavBar.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
+import {TwitchWidget} from "./components/TwitchWidget.jsx"
 
 const reduxStore = require('./store');
 import { Provider, connect } from 'react-redux'
@@ -50,12 +51,10 @@ var Content = React.createClass({
         });
     },
 
-    _setLoading: function(loaded) {
-        if (loaded) {
-            this.setState({ setLoading: true }, function() {
 
-            });
-        }
+
+    _setLoading : function(data) {
+
     },
 
     _setTwitchVideo: function() {
@@ -64,14 +63,25 @@ var Content = React.createClass({
         });
     },
 
+    _getSummonerData: function(summonerName, region) {
+        this._successfulSummonerRequest();
+    },
+
+    _successfulSummonerRequest: function() {
+            this.setState({
+                loading: false,
+
+            });
+    },
+
     render: function() {
         return (
             <div className="row">
-              <NavBar/>
-              <SummonerSearch setLoading={this._setLoading}/>
-              <About />
+                <NavBar/>
+                <SummonerSearch getSummonerData={this._getSummonerData}/>
+                <About />
             </div>
-        );
+        )
     }
 });
 
