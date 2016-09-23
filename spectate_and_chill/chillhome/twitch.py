@@ -160,7 +160,7 @@ class Twitch(object):
                 logo = stream["channel"]["logo"]
                 
             language = ""
-            if stream["channel"]["language"] != None
+            if stream["channel"]["language"] != None:
                 language = stream["channel"]["language"]
             
             streamer, created = TwitchStream.objects.update_or_create(
