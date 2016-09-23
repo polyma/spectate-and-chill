@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {NavBar} from "./components/NavBar.jsx"
+import {Logo} from "./components/Logo.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
 import {TwitchWidget} from "./components/TwitchWidget.jsx"
@@ -50,8 +50,6 @@ var Content = React.createClass({
         });
     },
 
-
-
     _setLoading : function(data) {
 
     },
@@ -72,18 +70,17 @@ var Content = React.createClass({
     },
 
     _successfulSummonerRequest: function() {
-            this.setState({
-                loading: false,
-
-            });
+        this.setState({
+            loading: false,
+        });
     },
 
     render: function() {
         return (
             <div className="row">
-              <NavBar/>
-              <SummonerSearch getSummonerData={this._getSummonerData}/>
-              <About />
+                <Logo />
+                <SummonerSearch getSummonerData={this._getSummonerData}/>
+                <About />
             </div>
         )
     }
@@ -105,7 +102,6 @@ var ContentContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Content)
-
 
 ReactDOM.render(
     <Provider store={reduxStore}>
