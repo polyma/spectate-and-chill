@@ -12,7 +12,7 @@ const reduxStore = require('./store');
 import { Provider, connect } from 'react-redux'
 
 var io = require('socket.io-client');
-import {receiveStreams, disconnect, newSocket, getRecommendations} from './actions/SocketActionCreators';
+import {receiveStreams, disconnect, newSocket, getRecommendations, newSocketMessage} from './actions/SocketActionCreators';
 import {setUserId, backendSwitch} from './middleware/socketMiddleware';
 
 var Content = React.createClass({
@@ -41,7 +41,7 @@ var Content = React.createClass({
 
      socket.on('message', function(msg) {
        console.log('received message!', msg);
-       backendSwitch(msg);
+       reduxStore.dispatch(newSocketMessage(msg));
      });
    },
 

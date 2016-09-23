@@ -10,21 +10,7 @@ sub.on('message', function(channel, message) {
   console.log('message', message, 'received from', channel);
   // should be an  array
   let m = JSON.parse(message)
-  m.forEach(function(a) {
-    a.followedBy.forEach(function(clientObj) {
-      if(clients[clientObj.id]) {
-        console.log('sending to user', clientObj.id)
-        clients[clientObj.id].send({
-          event: 'streams',
-          payload: a,
-        }); //TODO: remove followedBy
-      }
-      else {
-        console.log('cannot send to user', clientObj.id);
-      }
-    });
-  });
-  //Send to socket id;
+  sendToAllClients(message);
 });
 var app = require('express')();
 var http = require('http').Server(app);
@@ -33,12 +19,44 @@ var io = require('socket.io')(http);
 app.get('/', function(req, res){
     res.send('<h1>HI</h1>');
 });
+app.get('/online', function(req, res){
+    sendToAllClients([
+          {
+            id: 'streamer',
+            matchId: 0,
+          },
+          {
+            id: 'adil',
+            matchId: 1234,
+          },
+        ]);
+});
+app.get('/offline', function(req, res){
+    sendToAllClients([
+      {
+        id: 'streamer',
+        matchId: 0,
+      },
+      {
+        id: 'adil',
+        matchId: 0,
+      },
+    ]);
+});
+
+function sendToAllClients(objs) {
+  Object.keys(clients).forEach((client) => {
+    clients[client].send(objs);
+  })
+}
 
 io.on('connection', function(socket){
   console.log('a user connected');
   socket.on('disconnect', function() {
     console.log('user', socket.id, 'disconnected');
   });
+
+
   socket.on('message', function(msg) {
     //NOTE: the only messages we receive from the frontend contain the user id that they are
     //Message containing summoner id + realm
