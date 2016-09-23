@@ -106,7 +106,7 @@ class Check_Current_Games(object):
 
             content.append(item)
 
-        #print(json.dumps(content))
+        print(json.dumps(content))
 
         # Redis Update Goes Here
         r = redis.Redis(host=redisServer, port=6379)
