@@ -7,7 +7,7 @@ import {socketMiddleware} from './middleware/socketMiddleware';
 import StreamConstants from './constants/StreamConstants';
 import ServerConstants from './constants/ServerConstants';
 
-import {getChampionName} from './actions/SocketActionCreators';
+// import {getChampionName} from './actions/SocketActionCreators';
 var StreamRecord = new Immutable.Record({
   id: 0,
   "displayName":"ERROR",
@@ -134,15 +134,16 @@ export function onlineListReducers(state=Immutable.List(), action, rootState) {
             let s = rootState.get('streams').get(n.id);
             let c = rootState.get('currentChampion') || ''
             console.log('woo!');
-            getChampionName(rootState.get('streams').get(n.id).get('championId'))
-            .then((res)=> {
-              window.alert('YES! ' + s.name + ' is online ' + (res ? 'playing ' + res.name : ''));
-              championReducers(rootState.get('currentChampion'), {type: 'CHAMPION', payload: null})
-            })
-            .catch(()=> {
-              window.alert('YES! ' + s.name + ' is online!');
-              championReducers(rootState.get('currentChampion'), {type: 'CHAMPION', payload: null})
-            })
+            window.alert('YES! ' + s.name + ' is online!');
+            // getChampionName(rootState.get('streams').get(n.id).get('championId'))
+            // .then((res)=> {
+            //   window.alert('YES! ' + s.name + ' is online ' + (res ? 'playing ' + res.name : ''));
+            //   championReducers(rootState.get('currentChampion'), {type: 'CHAMPION', payload: null})
+            // })
+            // .catch(()=> {
+            //   window.alert('YES! ' + s.name + ' is online!');
+            //   championReducers(rootState.get('currentChampion'), {type: 'CHAMPION', payload: null})
+            // })
             //unset
           }
         });

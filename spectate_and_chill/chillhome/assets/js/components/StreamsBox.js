@@ -3,7 +3,7 @@ import React from 'react';
 import StreamCard from './StreamCard';
 import { setTopStream } from '../actions/SocketActionCreators';
 const StreamsBox = ({ streams, onlineList, setTopOnline }) => (
-  <div className="row">
+  <div className="row" style={{marginTop:50}}>
     {console.log('loading streams box', streams)}
     {rankStreams(streams, onlineList, setTopOnline)}
   </div>

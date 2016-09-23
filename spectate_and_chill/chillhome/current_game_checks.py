@@ -124,7 +124,7 @@ class Check_Current_Games(object):
         r = redis.Redis(host=redisServer, port=6379)
         r.publish("event", json.dumps(content))
 
-        timer = threading.Timer(60, self.checkAllGames)
+        timer = threading.Timer(120, self.checkAllGames)
         timer.daemon = True
         timer.start()
 

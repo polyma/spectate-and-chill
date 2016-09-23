@@ -35,7 +35,7 @@ var StreamCard = React.createClass({
         var champion = this._getChampion(this.props.championId);
         var url = "https://www.twitch.tv/" + this.props.name;
         return (
-          <div className="animated">
+          <div className="animated" style={{color: '#49498c'}}>
             {this.props.displayName}
             {this.props.online ?
               // Online card
