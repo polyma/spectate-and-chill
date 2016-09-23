@@ -274,10 +274,10 @@ def recommendations(request):
 
 
             content.append({
-                "id": r.streamer.stream.id
-                "name":r.streamer.stream.name,
-                "summonerId":r.streamer.summonerId,
-                "region":r.streamer.region.slug,
+                "id": r.streamer.stream.id,
+                "name": r.streamer.stream.name,
+                "summonerId": r.streamer.summonerId,
+                "region": r.streamer.region.slug,
                 "logo": r.streamer.stream.logo,
                 "status": r.streamer.stream.status,
             })
