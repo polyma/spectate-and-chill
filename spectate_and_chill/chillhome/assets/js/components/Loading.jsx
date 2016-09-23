@@ -1,15 +1,12 @@
 import React from "react"
+import Loader from "react-loaders"
 
 export class Loading extends React.Component {
     render() {
+        let loader = <Loader className="animated zoomIn" type="ball-grid-pulse" />
         return (
-            <div className="row">
-                <div className="col-xs-12">
-                    <div className="dimmer"></div>
-                    <div className="Loader-active">
-                        
-                    </div>
-                </div>
+            <div className="load-anim">
+                {loader}
             </div>
         );
     }

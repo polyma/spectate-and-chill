@@ -6,6 +6,7 @@ import StreamsBoxContainer from './components/StreamsBox'
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
 import {TwitchWidget} from "./components/TwitchWidget.jsx"
+import {Loading} from "./components/Loading.jsx"
 
 const reduxStore = require('./store');
 import { Provider, connect } from 'react-redux'
@@ -18,7 +19,6 @@ var Content = React.createClass({
     getInitialState: function() {
        return {
            loading: false,
-           showVideo: true,
            showRecommendations: false,
            showTwitchWidget: false
        };
@@ -45,12 +45,6 @@ var Content = React.createClass({
      });
    },
 
-   _showVideo: function() {
-        this.setState({ showVideo: true }, function() {
-
-        });
-    },
-
     _setLoading : function(data) {
 
     },
@@ -72,19 +66,27 @@ var Content = React.createClass({
 
     _successfulSummonerRequest: function() {
         this.setState({
-            loading: false,
+            loading: true,
         });
     },
 
     render: function() {
-        return (
-            <div className="row">
-              <Logo />
-              <SummonerSearch getSummonerData={this._getSummonerData}/>
-              <About />
-              <StreamsBoxContainer/>
-            </div>
-        )
+        if (!this.state.loading) {
+            return (
+                <div className="row">
+                    <Logo />
+                    <SummonerSearch getSummonerData={this._getSummonerData}/>
+                    <About />
+                    <StreamsBoxContainer/>
+                </div>
+            )
+        } else {
+            return (
+                <div className="row">
+                    <Loading />
+                </div>
+            )
+        }
     }
 });
 
