@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import {Logo} from "./components/Logo.jsx"
+import StreamsBoxContainer from './components/StreamsBox'
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
 import {TwitchWidget} from "./components/TwitchWidget.jsx"
@@ -76,6 +77,7 @@ var Content = React.createClass({
                     <Logo />
                     <SummonerSearch getSummonerData={this._getSummonerData}/>
                     <About />
+                    <StreamsBoxContainer/>
                 </div>
             )
         } else {
