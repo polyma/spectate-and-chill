@@ -117,22 +117,21 @@
 	        this.setState({ showVideo: true }, function () {});
 	    },
 
-	    _setLoading: function _setLoading(data) {
-	        $.ajax({
-	            url: this.props.url,
-	            dataType: 'json',
-	            cache: false,
-	            success: function (data) {
-	                this.setState({ loading: true });
-	            }.bind(this),
-	            error: function (xhr, status, err) {
-	                console.error(this.props.url, status, err.toString());
-	            }.bind(this)
-	        });
-	    },
+	    _setLoading: function _setLoading(data) {},
 
 	    _setTwitchVideo: function _setTwitchVideo() {
 	        this.setState({ setTwitchWidget: true }, function () {});
+	    },
+
+	    _getSummonerData: function _getSummonerData(summonerName, region) {
+	        this._successfulSummonerRequest();
+	    },
+
+	    _successfulSummonerRequest: function _successfulSummonerRequest() {
+	        this.setState({
+	            loading: false
+
+	        });
 	    },
 
 	    render: function render() {
@@ -140,7 +139,7 @@
 	            'div',
 	            { className: 'row' },
 	            _react2.default.createElement(_NavBar.NavBar, null),
-	            _react2.default.createElement(_SummonerSearch.SummonerSearch, { setLoading: this._setLoading }),
+	            _react2.default.createElement(_SummonerSearch.SummonerSearch, { getSummonerData: this._getSummonerData }),
 	            _react2.default.createElement(_About.About, null)
 	        );
 	    }
@@ -21822,11 +21821,15 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                "div",
-	                { className: "row" },
+	                { className: "container-fluid" },
 	                _react2.default.createElement(
 	                    "div",
-	                    { className: "col-xs-12 navbar-nav nav-bar" },
-	                    _react2.default.createElement("img", { className: "logo", src: "../static/specnchill.png" })
+	                    { className: "row" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "col-xs-12 navbar-nav nav-bar" },
+	                        _react2.default.createElement("img", { className: "logo", src: "../static/specnchill.png" })
+	                    )
 	                )
 	            );
 	        }
@@ -21924,7 +21927,8 @@
 
 	        _this.state = {
 	            summonerName: 'Summoner Name',
-	            region: 'euw'
+	            region: 'euw',
+	            error: null
 	        };
 	        _this.changeName = _this._changeName.bind(_this);
 	        _this.changeRegion = _this._changeRegion.bind(_this);
@@ -21939,7 +21943,9 @@
 	            e.preventDefault();
 	            var re = new RegExp("^([\p{L}_. ]+)$");
 	            if (re.test(summonerName)) {
-	                this.getSummonerData();
+	                this.props.getSummonerData(this.state.summonerName, this.state.region);
+	            } else {
+	                this.setState({ error: 'SUMMONER NAME INCORRECTLY FORMATTED' });
 	            }
 	        }
 	    }, {
@@ -21951,6 +21957,12 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'form-group row' },
+	                    this.state.error ? _react2.default.createElement(
+	                        'h2',
+	                        null,
+	                        'ERROR ',
+	                        this.state.error
+	                    ) : null,
 	                    _react2.default.createElement(
 	                        'form',
 	                        { onSubmit: this.validateInput },

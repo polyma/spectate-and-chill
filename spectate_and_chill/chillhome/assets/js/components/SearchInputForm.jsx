@@ -7,6 +7,7 @@ export class SearchInputForm extends React.Component {
         this.state = {
             summonerName: 'Summoner Name',
             region: 'euw',
+            error: null,
         }
         this.changeName = this._changeName.bind(this)
         this.changeRegion = this._changeRegion.bind(this);
@@ -18,16 +19,20 @@ export class SearchInputForm extends React.Component {
         e.preventDefault();
         var re = new RegExp("^([\p{L}_. ]+)$");
         if (re.test(summonerName)) {
-            this.getSummonerData();
+            this.props.getSummonerData(this.state.summonerName, this.state.region);
         }
-
+        else {
+            this.setState({error: 'SUMMONER NAME INCORRECTLY FORMATTED'})
+        }
     }
 
-     render() {
+    render() {
         return (
-
             <div className="inputForm form-horizontal animated fadeInDown">
                 <div className="form-group row">
+                {this.state.error
+                ? <h2>ERROR {this.state.error}</h2>
+                : null}
                 <form onSubmit={this.validateInput}>
                     <div className="col-xs-6 col-xs-offset-2 ">
                         <input value={this.state.summonerName} onChange={this.changeName} id="summoner" className="form-control search-bar" placeholder="Summoner name" ></input>

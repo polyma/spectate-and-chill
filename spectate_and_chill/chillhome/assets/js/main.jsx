@@ -54,17 +54,7 @@ var Content = React.createClass({
 
 
     _setLoading : function(data) {
-        $.ajax({
-            url: this.props.url,
-            dataType: 'json',
-            cache: false,
-            success: function(data) {
-                this.setState({ loading: true });
-            }.bind(this),
-            error: function(xhr, status, err) {
-                console.error(this.props.url, status, err.toString());
-            }.bind(this)
-        });
+
     },
 
     _setTwitchVideo: function() {
@@ -73,15 +63,25 @@ var Content = React.createClass({
         });
     },
 
+    _getSummonerData: function(summonerName, region) {
+        this._successfulSummonerRequest();
+    },
+
+    _successfulSummonerRequest: function() {
+            this.setState({
+                loading: false,
+
+            });
+    },
+
     render: function() {
         return (
             <div className="row">
-            
                 <NavBar/>
-                <SummonerSearch setLoading={this._setLoading}/>
+                <SummonerSearch getSummonerData={this._getSummonerData}/>
                 <About />
             </div>
-        );
+        )
     }
 });
 

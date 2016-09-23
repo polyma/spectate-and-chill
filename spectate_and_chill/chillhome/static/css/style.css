@@ -1,13 +1,9 @@
 
 body {
-<<<<<<< HEAD
     background-color: black;
     background-image: url(../chill.jpg) no-repeat;
     min-width: 100%;
     min-height: 100%
-=======
-    background-color: #122341;
->>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
 }
 
 video#bgvid {
@@ -24,30 +20,18 @@ video#bgvid {
     -moz-transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
-<<<<<<< HEAD
     background: url(../chill.jpg) no-repeat;
-=======
-    background: url(../watcher.jpg) no-repeat;
->>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
     background-size: cover;
     filter: blur(3px);
 }
 
 .overlay {
-<<<<<<< HEAD
     position: fixed;
-=======
-    margin-top: 50px;
->>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
     width: 100%;
     height: 100%;
     position: absolute;
     background-color: black;
-<<<<<<< HEAD
     opacity: 0.6;
-=======
-    opacity: 0.3;
->>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
 }
 
 .scan-lines {
@@ -67,9 +51,9 @@ video#bgvid {
 
 .nav-bar {
     background: rgba(00, 00, 00, 0.4);
+    width: 100%;
     height: 50px;
     color: white;
-    border-bottom: 2px solid #444444;
 }
 
 
@@ -79,32 +63,23 @@ video#bgvid {
 }
 
 .search-bar {
-<<<<<<< HEAD
     background: rgba(53, 50, 60, 0.7);
     height: 50px;
     border-color: gray;
-=======
-    background-color: #2C323C;
->>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
     color: white;
 }
 
 .region-btn {
-<<<<<<< HEAD
     background: rgba(53, 50, 60, 0.7);
     height: 50px;
     border-color: gray;
-=======
-    background-color: #2C323C;
-    padding: 0;
->>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
     margin: 0;
     color: white;
 }
 
 .summ-search {
     text-align: center;
-    margin-top: 15%;
+    margin-top: 10%;
     margin-left: 20px;
     color: white;
 }
@@ -115,13 +90,13 @@ video#bgvid {
     padding: 8px;
     cursor:pointer;
     color: white;
+    font-size: 2em;
 }
 
 .logo {
     max-height: 100%;
     width: auto;
 }
-<<<<<<< HEAD
 
 .about {
     margin-top: 5%;
@@ -169,5 +144,3 @@ video#bgvid {
     background-color: black;
     opacity: 0.7;
 }
-=======
->>>>>>> 82900fa31a96adb49a74658efcc3e45824ba8261
