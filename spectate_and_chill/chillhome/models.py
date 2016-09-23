@@ -43,9 +43,8 @@ class TwitchStreamer(models.Model):
 class Streamer(models.Model):
     summonerId = models.IntegerField()
     region = models.ForeignKey(Region)
-    streamService = models.CharField(max_length=10)
-    streamId = models.IntegerField()
-    streamName = models.CharField(max_length=50)
+    streamId = models.IntegerField(default=0)
+    streamName = models.CharField(max_length=50, default="")
     
     class Meta:
         unique_together = ("streamService","streamId")

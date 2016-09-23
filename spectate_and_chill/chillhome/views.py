@@ -16,6 +16,7 @@ redisServer = settings.IP_ADDRESS
 #redisServer = "redis"
 
 from .models import *
+from .recommend import Recommender
 
 
 
@@ -77,7 +78,7 @@ def request_summoner(request):
 
 
     try:
-        print(region, summonerName)
+        print(region.slug, summonerName)
 
         #baseriotapi.set_region(region)
         #summoner = riotapi.get_summoner_by_name(summonerName)
@@ -94,18 +95,19 @@ def request_summoner(request):
 
         summonerJson = j[list(j)[0]]
 
-        # summoner, created = User.objects.update_or_create(
-        #     summonerId = summonerJson["id"],
-        #     region = region,
-        #     default = {
-        #         "summonerName":summonerJson["name"],
-        #         "summonerIcon":summonerJson["profileIconId"],
-        #         "summonerSimpleName":summonerName,
-        #     }
-        # )
+        summoner, created = User.objects.update_or_create(
+            summonerId = summonerJson["id"],
+            region = region,
+            defaults = {
+                "summonerName":summonerJson["name"],
+                "summonerIcon":summonerJson["profileIconId"],
+                "summonerSimpleName":summonerName,
+            }
+        )
 
-    except:
+    except Exception as e:
         # Something was wrong or went wrong, assume the summoner doesn't exist
+        #print(e)
         raise Http404('Invalid Summoner')
 
     try:
@@ -121,32 +123,60 @@ def request_summoner(request):
             response = urllib.request.urlopen(r)
             champMastery = json.loads(response.read().decode('utf-8'))
 
-            pass
+            recommender = Recommender.from_file("model.pkl")
+            response = recommender.recommend({"id":summoner.summonerId, "region":summoner.region.slug}, championMastery)
+            
+            for r in response:
+                # Find the streamer
+                streamer, created = Streamer.objects.get_or_create(
+                    summonerId = r["id"],
+                    region = Region.objects.get(slug=r["region"].lower()),
+                )
+                
+                # Save the response
+                recommendation, created = Recommendation.objects.update_or_create(
+                    user=summoner,
+                    streamer = streamer,
+                    defaults={
+                        "score":r["score"],
+                    }
+                )
+        
+        # Pull the recommendations from the DB
+        recommendations = Recommendation.objects.filter(user=summoner)
+        
+        content = []
+        for r in recommendations:
+            content.append({
+                "twitchName":r.streamer.streamName,
+                "summonerId":r.streamer.summonerId,
+                "region":r.streamer.region.slug,
+            })
+        
 
-
-
-        dummyData = [{
-               "id": "streamer",
-               "displayName":"MushIsGosu",
-               "name":"muchisgosu",
-               "language":"en",
-               "logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/mushisgosu-profile_image-b1c8bb5fd700025e-300x300.png",
-               "status":"TSM Gosu - Solo Q - Shadowverse later",
-               "currentViews":7333,
-               "totalViews":78560127,
-               "followers":1096293,
-
-               "spectateURL":"<complete gibberish>",
-               "twitchURL":"https://www.twitch.tv/mushisgosu",
-               "previewURL_small":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-80x45.jpg",
-               "previewURL_medium":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-320x180.jpg",
-               "previewURL_large":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-640x360.jpg",
-               "championId":67,
-               "lane":"",
-        }]
+        return HttpResponse(json.dumps(content))
+        #dummyData = [{
+        #       "id": "streamer",
+        #       "displayName":"MushIsGosu",
+        #       "name":"muchisgosu",
+        #       "language":"en",
+        #       "logo":"https://static-cdn.jtvnw.net/jtv_user_pictures/mushisgosu-profile_image-b1c8bb5fd700025e-300x300.png",
+        #       "status":"TSM Gosu - Solo Q - Shadowverse later",
+        #       "currentViews":7333,
+        #       "totalViews":78560127,
+        #       "followers":1096293,
+        #
+        #       "spectateURL":"<complete gibberish>",
+        #       "twitchURL":"https://www.twitch.tv/mushisgosu",
+        #       "previewURL_small":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-80x45.jpg",
+        #       "previewURL_medium":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-320x180.jpg",
+        #       "previewURL_large":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-640x360.jpg",
+        #       "championId":67,
+        #       "lane":"",
+        #}]
         # r = redis.Redis(host=redisServer, port=6379)
         # r.publish("event", json.dumps(dummyData))
-        return HttpResponse(json.dumps(dummyData))
+        #return HttpResponse(json.dumps(dummyData))
     except Exception as e:
         raise Http404('KABOOM \n%s'%e)
 
