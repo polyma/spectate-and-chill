@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import React from 'react';
 import StreamCard from './StreamCard';
+
 const StreamsBox = ({ streams, onlineList }) => (
   <ul>
     {onlineList.map((stream, i) => {

@@ -23,6 +23,7 @@ var StreamRecord = new Immutable.Record({
   "previewURL_large":"https://static-cdn.jtvnw.net/previews-ttv/live_user_mushisgosu-640x360.jpg",
   "championId":67,
   "lane":"",
+  "score":0
 });
 
 var OnlineRecord = new Immutable.Record({
@@ -54,7 +55,10 @@ var store = createStore(rootApp, Immutable.Map({
     new OnlineRecord({id: 'streamer', matchId: 0}),
     new OnlineRecord({id: 'adil', matchId: 123}),
   ]), //TODO: change this!
-  streams: Immutable.Map(),
+  streams: Immutable.Map({
+      'streamer': new StreamRecord({id: 'streamer', displayName: 'STREAMER'}),
+      'adil': new StreamRecord({id: 'adil', displayName: 'ADIL'})
+  }),
 }), applyMiddleware(socketMiddleware, thunkMiddleware));
 
 
