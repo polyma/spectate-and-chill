@@ -3,13 +3,13 @@ import pickle
 import sys
 import os
 import argparse
-from sklearn import decomposition
+from sklearn import manifold
 from sklearn.neighbors import KDTree
 
 from cassiopeia import riotapi, baseriotapi
 
 
-NUM_COMPONENTS = 131
+NUM_COMPONENTS = 30
 LEAF_SIZE = 20
 METRIC = "euclidean"
 REQUIRED = {"id", "region"}
@@ -50,7 +50,7 @@ class Recommender(object):
         for i, row in enumerate(map(lambda x: get_mastery_vector(self.__champion_indexes, x["masteries"]), general_summoners)):
             data[i] = row
 
-        self.__projection = decomposition.PCA(n_components=NUM_COMPONENTS)
+        self.__projection = manifold.LocallyLinearEmbedding(n_components=NUM_COMPONENTS)
         self.__projection.fit(data)
 
         points = np.zeros((len(streamer_summoners), NUM_COMPONENTS), dtype=np.float)
