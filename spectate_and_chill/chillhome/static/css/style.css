@@ -56,43 +56,36 @@ video#bgvid {
 .logo {
     height: 100%;
     width: auto;
-    margin-top: 5%;
+    margin-top: 8%;
     display: inline-block;
 }
 
 .summ-search {
-    text-align: center;
     margin-top: 5%;
-    margin-left: 20px;
-    color: white;
 }
 
 .search-bar, .region-button, .button-button {
-    width: 100%;
     display: inline-block;
 }
 
 .search-form {
     background: rgba(53, 50, 60, 0.7);
     height: 50px;
-    width: 50%;
     border-color: gray;
     color: white;
 }
 
 .region-form {
     background: rgba(53, 50, 60, 0.7);
-    width: 10%;
     height: 50px;
     border-color: gray;
-    margin: 0;
     color: white;
 }
 
 .submit-form {
     background-color: Transparent;
+    margin-top: 10px;
     border: none;
-    padding-top: 9px;
     cursor:pointer;
     color: white;
     font-size: 1.6em;
