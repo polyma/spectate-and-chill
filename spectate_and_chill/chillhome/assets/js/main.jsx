@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import {Logo} from "./components/Logo.jsx"
+import {NavBar} from "./components/NavBar.jsx"
 import StreamsBoxContainer from './components/StreamsBox'
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
 import {About} from "./components/About.jsx"
@@ -82,17 +83,37 @@ var Content = React.createClass({
 
     render: function() {
         if (!this.state.loading) {
-            return (
-                <div className="row">
-                    <Logo />
-                    <SummonerSearch getSummonerData={this._getSummonerData}/>
-                    <About />
-                    <StreamsBoxContainer/>
-                </div>
-            )
+            if (this.props.streams.size > 0) {
+                $("#bgvid").addClass("hidden");
+                return (
+                    <div className="row">
+                        <NavBar />
+                        <StreamsBoxContainer/>
+                    </div>
+                )
+            } else if (this.state.showTwitchWidget){
+                $("#bgvid").addClass("hidden");
+                return (
+                    <div className="row">
+                        <NavBar />
+                        <TwitchWidget />
+                    </div>
+                )
+            } else {
+                $("#bgvid").removeClass("hidden");
+                return (
+                    <div className="row">
+                        <Logo />
+                        <SummonerSearch getSummonerData={this._getSummonerData}/>
+                        <About />
+                    </div>
+                )
+            }
         } else {
+            $("#bgvid").addClass("hidden");
             return (
                 <div className="row">
+                    <NavBar />
                     <Loading />
                 </div>
             )
@@ -102,6 +123,7 @@ var Content = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+      streams: state.get('streams'),
   }
 }
 const mapDispatchToProps = (dispatch) => {

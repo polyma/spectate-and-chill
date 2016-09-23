@@ -8,11 +8,13 @@ const StreamsBox = ({ streams, onlineList }) => (
       var streamObj = streams.get(stream.get('id'));
       if(streamObj) {
         return (
-          <StreamCard
-            key={i}
-            online={stream.get('matchId')}
-            {...streamObj.toJS()}
-          />
+            <div className="col-xs-4">
+                  <StreamCard
+                    key={i}
+                    online={stream.get('matchId')}
+                    {...streamObj.toJS()}
+                  />
+                </div>
         );
       }
     })

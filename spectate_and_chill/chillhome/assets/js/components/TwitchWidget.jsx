@@ -10,9 +10,6 @@ export class TwitchWidget extends React.Component {
                 <div className="col-xs-8 media-container">
                     <iframe className="video-player" frameBorder="0" src={video} frameborder="0" scrolling="no" allowfullscreen="true"></iframe>
                 </div>
-                <div className="col-xs-4 media-container">
-                    <iframe className="chat-window" frameBorder="0" scrolling="no" id="chat_embed" src={chat} ></iframe>
-                </div>
             </div>
         );
     }

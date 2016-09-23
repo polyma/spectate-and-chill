@@ -2,7 +2,7 @@
 body {
     background-color: black;
     background-image: url('../chill.jpg');
-    background-size: 100% auto;
+    background-size: cover;
 }
 
 video#bgvid {
@@ -57,11 +57,23 @@ video#bgvid {
     -moz-background-size: 100% 2px;
 }
 
+.stretch {
+    min-width: 100%;
+}
+
 .nav-bar {
-    background: rgba(00, 00, 00, 0.4);
-    width: 100%;
+    padding: 0;
+    min-width: 100%;
     height: 50px;
     color: white;
+}
+
+.nav-logo {
+    position: fixed;
+    width: auto;
+    height: 7%;
+    padding: 0;
+    margin: 0;
 }
 
 .logo-container {
@@ -175,12 +187,12 @@ video#bgvid {
 .load-anim {
     color: white;
     padding-bottom: 10px;
-    font-size: 1.5em;
+    text-align: center;
     position: absolute;
     left: 50%;
     top: 50%;
     margin-top: -23px;
-    margin-left: -23px;
+    margin-left: -21px;
 }
 
 .dimmer {
