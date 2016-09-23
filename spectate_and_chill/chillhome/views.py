@@ -219,7 +219,7 @@ def recommendations(request):
         response = urllib.request.urlopen(r)
         j = json.loads(response.read().decode('utf-8'))
         summonerJson = j[list(j)[0]]
-        print(summonerJson)
+        #print(summonerJson)
         summonerId = summonerJson["id"]
         
         
@@ -232,7 +232,7 @@ def recommendations(request):
         r = urllib.request.Request(url)
         response = urllib.request.urlopen(r)
         champMastery = json.loads(response.read().decode('utf-8'))
-        print (champMastery)
+        #print (champMastery)
 
         #TODO: REPLACE TRY EXCEPT HERE
         recommender = Recommender.from_file("chillhome/model.pkl")
@@ -240,7 +240,7 @@ def recommendations(request):
         response = recommender.recommend({"id":summonerId, "region":region}, champMastery)
 
         #     response = [{"id":"adil", "region":region, "score": 1.0},{"id":"streamer", "region":region, "score": 1.0}]
-        print(response)
+        #print(response)
 
         for r in response:
             # Find the streamer, they already exist
@@ -267,7 +267,7 @@ def recommendations(request):
 
         # Pull the recommendations from the DB
         recommendations = Recommendation.objects.filter(user=user).order_by("score")
-        print("Recommendations: %s"%recommendations)
+        #print("Recommendations: %s"%recommendations)
 
         content = []
         for r in recommendations:
