@@ -34,7 +34,7 @@ export class SummonerSearch extends React.Component {
               <div className="inputForm form-horizontal animated fadeInDown col-xs-8 col-xs-offset-2">
                 <div className="form-group ">
                   {this.state.error
-                    ? alert("error")
+                    ? console.log("error")
                   : null}
                   <form >
                     <div className="row summ-search">
