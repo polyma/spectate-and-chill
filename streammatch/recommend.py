@@ -1,5 +1,7 @@
 import numpy as np
 import pickle
+import os
+import argparse
 from sklearn import decomposition
 from sklearn.neighbors import KDTree
 
@@ -81,9 +83,7 @@ class Recommender(object):
         neighbors = self.__streamer_tree.query(projection, k=num_recommendations, return_distance=True)
 
         distances = neighbors[0]
-        print(distances)
         indexes = neighbors[1]
-        print(indexes)
 
         return [
             {
@@ -93,3 +93,33 @@ class Recommender(object):
             }
             for i, index in enumerate(indexes[0])
         ]
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-general", type=str, required=True)
+    parser.add_argument("-streamers", type=str, required=True)
+    parser.add_argument("-out", type=str, required=False)
+    args = parser.parse_args()
+
+    riotapi.set_load_policy("lazy")
+    riotapi.set_rate_limit(25000, 10)
+    riotapi.set_data_store(None)
+    riotapi.set_api_key(os.environ["API_KEY"])
+    riotapi.set_region("NA")
+
+    if not args.out:
+        args.out = "model.pkl"
+
+    with open(args.general, "rb") as in_file:
+        general = pickle.load(in_file)
+
+    with open(args.streamers, "rb") as in_file:
+        streamers = pickle.load(in_file)
+
+    recommender = Recommender(general, streamers)
+    recommender.to_file(args.out)
+
+
+if __name__ == "__main__":
+    main()
