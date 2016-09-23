@@ -27,13 +27,12 @@ class Twitch(object):
         ts = None
         
         try:
+            #Twitch Account already in the DB
             ts = TwitchStream.objects.get(name=twitchName.lower())
         except:
-            
+            # New Twitch Account
             url = "https://api.twitch.tv/kraken/streams/%s"%twitchName
-            
-            print(url)
-            
+
             twitchJson = None
             try:
                 r = urllib.request.Request(url)
@@ -68,7 +67,7 @@ class Twitch(object):
                     status = twitchJson["stream"]["channel"]["status"]
                 
                 ts = TwitchStream(
-                    twitchId = twitchName["channel"]["_id"],
+                    twitchId = twitchJson["stream"]["channel"]["_id"],
                     name = twitchJson["stream"]["channel"]["name"],
                     display_name = twitchJson["stream"]["channel"]["display_name"],
                     language = language,
