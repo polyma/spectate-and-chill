@@ -1,11 +1,22 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-# Create your models here.
+
+class Region(models.Model):
+    slug = models.CharField(primary_key=True, max_length=4)
+    region_tag = models.CharField(max_length=5)
+    hostname = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    
+    
+    
+class Language(models.Model):
+    region = models.ForeignKey(Region)
+    locale = models.CharField(max_length=5)
 
 class MatchEverything(models.Model):
     matchId = models.IntegerField() #Long?
-    region = models.CharField(max_length=4)
+    region = models.ForeignKey(Region)
     json = JSONField()
 
     # Primary key is the matchId + region
@@ -31,7 +42,7 @@ class TwitchStreamer(models.Model):
     
 class Streamer(models.Model):
     summonerId = models.IntegerField()
-    region = models.CharField(max_length=4)
+    region = models.ForeignKey(Region)
     streamService = models.CharField(max_length=10)
     streamId = models.IntegerField()
     streamName = models.CharField(max_length=50)
@@ -42,7 +53,7 @@ class Streamer(models.Model):
     
 class User(models.Model):
     summonerId = models.IntegerField()
-    region = models.CharField(max_length=4)
+    region = models.ForeignKey(Region)
     summonerName = models.CharField(max_length=24)
     summonerSimpleName = models.CharField(max_length=24) # What the query string passes in
     summonerIcon = models.IntegerField()
@@ -58,5 +69,8 @@ class Recommendation(models.Model):
     
     class Meta:
         unique_together = ("user", "streamer")
+
+        
+
     
-    
+
