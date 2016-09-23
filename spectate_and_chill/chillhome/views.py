@@ -17,7 +17,7 @@ redisServer = settings.IP_ADDRESS
 
 from .models import *
 from .recommend import Recommender
-
+#from .RecommenderWrapper import RecommenderWrapper
 
 
 def pullRegions():
@@ -40,7 +40,7 @@ def pullRegions():
         for locale in shard["locales"]:
             lang, created = Language.objects.get_or_create(
                 region = region,
-                locale = localem
+                locale = locale
             )
 
 
@@ -104,57 +104,67 @@ def request_summoner(request):
                 "summonerSimpleName":summonerName,
             }
         )
+        summoner.save()
 
     except Exception as e:
         # Something was wrong or went wrong, assume the summoner doesn't exist
         #print(e)
         raise Http404('Invalid Summoner')
 
-    try:
-        if created:
-            # New user, new recommendations
-            # Pull Champion Mastery for this user
-            url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{name}?api_key={apikey}".format(
-                region=region.slug,
-                name=summonerName,
-                apikey=settings.APIKEY,
+    #try:
+    if True:
+    #if created:
+        # New user, new recommendations
+        # Pull Champion Mastery for this user
+        url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{name}?api_key={apikey}".format(
+            region=region.slug,
+            name=summonerName,
+            apikey=settings.APIKEY,
+        )
+        r = urllib.request.Request(url)
+        response = urllib.request.urlopen(r)
+        champMastery = json.loads(response.read().decode('utf-8'))
+
+        recommender = Recommender.from_file("chillhome/model.pkl")
+        #recommender = (RecommenderWrapper.Instance()).recommender
+        response = recommender.recommend({"id":summoner.summonerId, "region":summoner.region.slug}, championMastery)
+        
+        print(response)
+        
+        for r in response:
+            # Find the streamer
+            streamer, created = Streamer.objects.get_or_create(
+                summonerId = r["id"],
+                region = Region.objects.get(slug=r["region"].lower()),
             )
-            r = urllib.request.Request(url)
-            response = urllib.request.urlopen(r)
-            champMastery = json.loads(response.read().decode('utf-8'))
-
-            recommender = Recommender.from_file("model.pkl")
-            response = recommender.recommend({"id":summoner.summonerId, "region":summoner.region.slug}, championMastery)
             
-            for r in response:
-                # Find the streamer
-                streamer, created = Streamer.objects.get_or_create(
-                    summonerId = r["id"],
-                    region = Region.objects.get(slug=r["region"].lower()),
-                )
-                
-                # Save the response
-                recommendation, created = Recommendation.objects.update_or_create(
-                    user=summoner,
-                    streamer = streamer,
-                    defaults={
-                        "score":r["score"],
-                    }
-                )
-        
-        # Pull the recommendations from the DB
-        recommendations = Recommendation.objects.filter(user=summoner)
-        
-        content = []
-        for r in recommendations:
-            content.append({
-                "twitchName":r.streamer.streamName,
-                "summonerId":r.streamer.summonerId,
-                "region":r.streamer.region.slug,
-            })
-        
+            streamer.save()
+            
+            # Save the response
+            recommendation, created = Recommendation.objects.update_or_create(
+                user=summoner,
+                streamer = streamer,
+                defaults={
+                    "score":r["score"],
+                }
+            )
+            
+            recommendation.save()
+    
+    # Pull the recommendations from the DB
+    recommendations = Recommendation.objects.filter(user=summoner).order_by("score")
+    print("Recommendations: %s"%recommendations)
+    
+    content = []
+    for r in recommendations:
+        content.append({
+            "twitchName":r.streamer.streamName,
+            "summonerId":r.streamer.summonerId,
+            "region":r.streamer.region.slug,
+        })
+    
 
-        return HttpResponse(json.dumps(content))
+    return HttpResponse(json.dumps(content))
         #dummyData = [{
         #       "id": "streamer",
         #       "displayName":"MushIsGosu",
@@ -177,8 +187,8 @@ def request_summoner(request):
         # r = redis.Redis(host=redisServer, port=6379)
         # r.publish("event", json.dumps(dummyData))
         #return HttpResponse(json.dumps(dummyData))
-    except Exception as e:
-        raise Http404('KABOOM \n%s'%e)
+    #except Exception as e:
+    #    raise Http404('KABOOM \n%s'%e)
 
 
 def delay404(request):

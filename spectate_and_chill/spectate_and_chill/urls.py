@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 
 from cassiopeia import riotapi
-
+#from chillhome.RecommenderWrapper import RecommenderWrapper
 
 
 riotapi.set_load_policy("lazy")
@@ -26,6 +26,8 @@ riotapi.set_rate_limit(25000, 10)
 riotapi.set_data_store(None)
 riotapi.set_api_key(settings.APIKEY)
 
+
+#recommender = RecommenderWrapper.Instance()
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

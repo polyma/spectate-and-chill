@@ -6,7 +6,7 @@ import json
 
 from .Singleton import Singleton
 
-from .models import TwitchStreamer, Streamer
+from .models import TwitchStreamer, Streamer, Region
 from django.conf import settings
 
 
@@ -36,7 +36,7 @@ class Twitch(object):
         
         for stream in j["streams"]:
             ids.append(stream["_id"])
-            streamer, created = TwitchStreamer.objects.update_or_create(
+            streamer, created = TwitchStream.objects.update_or_create(
                 twitchId = stream["_id"],
                 name = stream["channel"]["name"],
                 
@@ -55,7 +55,7 @@ class Twitch(object):
         
         
         # Do an exclude to find out who's not actively streaming, setting streaming to false
-        #notLive = TwitchStreamer.objects.exclude(primary_key__in=ids)
+        #notLive = TwitchStream.objects.exclude(primary_key__in=ids)
         
         
         
@@ -102,6 +102,8 @@ class Twitch(object):
         offset = 0
         url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
         
+        region = Region.objects.get(slug="na")
+        
         r = urllib.request.Request(url)
         r.add_header("Client-ID", self.clientId)
         response = urllib.request.urlopen(r)
@@ -116,10 +118,14 @@ class Twitch(object):
                     {stream["channel"]["name"]:
                         {
                         "id":stream["_id"], 
-                        "language":stream["channel"]["language"], 
+                        "name":stream["channel"]["name"],
                         "display_name":stream["channel"]["display_name"],
+                        "language":stream["channel"]["language"], 
                         "logo":stream["channel"]["logo"],
-                        # more...
+                        "status":stream["channel"]["status"],
+                        "currentViews":stream["viewers"],
+                        "totalViews":stream["channel"]["views"],
+                        "followers":stream["channel"]["followers"],
                         }
                     }
                 )
@@ -133,21 +139,18 @@ class Twitch(object):
             response = urllib.request.urlopen(r)
             
             streamersJson = json.loads(response.read().decode('utf-8'))
-            
-        
-        
-        
+
         # Split the streamer names into lists of 40, ideal for checking names
         streamersList = list(streamers)
         splitLists = [streamersList[x:x+40] for x in range(0, len(streamersList), 40)]
-        region = "na"
+        #region = "na"
         url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{names}?api_key={api_key}"
         
         summoners = []
         
         for sublist in splitLists:
             sendMe = url.format(
-                region=region,
+                region=region.slug,
                 names=",".join(sublist),
                 api_key=settings.APIKEY,
             )
@@ -174,15 +177,15 @@ class Twitch(object):
                     summoners.append(None)
                     
         # Check if these guys are in game
-        region_tag = "NA1"
+        #region_tag = "NA1"
         url = "https://{region}.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/{region_tag}/{summoner_id}?api_key={api_key}"
               
         
-        for summoner in summoners:
+        for i in range(len(summoners)):
             sendMe = url.format(
-                region=region,
-                region_tag=region_tag,
-                summoner_id=summoner["summonerId"],
+                region=region.slug,
+                region_tag=region.region_tag,
+                summoner_id=summoners[i]["summonerId"],
                 api_key=settings.APIKEY,
             )
         
@@ -194,11 +197,37 @@ class Twitch(object):
                 
                 # They exist
                 
-                # Save them into the db
-                streamer, created = Streamer.objects.get_or_create(
-                    
-                )
+                # Create a TwitchStream object
+                streamer = streamers[streamersList[i]]
                 
+                ts, created = TwitchStream.objects.update_or_create(
+                    twitchId = streamer["id"],
+                    name = streamer["name"],
+                    defaults = {
+                        "display_name":streamer["display_name"],
+                        "language":streamer["language"],
+                        "logo":streamer["logo"],
+                        "status":streamer["status"],
+                        "currentViews":streamer["currentViews"],
+                        "totalViews":streamer["totalViews"],
+                        "followers":streamer["followers"],
+                        "live":True,
+                    }
+                )
+                ts.save()
+                
+                # Save them into the db
+                stream, created = Streamer.objects.update_or_create(
+                    summonerId = summoners[i]["summonerId"],
+                    region = region,
+                    
+                    defaults = {
+                        "matchId":gameJson["gameId"],
+                        "streamId":ts.twitchId,
+                        "streamName":ts.name,
+                    }
+                )
+                stream.save()
                 
                 
             except:

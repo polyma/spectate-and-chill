@@ -26,7 +26,7 @@ class MatchEverything(models.Model):
     class Meta:
         unique_together = ("matchId", "region")
 
-class TwitchStreamer(models.Model):
+class TwitchStream(models.Model):
     twitchId = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=30)
     display_name = models.CharField(max_length=30)
@@ -42,7 +42,9 @@ class TwitchStreamer(models.Model):
     
 class Streamer(models.Model):
     summonerId = models.IntegerField()
-    region = models.ForeignKey(Region)
+    region = models.ForeignKey(Region)    
+    matchId = models.IntegerField()
+        
     streamId = models.IntegerField(primary_key = True, default=0)
     streamName = models.CharField(max_length=50, default="")
     
