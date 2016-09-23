@@ -40,11 +40,13 @@ var StreamCard = React.createClass({
             {this.props.online ?
               // Online card
                 <div className="online-card">
-                  <div onClick={this.props._nameSetTwitch} className="card-name">
-                    <div className="online"></div>
-                    <p>LIVE</p>
-                    <a href={url} target="_blank" >{this.props.name}</a>
-                  </div>
+                    <div className="card-top">
+                      <div onClick={this.props._nameSetTwitch} className="card-name">
+                        <div className="online"></div>
+                        <p>LIVE</p>
+                        <a href={url} target="_blank" >{this.props.name}</a>
+                      </div>
+                     </div>
                   <div className="card-pics">
                     <img className="online-pic" src={this.props.logo}></img>
                     <img className="online-pic" src={champion}></img>
@@ -55,9 +57,11 @@ var StreamCard = React.createClass({
             :
                 // Offline card
                 <div className="offline-card">
+                    <div className="card-top">
                     <div className="card-name">
                         <div className="offline"><p>OFFLINE</p></div>
                         <a href={url} target="_blank" >{this.props.name}</a>
+                    </div>
                     </div>
                     <img className="offline-pic" src={this.props.logo}></img>
                 </div>
