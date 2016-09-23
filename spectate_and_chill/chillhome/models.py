@@ -44,8 +44,19 @@ class User(models.Model):
     summonerId = models.IntegerField()
     region = models.CharField(max_length=4)
     summonerName = models.CharField(max_length=24)
+    summonerSimpleName = models.CharField(max_length=24) # What the query string passes in
+    summonerIcon = models.IntegerField()
     
     class Meta:
         unique_together = ("summonerId", "region")
-        
+    
+    
+class Recommendation(models.Model):
+    user = models.ForeignKey(User)
+    streamer = models.ForeignKey(Streamer)
+    score = models.FloatField()
+    
+    class Meta:
+        unique_together = ("user", "streamer")
+    
     
