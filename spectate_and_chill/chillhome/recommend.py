@@ -42,23 +42,25 @@ def normalize(vector, norm="max"):
 
 class Recommender(object):
     def __init__(self, general_summoners, streamer_summoners):
-        self.__champion_indexes = sorted([champion.id for champion in riotapi.get_champions()])
-        self.__train(general_summoners, streamer_summoners)
+        self._champion_indexes = sorted([champion.id for champion in riotapi.get_champions()])
+        self._train(general_summoners, streamer_summoners)
 
-    def __train(self, general_summoners, streamer_summoners):
-        data = np.zeros((len(general_summoners), len(self.__champion_indexes)), dtype=np.float)
-        for i, row in enumerate(map(lambda x: get_mastery_vector(self.__champion_indexes, x["masteries"]), general_summoners)):
+    def _train(self, general_summoners, streamer_summoners):
+        data = np.zeros((len(general_summoners), len(self._champion_indexes)), dtype=np.float)
+        for i, row in enumerate(map(lambda x: get_mastery_vector(self._champion_indexes, x["masteries"]), general_summoners)):
             data[i] = row
 
-        self.__projection = manifold.LocallyLinearEmbedding(n_components=NUM_COMPONENTS)
-        self.__projection.fit(data)
+        self._projection = manifold.LocallyLinearEmbedding(n_components=NUM_COMPONENTS)
+        self._projection.fit(data)
+        self._update_streamer_tree(streamer_summoners)
 
+    def _update_streamer_tree(self, streamer_summoners):
         points = np.zeros((len(streamer_summoners), NUM_COMPONENTS), dtype=np.float)
-        for i, row in enumerate(map(lambda x: get_mastery_vector(self.__champion_indexes, x["masteries"]), streamer_summoners)):
-            points[i] = self.__projection.transform(row)
+        for i, row in enumerate(map(lambda x: get_mastery_vector(self._champion_indexes, x["masteries"]), streamer_summoners)):
+            points[i] = self._projection.transform(row)
 
-        self.__streamer_tree = KDTree(points, leaf_size=LEAF_SIZE, metric=METRIC)
-        self.__streamer_index = list()
+        self._streamer_tree = KDTree(points, leaf_size=LEAF_SIZE, metric=METRIC)
+        self._streamer_index = list()
         for s in streamer_summoners:
             s = dict(s)
             to_remove = set()
@@ -67,7 +69,7 @@ class Recommender(object):
                     to_remove.add(key)
             for key in to_remove:
                 del s[key]
-            self.__streamer_index.append(s)
+            self._streamer_index.append(s)
 
     def to_file(self, filepath):
         with open(filepath, "wb") as out_file:
@@ -79,20 +81,20 @@ class Recommender(object):
             return pickle.load(in_file)
 
     def recommend(self, summoner, champion_masteries, num_recommendations=12):
-        if num_recommendations > len(self.__streamer_index):
-            num_recommendations = len(self.__streamer_index)
+        if num_recommendations > len(self._streamer_index):
+            num_recommendations = len(self._streamer_index)
 
-        mastery_vector = get_mastery_vector(self.__champion_indexes, champion_masteries)
-        projection = self.__projection.transform(mastery_vector)
-        neighbors = self.__streamer_tree.query(projection, k=num_recommendations, return_distance=True)
+        mastery_vector = get_mastery_vector(self._champion_indexes, champion_masteries)
+        projection = self._projection.transform(mastery_vector)
+        neighbors = self._streamer_tree.query(projection, k=num_recommendations, return_distance=True)
 
         distances = neighbors[0]
         indexes = neighbors[1]
 
         return [
             {
-                "id": self.__streamer_index[index]["id"],
-                "region": self.__streamer_index[index]["region"],
+                "id": self._streamer_index[index]["id"],
+                "region": self._streamer_index[index]["region"],
                 "score": distances[0][i]
             }
             for i, index in enumerate(indexes[0])
