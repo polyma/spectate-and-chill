@@ -79,38 +79,7 @@ class Check_Current_Games(object):
             streamer.save()
 
         # Convert all streamers to a list
-        streamers = TwitchStream.objects.all()
-
-        content = []
-        for streamer in streamers:
-            item = {}
-            item["id"] = streamer.twitchId
-            item["displayName"] = streamer.display_name
-            item["name"] = streamer.name
-            item["language"] = streamer.language
-            item["logo"] = streamer.logo
-            item["status"] = streamer.status
-            item["currentViews"] = streamer.currentViews
-            item["totalViews"] = streamer.totalViews
-            item["followers"] = streamer.followers
-            item["twitchLive"] = streamer.live
-
-            item["matchId"] = streamer.matchId
-            item["region"] = streamer.regionSlug
-            item["encryptionKey"] = streamer.encryptionKey
-            item["twitchURL"] = "https://www.twitch.tv/%s"%streamer.name
-            item["previewURL_small"] = streamer.previewSmall
-            item["previewURL_medium"] = streamer.previewMedium
-            item["previewURL_large"] = streamer.previewLarge
-            item["championId"] = streamer.championId
-
-            content.append(item)
-
-        print(json.dumps(content))
-
-        # Redis Update Goes Here
-        r = redis.Redis(host=redisServer, port=6379)
-        r.publish("event", json.dumps(content))
+        pushStreamersToRedis()
 
 
         timer = threading.Timer(60 * 2, self.checkAllGames)
@@ -118,6 +87,40 @@ class Check_Current_Games(object):
         timer.start()
 
 
+def pushStreamersToRedis():
+    streamers = TwitchStream.objects.all()
+
+    content = []
+    for streamer in streamers:
+        item = {}
+        item["id"] = streamer.twitchId
+        item["displayName"] = streamer.display_name
+        item["name"] = streamer.name
+        item["language"] = streamer.language
+        item["logo"] = streamer.logo
+        item["status"] = streamer.status
+        item["currentViews"] = streamer.currentViews
+        item["totalViews"] = streamer.totalViews
+        item["followers"] = streamer.followers
+        item["twitchLive"] = streamer.live
+
+        item["matchId"] = streamer.matchId
+        item["region"] = streamer.regionSlug
+        item["encryptionKey"] = streamer.encryptionKey
+        item["twitchURL"] = "https://www.twitch.tv/%s"%streamer.name
+        item["previewURL_small"] = streamer.previewSmall
+        item["previewURL_medium"] = streamer.previewMedium
+        item["previewURL_large"] = streamer.previewLarge
+        item["championId"] = streamer.championId
+
+        content.append(item)
+
+    print(json.dumps(content))
+
+    # Redis Update Goes Here
+    r = redis.Redis(host=redisServer, port=6379)
+    r.publish("event", json.dumps(content))
+        
 
 def schedule_checks(region, summoner_ids, on_new_game, minutes_per_check=2):
     __do_check(region, summoner_ids, on_new_game, minutes_per_check)

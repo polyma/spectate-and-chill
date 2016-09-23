@@ -303,6 +303,9 @@ def recommendations(request):
             })
 
 
+        t = Twitch.Instance()
+        t.pushStreamersToRedis()
+        
         return HttpResponse(json.dumps(content))
     # # Return recommendations
     # recommendations = Recommendation.objects.filter(User=user)
