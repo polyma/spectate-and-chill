@@ -20,7 +20,8 @@ var Content = React.createClass({
        return {
            loading: false,
            showRecommendations: false,
-           showTwitchWidget: false
+           showTwitchWidget: false,
+           error: null,
        };
    },
 
@@ -58,15 +59,24 @@ var Content = React.createClass({
     _getSummonerData: function(summonerName, region) {
       console.log('Beginning summoner fetch...', summonerName, region);
       this.setState({loading: true}, function() {
-        this._successfulSummonerRequest();
-        //Now get the recommendations
-        this.props.requestReccos(summonerName, region);
+        $.ajax({
+          url: window.serverUrl,
+          success: function(data) {
+
+            this._successfulSummonerRequest();
+            //Now get the recommendations
+            this.props.requestReccos(summonerName, region);
+          },
+          error: function(err) {
+            this.setState({error: err});
+          }
+        }).bind(this)
       });
     },
 
     _successfulSummonerRequest: function() {
         this.setState({
-            loading: true,
+            loading: false,
         });
     },
 

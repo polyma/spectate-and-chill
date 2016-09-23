@@ -8,6 +8,8 @@ import json
 import time
 import redis
 
+from .recommend import Recommender
+
 from cassiopeia import baseriotapi, riotapi
 from django.conf import settings
 
@@ -39,7 +41,7 @@ def pullRegions():
         for locale in shard["locales"]:
             lang, created = Language.objects.get_or_create(
                 region = region,
-                locale = localem
+                locale = locale
             )
 
 
@@ -110,60 +112,7 @@ def request_summoner(request):
         #print(e)
         raise Http404('Invalid Summoner')
 
-    #try:
-    if True:
-    #if created:
-        # New user, new recommendations
-        # Pull Champion Mastery for this user
-        url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{name}?api_key={apikey}".format(
-            region=region.slug,
-            name=summonerName,
-            apikey=settings.APIKEY,
-        )
-        r = urllib.request.Request(url)
-        response = urllib.request.urlopen(r)
-        champMastery = json.loads(response.read().decode('utf-8'))
-
-        recommender = Recommender.from_file("chillhome/model.pkl")
-        #recommender = (RecommenderWrapper.Instance()).recommender
-        response = recommender.recommend({"id":summoner.summonerId, "region":summoner.region.slug}, championMastery)
-
-        print(response)
-
-        for r in response:
-            # Find the streamer
-            streamer, created = Streamer.objects.get_or_create(
-                summonerId = r["id"],
-                region = Region.objects.get(slug=r["region"].lower()),
-            )
-
-            streamer.save()
-
-            # Save the response
-            recommendation, created = Recommendation.objects.update_or_create(
-                user=summoner,
-                streamer = streamer,
-                defaults={
-                    "score":r["score"],
-                }
-            )
-
-            recommendation.save()
-
-    # Pull the recommendations from the DB
-    recommendations = Recommendation.objects.filter(user=summoner).order_by("score")
-    print("Recommendations: %s"%recommendations)
-
-    content = []
-    for r in recommendations:
-        content.append({
-            "twitchName":r.streamer.streamName,
-            "summonerId":r.streamer.summonerId,
-            "region":r.streamer.region.slug,
-        })
-
-
-    return HttpResponse(json.dumps(content))
+    return HttpResponse(summoner.summonerSimpleName);
         #dummyData = [{
         #       "id": "streamer",
         #       "displayName":"MushIsGosu",
@@ -225,18 +174,73 @@ def recommendations(request):
         raise Http404("No such summoner in DB")
 
 
-    # Return recommendations
-    recommendations = Recommendation.objects.filter(User=user)
 
-    content = []
-    for recommended in recommendations:
-        info = {}
-        info["score"] = recommended.score
-        info["streamerName"] = recommended.streamer.streamName
-        content.append(info)
+    #try:
+    if True:
+    #if created:
+        # New user, new recommendations
+        # Pull Champion Mastery for this user
+        url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{name}?api_key={apikey}".format(
+            region=region.slug,
+            name=summonerName,
+            apikey=settings.APIKEY,
+        )
+        r = urllib.request.Request(url)
+        response = urllib.request.urlopen(r)
+        champMastery = json.loads(response.read().decode('utf-8'))
+
+        recommender = Recommender.from_file("chillhome/model.pkl")
+        #recommender = (RecommenderWrapper.Instance()).recommender
+        response = recommender.recommend({"id":summoner.summonerId, "region":summoner.region.slug}, championMastery)
+
+        print(response)
+
+        for r in response:
+            # Find the streamer
+            streamer, created = Streamer.objects.get_or_create(
+                summonerId = r["id"],
+                region = Region.objects.get(slug=r["region"].lower()),
+            )
+
+            streamer.save()
+
+            # Save the response
+            recommendation, created = Recommendation.objects.update_or_create(
+                user=summoner,
+                streamer = streamer,
+                defaults={
+                    "score":r["score"],
+                }
+            )
+
+            recommendation.save()
+
+        # Pull the recommendations from the DB
+        recommendations = Recommendation.objects.filter(user=summoner).order_by("score")
+        print("Recommendations: %s"%recommendations)
+
+        content = []
+        for r in recommendations:
+            content.append({
+                "twitchName":r.streamer.streamName,
+                "summonerId":r.streamer.summonerId,
+                "region":r.streamer.region.slug,
+            })
 
 
-    return HttpResponse(json.dumps(content))
+        return HttpResponse(json.dumps(content))
+    # # Return recommendations
+    # recommendations = Recommendation.objects.filter(User=user)
+    #
+    # content = []
+    # for recommended in recommendations:
+    #     info = {}
+    #     info["score"] = recommended.score
+    #     info["streamerName"] = recommended.streamer.streamName
+    #     content.append(info)
+    #
+    #
+    # return HttpResponse(json.dumps(content))
 
 
     #dummyData = [
