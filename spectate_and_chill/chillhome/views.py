@@ -276,6 +276,8 @@ def recommendations(request):
                 #"name": r.streamer.stream.name,
                 "summonerId": r.streamer.summonerId,
                 "region": r.streamer.region.slug,
+                "score": r.score, 
+                
                 #"logo": r.streamer.stream.logo,
                 #"status": r.streamer.stream.status,
                 

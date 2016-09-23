@@ -23,7 +23,7 @@ var StreamRecord = new Immutable.Record({
   "previewURL_medium":"https://static-cdn.jtvnw.net/previews-ttv/live_user_rush-320x180.jpg",
   "previewURL_large":"https://static-cdn.jtvnw.net/previews-ttv/live_user_rush-640x360.jpg",
   "championId":67,
-  "lane":"mid",
+  "lane":"",
   "score":0
 });
 
