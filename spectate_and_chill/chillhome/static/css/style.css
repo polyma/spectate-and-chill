@@ -171,7 +171,8 @@ video#bgvid {
 }
 
 .live-button {
-        
+    width: 30px;
+    height: 15px;
 }
 
 .media-container {

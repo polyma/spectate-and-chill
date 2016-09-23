@@ -34,7 +34,7 @@ var StreamCard = React.createClass({
                 <div className="online-card">
                     <div className="card-name">
                         <button onClick={this._getTwitchWidget} type="submit" className="submit-form live-button btn-success"><div className="online"></div>LIVE</button>
-                        <a href={this.url} target="_blank" >{this.props.name}</a>
+                        <a href={url} target="_blank" >{this.props.name}</a>
                     </div>
                     <div className="card-pics">
                         <img className="online-pic" src={this.props.logo}></img>
@@ -48,7 +48,7 @@ var StreamCard = React.createClass({
                 <div className="offline-card">
                     <div className="card-name">
                         <div className="offline"><p>OFFLINE</p></div>
-                        <a href={this.url} target="_blank" >{this.props.name}</a>
+                        <a href={url} target="_blank" >{this.props.name}</a>
                     </div>
                     <img className="offline-pic" src={this.props.logo}></img>
                 </div>
