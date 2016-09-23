@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Loader from 'react-loaders'
 
 import {Logo} from "./components/Logo.jsx"
 import {SummonerSearch} from "./components/SummonerSearch.jsx"
@@ -11,7 +10,7 @@ const reduxStore = require('./store');
 import { Provider, connect } from 'react-redux'
 
 var io = require('socket.io-client');
-import {receiveStreams, disconnect, newSocket} from './actions/SocketActionCreators';
+import {receiveStreams, disconnect, newSocket, getRecommendations} from './actions/SocketActionCreators';
 import {setUserId, backendSwitch} from './middleware/socketMiddleware';
 
 var Content = React.createClass({
@@ -62,7 +61,12 @@ var Content = React.createClass({
     },
 
     _getSummonerData: function(summonerName, region) {
+      console.log('Beginning summoner fetch...', summonerName, region);
+      this.setState({loading: true}, function() {
         this._successfulSummonerRequest();
+        //Now get the recommendations
+        this.props.requestReccos(summonerName, region);
+      });
     },
 
     _successfulSummonerRequest: function() {
@@ -82,9 +86,26 @@ var Content = React.createClass({
     }
 });
 
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    requestReccos: (sn, reg) => {
+      dispatch(getRecommendations(sn, reg))
+    }
+  }
+}
+
+var ContentContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Content)
+
 ReactDOM.render(
     <Provider store={reduxStore}>
-      <Content/>
+      <ContentContainer/>
     </Provider>
     , document.getElementById('root')
 );

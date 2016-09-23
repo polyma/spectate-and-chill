@@ -5,7 +5,7 @@ export class SearchInputForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            summonerName: 'Summoner Name',
+            summonerName: '',
             region: 'euw',
             error: null,
         }
@@ -17,8 +17,10 @@ export class SearchInputForm extends React.Component {
 
     _validateInput(e) {
         e.preventDefault();
+        this.props.getSummonerData(this.state.summonerName, this.state.region);
         var re = new RegExp("^([\p{L}_. ]+)$");
-        if (re.test(summonerName)) {
+        if (re.test(this.state.summonerName)) {
+          console.log('valid input!');
             this.props.getSummonerData(this.state.summonerName, this.state.region);
         }
         else {
@@ -63,7 +65,7 @@ export class SearchInputForm extends React.Component {
     }
 
     _changeName(e) {
-        this.setState({summonerName: e.value});
+        this.setState({summonerName: e.target.value});
     }
 
     _changeRegion(e) {
