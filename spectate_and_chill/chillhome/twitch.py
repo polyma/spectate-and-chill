@@ -6,7 +6,7 @@ import json
 
 from .Singleton import Singleton
 
-from .models import TwitchStreamer, Streamer, Region
+from .models import TwitchStream, Streamer, Region
 from django.conf import settings
 
 
@@ -102,18 +102,27 @@ class Twitch(object):
         offset = 0
         url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
         
+        
         region = Region.objects.get(slug="na")
+        
+        
         
         r = urllib.request.Request(url)
         r.add_header("Client-ID", self.clientId)
         response = urllib.request.urlopen(r)
-        j = json.loads(response.read().decode('utf-8'))
+        streamersJson = json.loads(response.read().decode('utf-8'))
         
         streamers = {} # converted to list later
         
-        while len(j["streams"]) > 0:
+        while len(streamersJson["streams"]) > 0:
             # Process
-            for stream in j["streams"]:
+            for stream in streamersJson["streams"]:
+                #print("len before: %s"%len(list(streamers)))
+                
+                logo = ""
+                if "logo" in stream["channel"] and stream["channel"]["logo"] != None:
+                    logo = stream["channel"]["logo"]
+                
                 streamers.update(
                     {stream["channel"]["name"]:
                         {
@@ -121,7 +130,12 @@ class Twitch(object):
                         "name":stream["channel"]["name"],
                         "display_name":stream["channel"]["display_name"],
                         "language":stream["channel"]["language"], 
-                        "logo":stream["channel"]["logo"],
+                        
+                        "logo":logo,
+                        "previewSmall":stream["preview"]["small"],
+                        "previewMedium":stream["preview"]["medium"],
+                        "previewLarge":stream["preview"]["large"],
+                        
                         "status":stream["channel"]["status"],
                         "currentViews":stream["viewers"],
                         "totalViews":stream["channel"]["views"],
@@ -129,17 +143,25 @@ class Twitch(object):
                         }
                     }
                 )
+                #print("len after: %s"%len(list(streamers)))
             
             # Issue the new call
             offset += limit
             url = "https://api.twitch.tv/kraken/streams?game=League%%20of%%20Legends&stream_type=live&limit=%s&offset=%s"%(limit, offset)
+            print("Streamers: %s"%len(list(streamers)))
             
-            r = urllib.request.Request(url)
-            r.add_header("Client-ID", self.clientId)
-            response = urllib.request.urlopen(r)
-            
-            streamersJson = json.loads(response.read().decode('utf-8'))
-
+            try:
+                r = urllib.request.Request(url)
+                r.add_header("Client-ID", self.clientId)
+                response = urllib.request.urlopen(r)
+                
+                streamersJson = json.loads(response.read().decode('utf-8'))
+            except:
+                break
+        print("Streamers: %s"%len(list(streamers)))
+        
+        print("Checking against the summoner names")
+                
         # Split the streamer names into lists of 40, ideal for checking names
         streamersList = list(streamers)
         splitLists = [streamersList[x:x+40] for x in range(0, len(streamersList), 40)]
@@ -147,6 +169,7 @@ class Twitch(object):
         url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{names}?api_key={api_key}"
         
         summoners = []
+        summonerNamesFound = 0
         
         for sublist in splitLists:
             sendMe = url.format(
@@ -154,7 +177,7 @@ class Twitch(object):
                 names=",".join(sublist),
                 api_key=settings.APIKEY,
             )
-        
+
             try:
                 r = urllib.request.Request(sendMe)
                 response = urllib.request.urlopen(r)
@@ -165,37 +188,56 @@ class Twitch(object):
                     if streamerName in summonersJson:
                         summoners.append(
                             {
-                                "summonerName":summonerJson[streamerName]["name"],
-                                "summonerId":summonerJson[streamerName]["id"],
+                                "summonerName":summonersJson[streamerName]["name"],
+                                "summonerId":summonersJson[streamerName]["id"],
                             }
                         )
-                        
+                        summonerNamesFound += 1
                     else:
                         summoners.append(None)
             except:
                 for _ in range(len(sublist)):
                     summoners.append(None)
-                    
+            
+        print("Summoner Names obtained: %s"%summonerNamesFound)
+        
+        
         # Check if these guys are in game
         #region_tag = "NA1"
         url = "https://{region}.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/{region_tag}/{summoner_id}?api_key={api_key}"
               
         
         for i in range(len(summoners)):
-            sendMe = url.format(
-                region=region.slug,
-                region_tag=region.region_tag,
-                summoner_id=summoners[i]["summonerId"],
-                api_key=settings.APIKEY,
-            )
+            if summoners[i] == None:
+                continue
+                
+            sendMe = ""
+            try:
+                sendMe = url.format(
+                    region=region.slug,
+                    region_tag=region.region_tag.upper(),
+                    summoner_id=summoners[i]["summonerId"],
+                    api_key=settings.APIKEY,
+                )
+            except Exception as e:
+                print("Phase 1: %s"%e)
+                continue
+        
+        
+            gameJson = None
         
             try:
                 r = urllib.request.Request(sendMe)
                 response = urllib.request.urlopen(r)
                 
                 gameJson = json.loads(response.read().decode('utf-8'))
-                
+            except urllib.error.HTTPError as e:
+                continue            
+            
+            ts = None
+            try:
                 # They exist
+                #print("Adding player to db")
                 
                 # Create a TwitchStream object
                 streamer = streamers[streamersList[i]]
@@ -206,7 +248,12 @@ class Twitch(object):
                     defaults = {
                         "display_name":streamer["display_name"],
                         "language":streamer["language"],
+                        
                         "logo":streamer["logo"],
+                        "previewSmall":streamer["previewSmall"],
+                        "previewMedium":streamer["previewMedium"],
+                        "previewLarge":streamer["previewLarge"],
+                        
                         "status":streamer["status"],
                         "currentViews":streamer["currentViews"],
                         "totalViews":streamer["totalViews"],
@@ -215,7 +262,10 @@ class Twitch(object):
                     }
                 )
                 ts.save()
+            except Exception as e:
+                print("Exception creating Twitch Stream: %s"%e)
                 
+            try:
                 # Save them into the db
                 stream, created = Streamer.objects.update_or_create(
                     summonerId = summoners[i]["summonerId"],
@@ -229,10 +279,13 @@ class Twitch(object):
                 )
                 stream.save()
                 
+            
                 
-            except:
-                pass
-        
+            except Exception as e:
+                print("Exception creating streamer: %s"%e)
+                print("len(matchId): %s"%gameJson["gameId"])
+                print("len(summoner): %s"%summoners[i]["summonerId"])
+                
         
         
         
