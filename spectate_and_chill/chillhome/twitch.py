@@ -6,7 +6,7 @@ import json
 
 from .Singleton import Singleton
 
-from .models import TwitchStream, Streamer, Region
+from .models import TwitchStream, StreamerAccount, Region
 from django.conf import settings
 
 
@@ -258,6 +258,8 @@ class Twitch(object):
                         "currentViews":streamer["currentViews"],
                         "totalViews":streamer["totalViews"],
                         "followers":streamer["followers"],
+                        
+                        "matchId":gameJson["gameId"],
                         "live":True,
                     }
                 )
@@ -267,14 +269,14 @@ class Twitch(object):
                 
             try:
                 # Save them into the db
-                stream, created = Streamer.objects.update_or_create(
+                stream, created = StreamerAccount.objects.update_or_create(
                     summonerId = summoners[i]["summonerId"],
                     region = region,
                     
                     defaults = {
-                        "matchId":gameJson["gameId"],
-                        "streamId":ts.twitchId,
-                        "streamName":ts.name,
+                        #"streamId":ts.twitchId,
+                        #"streamName":ts.name,
+                        "stream":ts
                     }
                 )
                 stream.save()

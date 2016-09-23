@@ -24,6 +24,13 @@ video#bgvid {
     background-size: cover;
 }
 
+.lane {
+    float: left;
+    clear: left;
+    margin-top: -21px;
+    margin-left: 1px;
+}
+
 .overlay {
     position: fixed;
     width: 100%;
@@ -32,6 +39,7 @@ video#bgvid {
     top: 0;
     background-color: black;
     opacity: 0.6;
+    z-index: 0;
 }
 
 .scan-lines {
@@ -137,10 +145,54 @@ video#bgvid {
 
 .load-anim {
     position: absolute;
-    width: 50%;
-    height: auto;
     left: 50%;
     top: 50%;
+}
+
+.snax-load {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -23px;
+    margin-left: -23px;
+    -webkit-animation-name: spin;
+   -webkit-animation-duration: 4000ms;
+   -webkit-animation-iteration-count: infinite;
+   -webkit-animation-timing-function: linear;
+   -moz-animation-name: spin;
+   -moz-animation-duration: 4000ms;
+   -moz-animation-iteration-count: infinite;
+   -moz-animation-timing-function: linear;
+   -ms-animation-name: spin;
+   -ms-animation-duration: 4000ms;
+   -ms-animation-iteration-count: infinite;
+   -ms-animation-timing-function: linear;
+
+   animation-name: spin;
+   animation-duration: 4000ms;
+   animation-iteration-count: infinite;
+   animation-timing-function: linear;
+}
+
+@-ms-keyframes spin {
+   from { -ms-transform: rotate(0deg); }
+   to { -ms-transform: rotate(360deg); }
+}
+@-moz-keyframes spin {
+   from { -moz-transform: rotate(0deg); }
+   to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+   from { -webkit-transform: rotate(0deg); }
+   to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+   from {
+       transform:rotate(0deg);
+   }
+   to {
+       transform:rotate(360deg);
+   }
 }
 
 .dimmer {
@@ -149,4 +201,64 @@ video#bgvid {
     min-height: 100%;
     background-color: black;
     opacity: 0.7;
+}
+
+.card-name {
+    padding: 0;
+    margin: 0;
+}
+
+.online-card, .offline-card {
+    color: white;
+    padding: 5px;
+    border: 3px solid #6441A4;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #5C5768;
+    width: 300px;
+    height: 185px;
+}
+
+.online {
+    box-shadow: 0px 0px 5px #fff;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: green;
+}
+
+.online > p, .offline > p {
+    padding: 3px;
+    line-height: 5px;
+    margin-left: 15px;
+}
+
+.online-pic {
+    height: 60px;
+    width: 60px;
+}
+
+.card-pics, .online-pic {
+    float: left;
+    clear: left;
+    margin-bottom: 4px;
+}
+
+.stream-preview {
+    width: 220px;
+    height: auto;
+}
+
+.offline {
+    box-shadow: 0px 0px 5px #fff;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+}
+
+.offline-pic {
+    display:inline-block;
+    height: 100px;
+    width: 100px;
 }

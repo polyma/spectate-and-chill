@@ -16,8 +16,7 @@ redisServer = settings.IP_ADDRESS
 #redisServer = "redis"
 
 from .models import *
-from .recommend import Recommender
-#from .RecommenderWrapper import RecommenderWrapper
+
 
 
 def pullRegions():
@@ -40,7 +39,7 @@ def pullRegions():
         for locale in shard["locales"]:
             lang, created = Language.objects.get_or_create(
                 region = region,
-                locale = locale
+                locale = localem
             )
 
 
@@ -128,18 +127,18 @@ def request_summoner(request):
         recommender = Recommender.from_file("chillhome/model.pkl")
         #recommender = (RecommenderWrapper.Instance()).recommender
         response = recommender.recommend({"id":summoner.summonerId, "region":summoner.region.slug}, championMastery)
-        
+
         print(response)
-        
+
         for r in response:
             # Find the streamer
             streamer, created = Streamer.objects.get_or_create(
                 summonerId = r["id"],
                 region = Region.objects.get(slug=r["region"].lower()),
             )
-            
+
             streamer.save()
-            
+
             # Save the response
             recommendation, created = Recommendation.objects.update_or_create(
                 user=summoner,
@@ -148,13 +147,13 @@ def request_summoner(request):
                     "score":r["score"],
                 }
             )
-            
+
             recommendation.save()
-    
+
     # Pull the recommendations from the DB
     recommendations = Recommendation.objects.filter(user=summoner).order_by("score")
     print("Recommendations: %s"%recommendations)
-    
+
     content = []
     for r in recommendations:
         content.append({
@@ -162,7 +161,7 @@ def request_summoner(request):
             "summonerId":r.streamer.summonerId,
             "region":r.streamer.region.slug,
         })
-    
+
 
     return HttpResponse(json.dumps(content))
         #dummyData = [{
