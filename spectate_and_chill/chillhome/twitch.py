@@ -389,7 +389,7 @@ class Twitch(object):
 
                 # Create a TwitchStream object
                 streamer = streamers[streamersList[i]]
-                print(streamer)
+                #print(streamer)
                 logo = ""
                 if "logo" in streamer and streamer["logo"] != None:
                     logo = streamer["logo"]
@@ -417,7 +417,8 @@ class Twitch(object):
                 ts.save()
             except Exception as e:
                 print("Exception creating Twitch Stream: %s"%e)
-
+                continue
+                
             try:
                 # Save them into the db
                 stream, created = StreamerAccount.objects.update_or_create(
@@ -438,3 +439,7 @@ class Twitch(object):
                 print("Exception creating streamer: %s"%e)
                 print("len(matchId): %s"%gameJson["gameId"])
                 print("len(summoner): %s"%summoners[i]["summonerId"])
+                
+        streamerCount = TwitchStream.objects.all().count()
+        accountCount = StreamerAccount.objects.all().count()
+        print("Total of %s streamers with %s accounts now in the database"%(streamerCount, accountCount))
