@@ -19,7 +19,7 @@ redisServer = settings.IP_ADDRESS
 
 from .models import *
 from .twitch import Twitch
-
+from .current_game_checks import Check_Current_Games
 
 
 def pullRegions():
@@ -303,8 +303,8 @@ def recommendations(request):
             })
 
 
-        t = Twitch.Instance()
-        t.pushStreamersToRedis()
+        ccg = Check_Current_Games.Instance()
+        ccg.pushStreamersToRedis()
         
         return HttpResponse(json.dumps(content))
     # # Return recommendations
