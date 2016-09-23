@@ -107,12 +107,22 @@ class Twitch(object):
         response = urllib.request.urlopen(r)
         j = json.loads(response.read().decode('utf-8'))
         
-        streamers = set([]) # converted to list later
+        streamers = {} # converted to list later
         
         while len(j["streams"]) > 0:
             # Process
             for stream in j["streams"]:
-                streamers.add(stream["channel"]["name"])
+                streamers.update(
+                    {stream["channel"]["name"]:
+                        {
+                        "id":stream["_id"], 
+                        "language":stream["channel"]["language"], 
+                        "display_name":stream["channel"]["display_name"],
+                        "logo":stream["channel"]["logo"],
+                        # more...
+                        }
+                    }
+                )
             
             # Issue the new call
             offset += limit
@@ -122,33 +132,77 @@ class Twitch(object):
             r.add_header("Client-ID", self.clientId)
             response = urllib.request.urlopen(r)
             
-            j = json.loads(response.read().decode('utf-8'))
+            streamersJson = json.loads(response.read().decode('utf-8'))
+            
+        
         
         
         # Split the streamer names into lists of 40, ideal for checking names
-        streamers = list(streamers)
-        splitLists = [streamers[x:x+40] for x in range(0, len(streamers), 40)]
+        streamersList = list(streamers)
+        splitLists = [streamersList[x:x+40] for x in range(0, len(streamersList), 40)]
         region = "na"
         url = "https://{region}.api.pvp.net/api/lol/{region}/v1.4/summoner/by-name/{names}?api_key={api_key}"
         
-        summoners = 
+        summoners = []
         
         for sublist in splitLists:
-            url = url.format(
+            sendMe = url.format(
                 region=region,
                 names=",".join(sublist),
                 api_key=settings.APIKEY,
             )
         
             try:
-                r = urllib.request.Request(url)
+                r = urllib.request.Request(sendMe)
                 response = urllib.request.urlopen(r)
+                
+                summonersJson = json.loads(response.read().decode('utf-8'))
+                
+                for streamerName in sublist:
+                    if streamerName in summonersJson:
+                        summoners.append(
+                            {
+                                "summonerName":summonerJson[streamerName]["name"],
+                                "summonerId":summonerJson[streamerName]["id"],
+                            }
+                        )
+                        
+                    else:
+                        summoners.append(None)
+            except:
+                for _ in range(len(sublist)):
+                    summoners.append(None)
+                    
+        # Check if these guys are in game
+        region_tag = "NA1"
+        url = "https://{region}.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/{region_tag}/{summoner_id}?api_key={api_key}"
+              
+        
+        for summoner in summoners:
+            sendMe = url.format(
+                region=region,
+                region_tag=region_tag,
+                summoner_id=summoner["summonerId"],
+                api_key=settings.APIKEY,
+            )
+        
+            try:
+                r = urllib.request.Request(sendMe)
+                response = urllib.request.urlopen(r)
+                
+                gameJson = json.loads(response.read().decode('utf-8'))
+                
+                # They exist
+                
+                # Save them into the db
+                streamer, created = Streamer.objects.get_or_create(
+                    
+                )
                 
                 
                 
             except:
                 pass
-            
         
         
         
