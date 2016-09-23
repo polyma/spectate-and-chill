@@ -58,6 +58,13 @@ export function error(string) {
   }
 }
 
+export function setTopStream(twitchName) {
+  return {
+    type: StreamConstants.ActionTypes.TOP_STREAM,
+    payload: twitchName,
+  }
+}
+
 export function getRecommendations(userId, region) {
   console.log('beginning recommendations request...');
   return function (dispatch) {

@@ -42,6 +42,7 @@ function rootApp(state = Immutable.Map(), action) {
     userProfileIcon: 0,
     onlineList: onlineListReducers(state.get('onlineList'), action, state),
     streams: streamReducers(state.get('streams'), action),
+    topStream: topStreamReducers(state.get('topStream'), action),
   });
   console.log('rootapp', stateUpdate.toJS());
   return stateUpdate;
@@ -54,9 +55,21 @@ var store = createStore(rootApp, Immutable.Map({
   userId: null,
   userProfileIcon: null,
   onlineList: Immutable.List(),
-  streams: Immutable.Map([new StreamRecord({id: 'adil'})]),
+  streams: Immutable.Map(),
+  topStream: null,
 }), applyMiddleware(socketMiddleware, thunkMiddleware));
 
+function topStreamReducers(state=Immutable.List(), action) {
+  switch(action.type) {
+    case StreamConstants.ActionTypes.TOP_STREAM:
+    state = action.payload;
+    console.log('NEW TOP STREAM', state);
+    return state;
+    break;
+    default:
+    return state;
+  }
+}
 
 export function onlineListReducers(state=Immutable.List(), action, rootState) {
   console.log('online list reducers!', action);

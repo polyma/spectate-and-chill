@@ -1,28 +1,11 @@
 import { connect } from 'react-redux'
 import React from 'react';
 import StreamCard from './StreamCard';
-
-const StreamsBox = ({ streams, onlineList }) => (
+import { setTopStream } from '../actions/SocketActionCreators';
+const StreamsBox = ({ streams, onlineList, setTopOnline }) => (
   <div className="row">
     {console.log('loading streams box', streams)}
-    {streams.size !== 0 ? streams.toIndexedSeq().toArray().map((stream, i) => {
-      var isOnline = false;
-      onlineList.map((online) => {
-        if(stream.get('id') === online.id && online.matchId !== 0) {
-          isOnline = true;
-        }
-      });
-      return (
-        <div className="col-xs-4">
-          <StreamCard
-            key={i}
-            online={isOnline}
-            {...stream.toJS()}
-          />
-        </div>
-      );
-    })
-    : null}
+    {rankStreams(streams, onlineList, setTopOnline)}
   </div>
 )
 const mapStateToProps = (state) => {
@@ -33,6 +16,66 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
+    setTopOnline: function(twitchName) {
+      dispatch(setTopStream(twitchName));
+    }
+  }
+}
+
+var rankStreams = function rankStream(streams, onlineList, setTopOnline) {
+  if(streams.size !== 0) {
+    var s = streams.toIndexedSeq().toArray().map((stream, i) => {
+      var isOnline = false;
+      onlineList.map((online) => {
+        if(stream.get('id') === online.id && online.matchId !== 0) {
+          isOnline = true;
+        }
+      });
+      return {
+        isOnline,
+        name: stream.get('name'),
+        stream,
+        score: stream.get('score'),
+      }
+    });
+    s.sort(function(obj1, obj2) {
+      return obj1.score - obj2.score;
+    });
+    //now order
+    var onlines = s.map(function(m, x) {
+      if(m.isOnline) {
+        return (
+          <div top={m.name} className="col-xs-4">
+            <StreamCard
+              key={x + "o"}
+              score={m.score}
+              online={m.isOnline}
+              {...m.stream.toJS()}
+            />
+          </div>
+        );
+      }
+    });
+    var offlines = s.map(function(m, x) {
+      if(!m.isOnline) {
+        return (
+          <div className="col-xs-4">
+            <StreamCard
+              key={x + "f"}
+              score={m.score}
+              online={m.isOnline}
+              {...m.stream.toJS()}
+            />
+          </div>
+        );
+      }
+    });
+    var full_list = onlines.concat(offlines)
+    setTopOnline(full_list[0]);
+    return full_list;
+  }
+  else {
+    return null;
   }
 }
 

@@ -6,6 +6,7 @@ module.exports = {
     RAW_UPDATES: null,
     ONLINE_UPDATES: null,
     REQUEST_RECOMMENDATIONS: null,
+    TOP_STREAM: null,
   }),
 
   ErrorTypes: keyMirror({

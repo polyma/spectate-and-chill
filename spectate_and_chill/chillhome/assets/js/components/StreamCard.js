@@ -32,7 +32,7 @@ var StreamCard = React.createClass({
     },
 
     render: function() {
-        var champion = this.getChampion(this.props.championId);
+        var champion = this._getChampion(this.props.championId);
         var url = "https://www.twitch.tv/" + this.props.name;
         return (
           <div className="animated">
