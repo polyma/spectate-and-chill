@@ -18,13 +18,14 @@ export class SearchInputForm extends React.Component {
     _validateInput(e) {
         e.preventDefault();
         this.props.getSummonerData(this.state.summonerName, this.state.region);
-        var re = new RegExp("/\W+/g");
-        if (re.test(this.state.summonerName)) {
-            console.log('valid input!');
-            this.props.getSummonerData(this.state.summonerName, this.state.region);
-        } else {
-            this.setState({error: 'INVALID SUMMONER NAME'})
-        }
+        this.state.summonerName = this.state.summonerName.replace(" ", "");
+        this.state.summonerName = this.state.summonerName.trim();
+        //var re = new RegExp("/[,.\s]+/g");
+        //if (re.test(this.state.summonerName)) {
+        //    this.setState({error: 'INVALID SUMMONER NAME'})
+        //} else {
+        //    console.log('valid input!');
+        this.props.getSummonerData(this.state.summonerName, this.state.region);
     }
 
     render() {
@@ -33,7 +34,7 @@ export class SearchInputForm extends React.Component {
                 <div className="inputForm form-horizontal animated fadeInDown">
                     <div className="form-group col-xs-12">
                         {this.state.error
-                            ? <h2>ERROR {this.state.error}</h2>
+                            ? alert("error")
                             : null}
                         <form onSubmit={this.validateInput}>
                             <div className="row summ-search">

@@ -70,9 +70,9 @@ var Content = React.createClass({
     },
 
     _successfulSummonerRequest: function() {
-            this.setState({
-                loading: false,
-            });
+        this.setState({
+            loading: false,
+        });
     },
 
     render: function() {
