@@ -50,9 +50,12 @@ function rootApp(state = Immutable.Map(), action) {
 var store = createStore(rootApp, Immutable.Map({
   userId: null,
   userProfileIcon: null,
-  onlineList: Immutable.List(),
+  onlineList: Immutable.List([
+    new OnlineRecord({id: 'streamer', matchId: 0}),
+    new OnlineRecord({id: 'adil', matchId: 123}),
+  ]), //TODO: change this!
   streams: Immutable.Map(),
-}), applyMiddleware(socketMiddleware,thunkMiddleware));
+}), applyMiddleware(socketMiddleware, thunkMiddleware));
 
 
 export function onlineListReducers(state=Immutable.List(), action) {
@@ -71,7 +74,10 @@ export function onlineListReducers(state=Immutable.List(), action) {
 export function streamReducers(state=Immutable.Map(), action) {
   switch(action.type) {
     case StreamConstants.ActionTypes.RAW_UPDATES:
-      state = state.set(action.payload.id, new StreamRecord(action.payload));
+      action.payload.forEach(function(stream) {
+        state = state.set(stream.id, new StreamRecord(stream));
+      })
+      console.log('Received updates from recommendation endpoint', state);
       return state;
     break;
     default:
