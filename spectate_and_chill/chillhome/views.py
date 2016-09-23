@@ -38,6 +38,12 @@ def pullRegions():
             }
         )
 
+        if region.slug == 'euw':
+            region.region_tag = 'euw1'
+            region.save()
+            
+
+        
         for locale in shard["locales"]:
             lang, created = Language.objects.get_or_create(
                 region = region,
@@ -191,14 +197,11 @@ def recommendations(request):
         summonerJson = j[list(j)[0]]
         print(summonerJson)
         summonerId = summonerJson["id"]
-        ##TODO: FIX THIS HACK
-        if region.slug == 'euw':
-            platform_append = 'W1'
-        else:
-            platform_append = ''
+        
+        
         url = "https://{region}.api.pvp.net/championmastery/location/{platform}/player/{summonerId}/champions?api_key={apikey}".format(
         region=region.slug,
-        platform=region.region_tag.upper() + platform_append,
+        platform=region.region_tag.upper(),
         summonerId=summonerId,
         apikey=settings.APIKEY,
         )
