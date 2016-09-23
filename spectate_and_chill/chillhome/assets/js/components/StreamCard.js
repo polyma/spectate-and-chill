@@ -18,21 +18,13 @@ var StreamCard = React.createClass({
         });
     },
 
-    _validateInput(e) {
+    _getTwitchWidget(e) {
         e.preventDefault();
-        this.props.getSummonerData(this.state.summonerName, this.state.region);
-        this.state.summonerName = this.state.summonerName.trim();
-        this.state.summonerName = this.state.summonerName.toLowerCase();
-        //var re = new RegExp("/[,.\s]+/g");
-        //if (re.test(this.state.summonerName)) {
-        //    this.setState({error: 'INVALID SUMMONER NAME'})
-        //} else {
-        //    console.log('valid input!');
-        this.props.getSummonerData(this.state.summonerName, this.state.region);
+        this.props._setTwitchVideo(this.state.showTwitchWidget);
     },
 
     render: function() {
-        var champion = this.getChampion(this.props.championId);
+        var champion = this._getChampion(this.props.championId);
         var url = "https://www.twitch.tv/" + this.props.name;
         return (
           <div className="animated">
@@ -41,7 +33,7 @@ var StreamCard = React.createClass({
                 // Online card
                 <div className="online-card">
                     <div className="card-name">
-                        <div className="online"><p>ONLINE</p></div>
+                        <button onClick={this._getTwitchWidget} type="submit" className="submit-form live-button btn-success"><div className="online"></div>LIVE</button>
                         <a href={this.url} target="_blank" >{this.props.name}</a>
                     </div>
                     <div className="card-pics">
