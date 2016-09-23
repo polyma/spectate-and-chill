@@ -48,10 +48,6 @@ var Content = React.createClass({
      });
    },
 
-    _setLoading : function(data) {
-
-    },
-
     _setTwitchVideo: function() {
         this.setState({ setTwitchWidget: true }, function() {
 

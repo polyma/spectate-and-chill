@@ -10,7 +10,7 @@ export class Twitch extends React.Component {
         return (
             <div className="row twitch-widget">
                 <div className="col-xs-8 col-xs-offset-2 media-container">
-                    <iframe className="video-player" frameBorder="0" src={video} scrolling="no" allowfullscreen="true"></iframe>
+                    <iframe className="video-player" frameBorder="0" src={video} scrolling="no" allowFullscreen="true"></iframe>
                 </div>
             </div>
         );

@@ -26,6 +26,11 @@ var StreamCard = React.createClass({
         this.props._setTwitchVideo(this.props.name);
     },
 
+    _nameSetTwitch(e) {
+        e.preventDefault();
+        return this.props.name;
+    },
+
     render: function() {
         var champion = this._getChampion(this.props.championId);
         var url = "https://www.twitch.tv/" + this.props.name;
@@ -35,8 +40,9 @@ var StreamCard = React.createClass({
             {this.props.online ?
               // Online card
                 <div className="online-card">
-                  <div className="card-name">
-                    <button onClick={this._getTwitchWidget} type="submit" className="submit-form live-button btn-success"><div className="online"></div>LIVE</button>
+                  <div onClick={this.props._nameSetTwitch} className="card-name">
+                    <div className="online"></div>
+                    <p>LIVE</p>
                     <a href={url} target="_blank" >{this.props.name}</a>
                   </div>
                   <div className="card-pics">
