@@ -1,7 +1,6 @@
 var Constants = require('../constants/ServerConstants');
 var socket = null;
-import {receiveStreams, disconnect, newSocket} from '../actions/SocketActionCreators';
-
+import {disconnect, newSocket, receiveEvents} from '../actions/SocketActionCreators';
 
 /*
   REDUX MIDDLEWARE
@@ -14,10 +13,7 @@ export function socketMiddleware(store) {
       setSocket(action.socket);
       return result;
     }
-    if (socket) {
-      backendSwitch(action);
-    }
-
+    backendSwitch(action, store);
     return result;
   };
 }
@@ -26,11 +22,11 @@ export function socketMiddleware(store) {
   Switch for events from the backend
 */
 
-var store = require('../store');
-export function backendSwitch(msg) {
-  switch(msg.event) {
-    case 'streams':
-      store.dispatch(receiveStreams(msg.payload)); //assume that we ONLY have the streams that are relevant to us
+export function backendSwitch(action, store) {
+  switch(action.event) {
+    case Constants.ActionTypes.SOCKET_MESSAGE:
+    console.log('backend message!', action);
+      store.dispatch(receiveEvents(action.payload)); //assume that we ONLY have the streams that are relevant to us
       break;
     // case 'disconnect':
     //   dispatch(disconnect());
